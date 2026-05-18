@@ -264,7 +264,10 @@ class MainController extends Controller
             }
         }
 
-        $products = $products->orderBy('p.id', 'DESC')->groupBy("p.id")->paginate(50);
+$products = $products->orderByRaw('CASE WHEN p.sort_index IS NULL THEN 1 ELSE 0 END')
+                ->orderBy('p.sort_index', 'desc')
+                ->orderBy('p.id', 'desc')
+                ->groupBy("p.id")->paginate(50);
 
         $categories = TxnCategory::selectRaw("DISTINCT(name) as category_name, id")->where('status', true)->get();
 
@@ -287,7 +290,10 @@ class MainController extends Controller
             $products = $products->whereIn('p.condition_id', $request->conditions);
         }
 
-        $products = $products->orderBy('p.id', 'DESC')->groupBy("p.id")->paginate(20);
+        $products = $products->orderByRaw('CASE WHEN p.sort_index IS NULL THEN 1 ELSE 0 END')
+            ->orderBy('p.sort_index', 'desc')
+            ->orderBy('p.id', 'desc')
+            ->groupBy("p.id")->paginate(20);
 
         $prodLists = [];
 
@@ -354,7 +360,10 @@ class MainController extends Controller
             $products = $products->whereIn('p.condition_id', $request->conditions);
         }
 
-        $products = $products->orderBy('p.id', 'DESC')->groupBy("p.id")->paginate(20);
+        $products = $products->orderByRaw('CASE WHEN p.sort_index IS NULL THEN 1 ELSE 0 END')
+            ->orderBy('p.sort_index', 'desc')
+            ->orderBy('p.id', 'desc')
+            ->groupBy("p.id")->paginate(20);
 
         return view('frontend.product.cate-products', compact('products', 'category', 'brands', 'conditions'))->with('input', $request);
 
@@ -424,7 +433,10 @@ class MainController extends Controller
                 ->where('p.status', true)
                 ->max('map.mrp') ?? 5000;
 
-            $products = $products->orderBy('p.id', 'DESC')->groupBy("p.id")->paginate(50);
+            $products = $products->orderByRaw('CASE WHEN p.sort_index IS NULL THEN 1 ELSE 0 END')
+                ->orderBy('p.sort_index', 'desc')
+                ->orderBy('p.id', 'desc')
+                ->groupBy("p.id")->paginate(50);
             return view('frontend.newproduct.category', compact('products', 'category', 'categories', 'colors', 'sizes', 'max_price'))->with('input', $request);
         } catch (\Exception $ex) {
             if ($ex instanceof \Illuminate\Database\Eloquent\ModelNotFoundException) {

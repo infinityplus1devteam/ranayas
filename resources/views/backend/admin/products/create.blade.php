@@ -273,6 +273,14 @@
 
                                 <div class="col-md-4">
                                     <div class="form-group">
+                                        <label for="product_sort_index">Product Sort Index <span class="text-muted">(optional)</span></label>
+                                        <input type="number" name="product_sort_index" id="product_sort_index" class="form-control"
+                                            value="{{ old('product_sort_index') }}" min="1" placeholder="Enter Product Sort Index (optional)">
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <div class="form-group">
                                         <label for="weight">Weight </label>
                                         <input type="text" name="weight" id="weight" class="form-control"
                                             value="{{ old('weight') }}" placeholder="Enter weight">

@@ -46,7 +46,11 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = TxnProduct::with('category')->orderBy('id')->paginate(3000);
+        $products = TxnProduct::with('category')
+            ->orderByRaw('CASE WHEN sort_index IS NULL THEN 1 ELSE 0 END')
+            ->orderBy('sort_index', 'desc')
+            ->orderBy('id', 'desc')
+            ->paginate(3000);
         $gsts = TxnMasterGst::where('status', true)->get();
 
         return view('backend.admin.products.index', compact('products', 'gsts'));
@@ -111,6 +115,7 @@ class ProductController extends Controller
                 'mrp' => 'required|numeric|min:1',
                 'starting_price' => 'required|numeric|min:1',
                 'stock' => 'required|numeric|min:1',
+                'product_sort_index' => 'nullable|numeric|min:1',
                 'sort_index' => 'required|numeric|min:1',
             ],
             [
@@ -211,6 +216,7 @@ class ProductController extends Controller
             'faulty_products' => $request->has('faulty_products') ? 1 : 0,
             'quality_issue' => $request->has('quality_issue') ? 1 : 0,
             'slug_url' => Str::slug($category->name . '-' . $request->title . '-' . rand(1000, 9999), '-'),
+            'sort_index' => $request->product_sort_index ?? null,
         ]);
 
         if ($request->filled('offer_id')) {
@@ -396,6 +402,7 @@ class ProductController extends Controller
                 'is_cod' => 'required|numeric|max:1',
                 'dimension_unit' => 'nullable|integer|exists:txn_length_units,id',
                 'review_status' => 'required|numeric|min:0|max:1',
+                'product_sort_index' => 'nullable|numeric|min:1',
             ],
             [
                 'title.required' => 'Please Enter Product Name',
@@ -499,6 +506,7 @@ class ProductController extends Controller
                 'wrong_products' => $request->has('wrong_products') ? 1 : 0,
                 'faulty_products' => $request->has('faulty_products') ? 1 : 0,
                 'quality_issue' => $request->has('quality_issue') ? 1 : 0,
+                'sort_index' => $request->product_sort_index ?? null,
             ]);
 
             if ($request->filled('keywords')) {
