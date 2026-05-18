@@ -6,6 +6,17 @@
             /* color: #e36542; */
             color: #fcca2f;
         }
+        .home5-service .service .service-box .s-box .homepage-rupee-icon {
+            width: 38px;
+            height: 38px;
+            margin-right: 15px;
+            color: #7423b6;
+            transition: all 0.3s ease-in-out;
+            vertical-align: middle;
+        }
+        .home5-service .service .service-box .s-box:hover .homepage-rupee-icon {
+            transform: rotateY(180deg);
+        }
     </style>
 @endsection
 @section('content')
@@ -53,10 +64,16 @@
                         </div>
                         <div class="service-box">
                             <div class="s-box">
-                                <i class="ti-money"></i>
+                                <svg class="homepage-rupee-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M6 3h12"></path>
+                                    <path d="M6 8h12"></path>
+                                    <path d="m6 13 8.5 8"></path>
+                                    <path d="M6 13h3"></path>
+                                    <path d="M9 13c6.667 0 6.667-10 0-10"></path>
+                                </svg>
                                 <div class="service-content">
                                     <span class="text--2">Return and Refund</span>
-                                    <p class="text--2">Money Back Guarantee ₹</p>
+                                    <p class="text--2">Money Back Guarantee</p>
                                 </div>
                             </div>
                         </div>
@@ -535,13 +552,7 @@
 </section> --}}
     <!-- home banner end -->
 @endsection
-@section('extracss')
-    <style>
-        /* .home-slider-5 .home-slider-main-5 .home5-slider .img-back {
-                                                                                                                                                                                                                                                                                                        width: 100% !important;
-                                                                                                                                                                                                                                                                                                    } */
-    </style>
-@endsection
+
 
 @section('extrajs')
     <script>

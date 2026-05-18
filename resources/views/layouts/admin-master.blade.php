@@ -217,6 +217,27 @@
                                     data-feather="smartphone"></i><span>Products</span></a>
                         </li>
 
+                        <li class="dropdown">
+                            <a href="#" class="menu-toggle nav-link has-dropdown">
+                                <i data-feather="file-text"></i><span>Policies</span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="nav-link"
+                                        href="{{ route('admin.policies.edit', 'terms-condition') }}">Terms &
+                                        conditions</a></li>
+                                <li><a class="nav-link" href="{{ route('admin.policies.edit', 'privacy') }}">Privacy
+                                        policy</a></li>
+                                <li><a class="nav-link"
+                                        href="{{ route('admin.policies.edit', 'refund-return') }}">Return policy</a>
+                                </li>
+                                <li><a class="nav-link"
+                                        href="{{ route('admin.policies.edit', 'shipping') }}">Shipping policy</a></li>
+                                <li><a class="nav-link"
+                                        href="{{ route('admin.policies.edit', 'cancellation') }}">Cancellation
+                                        policy</a></li>
+                            </ul>
+                        </li>
+
 
 
                         <li class="dropdown">

@@ -588,4 +588,11 @@ class MainController extends Controller
                 ->with('msg', 'Email sending failed.');
         }
     }
+
+    public function showPolicy(Request $request)
+    {
+        $slug = $request->segment(1);
+        $policy = \App\Model\Policy::where('slug', $slug)->firstOrFail();
+        return view('frontend.policy.show', compact('policy'));
+    }
 }

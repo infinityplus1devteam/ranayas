@@ -260,7 +260,7 @@
 
                                 @if ($product->non_returnable)
                                     <div class="return-policy-notice mt-3">
-                                        <span class="text-muted fw-bold" style="font-size: 14px;">Non Returnable</span>
+                                        <span class="text-danger fw-bold" style="font-size: 16px;">Non Returnable</span>
                                     </div>
                                 @elseif($product->within_days)
                                     <div class="return-policy-notice mt-3">
@@ -312,8 +312,8 @@
                         }
 
                         /* .specification{
-                                                                                                                                                                    display: flex;
-                                                                                                                                                                } */
+                                                                                                                                                                        display: flex;
+                                                                                                                                                                    } */
                     </style>
 
                     <style>
@@ -386,22 +386,22 @@
                         }
 
                         /* .read-more-btn{
-                                                                                                                                                                    position: relative;
-                                                                                                                                                                    font-size:18px;
-                                                                                                                                                                    cursor: pointer;
-                                                                                                                                                                } */
+                                                                                                                                                                        position: relative;
+                                                                                                                                                                        font-size:18px;
+                                                                                                                                                                        cursor: pointer;
+                                                                                                                                                                    } */
                         /* .read-more-btn:before{
-                                                                                                                                                                    position: absolute;
-                                                                                                                                                                    content:"";
-                                                                                                                                                                    width: 100%;
-                                                                                                                                                                    height: 30px;
-                                                                                                                                                                    background: linear-gradient(0deg, rgba(255,0,0,0.5) 0%, rgba(0,0,0,0) 80%);
-                                                                                                                                                                    left: 0;
-                                                                                                                                                                    top: -30px;
-                                                                                                                                                                } */
+                                                                                                                                                                        position: absolute;
+                                                                                                                                                                        content:"";
+                                                                                                                                                                        width: 100%;
+                                                                                                                                                                        height: 30px;
+                                                                                                                                                                        background: linear-gradient(0deg, rgba(255,0,0,0.5) 0%, rgba(0,0,0,0) 80%);
+                                                                                                                                                                        left: 0;
+                                                                                                                                                                        top: -30px;
+                                                                                                                                                                    } */
                         /* .tech-spec, .pack-detl, .certification{
-                                                                                                                                                                    display: none;
-                                                                                                                                                                } */
+                                                                                                                                                                        display: none;
+                                                                                                                                                                    } */
                         @media screen and (max-width: 768px) {
                             .specification {
                                 display: block;

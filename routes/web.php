@@ -33,11 +33,11 @@ Route::
 
                 // policy
         
-                Route::view('/terms-condition', 'frontend.policy.terms-condition')->name('terms-condition');
-                Route::view('/privacy', 'frontend.policy.privacy')->name('privacy');
-                Route::view('/cancellation', 'frontend.policy.cancellation')->name('cancellation');
-                Route::view('/refund-return', 'frontend.policy.refund-return')->name('refund-return');
-                Route::view('/shipping', 'frontend.policy.shipping')->name('shipping');
+                Route::GET('/terms-condition', 'MainController@showPolicy')->name('terms-condition');
+                Route::GET('/privacy', 'MainController@showPolicy')->name('privacy');
+                Route::GET('/cancellation', 'MainController@showPolicy')->name('cancellation');
+                Route::GET('/refund-return', 'MainController@showPolicy')->name('refund-return');
+                Route::GET('/shipping', 'MainController@showPolicy')->name('shipping');
 
                 // contact us
         
@@ -114,6 +114,11 @@ Route::
                     Route::GET('/profile', 'AdminController@edit')->name('admin.profile');
                     Route::POST('/profile', 'AdminController@update');
                     Route::POST('/logout', 'AdminAuth\LoginController@logout')->name('admin.logout');
+
+                    Route::prefix('/manage-policies')->group(function () {
+                        Route::GET('/edit/{slug}', 'Admin\PolicyController@edit')->name('admin.policies.edit');
+                        Route::POST('/update/{slug}', 'Admin\PolicyController@update')->name('admin.policies.update');
+                    });
 
                     Route::prefix('/manage-admins')->group(function () {
                         Route::GET('/', 'AdminController@manage')->name('admin.admins.all');
@@ -455,7 +460,7 @@ Route::get('/test-sms', function (Request $request) {
 
     if (!empty($otp)) {
         // Build exact template text replacing placeholder with OTP (single-line)
-        $text = 'Dear user, Your OTP for login to Dekha OTT is ' . $otp . '. Enjoy the videos. Regards, Dekha Team';
+        $text = 'Dear user, Your OTP for login to Ranayas is ' . $otp . '. Regards, Ranayas Team';
     } else {
         $text = $request->query('text', 'Test message from application');
     }
@@ -484,8 +489,7 @@ Route::get('/test-sms-send', function (Request $request) {
     $otp = $request->query('otp', '1234');
 
     // EXACT TEMPLATE MATCH
-    // $text = "Dear user,\n\nYour OTP for login to Dekha OTT is {$otp}. Enjoy the videos.\n\nRegards,";
-    $text = "Dear user, \n\nYour OTP for login to Dekha OTT is {$otp}. Enjoy the videos.\n\nRegards,\n\nDekha Team";
+    $text = "Dear user, \n\nYour OTP for login to Ranayas is {$otp}.\n\nRegards,\n\nRanayas Team";
 
     $url = 'https://login.businesslead.co.in/api/mt/SendSMS?' . http_build_query([
         'user' => $user,

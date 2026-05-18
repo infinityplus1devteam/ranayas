@@ -106,14 +106,14 @@ class LoginController extends Controller
 
         SMS::send(
             $user['mobile'],
-            $user['otp'].' is your verification code for Standalone Stream',
-            1507164000218506867
+            'Dear user, Your OTP for login to Ranayas is ' . $user['otp'] . '. Regards, Ranayas Team',
+            '1207174850771033756'
         );
         // dd('i m here');
 
         try {
             Mail::send(['html' => 'backend.mails.otp'], ['user' => $user], function ($message) use ($user) {
-                $message->to($user['email'])->subject(config('app.name').', One Time Password(OTP)');
+                $message->to($user['email'])->subject(config('app.name') . ', One Time Password(OTP)');
                 $message->from(config('mail.from.address'), config('mail.from.name'));
             });
         } catch (\Exception $e) {
@@ -138,13 +138,13 @@ class LoginController extends Controller
 
             SMS::send(
                 $user['mobile'],
-                $user['otp'].' is your verification code for Standalone Stream',
-                1507164000218506867
+                'Dear user, Your OTP for login to Ranayas is ' . $user['otp'] . '. Regards, Ranayas Team',
+                '1207174850771033756'
             );
 
             try {
                 Mail::send(['html' => 'backend.mails.otp'], ['user' => $user], function ($message) use ($user) {
-                    $message->to($user['email'])->subject(config('app.name').', One Time Password(OTP)');
+                    $message->to($user['email'])->subject(config('app.name') . ', One Time Password(OTP)');
                     $message->from(config('mail.from.address'), config('mail.from.name'));
                 });
             } catch (\Exception $e) {
@@ -182,7 +182,7 @@ class LoginController extends Controller
         $userData = $request->session()->get('user');
 
         // Safeguard against expired sessions
-        if (! $userData) {
+        if (!$userData) {
             connectify('error', 'Session Expired', 'Your session has expired. Please try registering again.');
 
             return redirect()->route('user.register');
@@ -281,13 +281,13 @@ class LoginController extends Controller
 
             SMS::send(
                 $user['mobile'],
-                $user['otp'].' is your verification code for Standalone Stream',
-                1507164000218506867
+                'Dear user, Your OTP for login to Ranayas is ' . $user['otp'] . '. Regards, Ranayas Team',
+                '1207174850771033756'
             );
 
             try {
                 Mail::send(['html' => 'backend.mails.otp'], ['user' => $user], function ($message) use ($user) {
-                    $message->to($user['email'])->subject(config('app.name').', One Time Password(OTP)');
+                    $message->to($user['email'])->subject(config('app.name') . ', One Time Password(OTP)');
                     $message->from(config('mail.from.address'), config('mail.from.name'));
                 });
             } catch (\Exception $e) {

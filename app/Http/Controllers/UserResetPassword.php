@@ -45,7 +45,7 @@ class UserResetPassword extends Controller
                 'otp' => $rand_otp,
             ]);
 
-            SMS::send($user->mobile, 'One Time Password (OTP) for Reset Password : ' . $rand_otp . ' Ranayas Note: this OTP is case sensitive, Do not Share your otp with anyone !');
+            SMS::send($user->mobile, 'Dear user, Your OTP for login to Ranayas is ' . $rand_otp . '. Regards, Ranayas Team', '1207174850771033756');
 
             Mail::send(['html' => 'backend.mails.password-reset-otp'], ['user' => $user], function ($message) use ($user) {
                 $message->to($user->email)->subject(config('app.name') . ', One Time Password(OTP)');
@@ -91,7 +91,7 @@ class UserResetPassword extends Controller
                 'otp' => $rand_otp,
             ]);
 
-            SMS::send($user->mobile, 'One Time Password (OTP) for Reset Password : ' . $rand_otp . ' Ranayas Note: this OTP is case sensitive, Do not Share your otp with anyone !');
+            SMS::send($user->mobile, 'Dear user, Your OTP for login to Ranayas is ' . $rand_otp . '. Regards, Ranayas Team', '1207174850771033756');
 
             Mail::send(['html' => 'backend.mails.password-reset-otp'], ['user' => $user], function ($message) use ($user) {
                 $message->to($user->email)->subject(config('app.name') . ', One Time Password(OTP)');
