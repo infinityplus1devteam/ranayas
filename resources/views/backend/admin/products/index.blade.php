@@ -84,10 +84,11 @@
             </div>
             @endif
             <div class="table-responsive">
-                <table class="table table-striped table-hover datatable" style="width:100%;">
+                <table class="table table-striped table-hover datatable-products" style="width:100%;">
                     <thead>
                         <tr>
                             <th>#</th>
+                            <th style="width: 80px; text-align: center;">Product Index</th>
                             <th>Image</th>
                             <th>Name</th>
                             <th>Category Name</th>
@@ -100,6 +101,7 @@
                         @forelse ($products as $product)
                         <tr>
                             <td>{{ $product->id }}</td>
+                            <td style="text-align: center;">{{ $product->sort_index ?? '-' }}</td>
                             <td>
                                 <a href="{!! asset('storage/images/products/' . $product->image_url) !!}"
                                     target="_blank">
@@ -139,7 +141,7 @@
                         </tr>
                         @empty
                         <tr class="text-center">
-                            <td class="text-danger" colspan="9">
+                            <td class="text-danger" colspan="8">
                                 <h5>No Record Found. </h5>
                             </td>
                         </tr>
@@ -148,6 +150,7 @@
                     <tfoot>
                         <tr>
                             <th>#</th>
+                            <th style="width: 80px; text-align: center;">Product Index</th>
                             <th>Image</th>
                             <th>Name</th>
                             <th>Category Name</th>
@@ -164,6 +167,10 @@
     @section('extrajs')
     <script>
         $(document).ready(function() {
+            $('.datatable-products').dataTable({
+                "order": [],
+                "stateSave": false
+            });
             // setTimeout(function() {
             //     if ($(".alert").is(":visible")) {
             //         $(".alert").fadeOut("fast");
