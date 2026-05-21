@@ -435,10 +435,10 @@
                                             required>{{ old('comment') }}</textarea>
                                     </div>
                                     <div class="col-md-12 mb-4 text-center">
-                                        <div class="save_button primary_btn default_button pull-right">
-                                            <button type="submit" class="btn btn-style2 button_update">Submit</button>
-                                        </div>
-                                    </div>
+                                         <div class="pull-right">
+                                             <button type="submit" class="btn review-submit-btn">Submit</button>
+                                         </div>
+                                     </div>
                                 </div>
                             </form>
                         </div>
@@ -554,6 +554,23 @@
         .review-sec {
             float: unset !important;
         }
+    }
+
+    .review-submit-btn {
+        background-color: transparent !important;
+        border: 2px solid #8a2be2 !important;
+        color: #8a2be2 !important;
+        padding: 8px 24px !important;
+        font-size: 15px !important;
+        font-weight: 600 !important;
+        border-radius: 5px !important;
+        transition: all 0.3s ease !important;
+        cursor: pointer !important;
+    }
+
+    .review-submit-btn:hover {
+        background-color: #8a2be2 !important;
+        color: #ffffff !important;
     }
 </style>
 @endsection

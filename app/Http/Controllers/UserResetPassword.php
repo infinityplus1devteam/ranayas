@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Model\SMS;
 use App\Model\TxnUser;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
@@ -32,6 +33,7 @@ class UserResetPassword extends Controller
 
         if ($validator->fails()) {
             connectify('error', 'Error', $validator->errors()->first());
+
             return back()->withInput();
         }
 
@@ -45,10 +47,10 @@ class UserResetPassword extends Controller
                 'otp' => $rand_otp,
             ]);
 
-            SMS::send($user->mobile, 'Dear user, Your OTP for login to Ranayas is ' . $rand_otp . '. Regards, Ranayas Team', '1207174850771033756');
+            SMS::send($user->mobile, 'Dear user, Your OTP for login to Ranayas is '.$rand_otp.'. Regards, Ranayas Team', '1207174850771033756');
 
             Mail::send(['html' => 'backend.mails.password-reset-otp'], ['user' => $user], function ($message) use ($user) {
-                $message->to($user->email)->subject(config('app.name') . ', One Time Password(OTP)');
+                $message->to($user->email)->subject(config('app.name').', One Time Password(OTP)');
                 $message->from(config('mail.from.address'), config('mail.from.name'));
             });
 
@@ -57,7 +59,7 @@ class UserResetPassword extends Controller
             return redirect()->route('user.password.otp.send');
 
         } catch (\Exception $ex) {
-            if ($ex instanceof \Illuminate\Database\Eloquent\ModelNotFoundException) {
+            if ($ex instanceof ModelNotFoundException) {
 
                 connectify('error', 'Invalid Email', 'Whoops, Email Not Found !');
 
@@ -91,17 +93,17 @@ class UserResetPassword extends Controller
                 'otp' => $rand_otp,
             ]);
 
-            SMS::send($user->mobile, 'Dear user, Your OTP for login to Ranayas is ' . $rand_otp . '. Regards, Ranayas Team', '1207174850771033756');
+            SMS::send($user->mobile, 'Dear user, Your OTP for login to Ranayas is '.$rand_otp.'. Regards, Ranayas Team', '1207174850771033756');
 
             Mail::send(['html' => 'backend.mails.password-reset-otp'], ['user' => $user], function ($message) use ($user) {
-                $message->to($user->email)->subject(config('app.name') . ', One Time Password(OTP)');
+                $message->to($user->email)->subject(config('app.name').', One Time Password(OTP)');
                 $message->from(config('mail.from.address'), config('mail.from.name'));
             });
 
             return redirect()->route('user.password.otp.send');
 
         } catch (\Exception $ex) {
-            if ($ex instanceof \Illuminate\Database\Eloquent\ModelNotFoundException) {
+            if ($ex instanceof ModelNotFoundException) {
 
                 connectify('error', 'Invalid Email', 'Whoops, Email Id Not Found !');
 
@@ -129,6 +131,7 @@ class UserResetPassword extends Controller
 
         if ($validator->fails()) {
             connectify('error', 'Error', $validator->errors()->first());
+
             return back()->withInput();
         }
 
@@ -145,7 +148,7 @@ class UserResetPassword extends Controller
             return redirect()->route('user.password.reset.form');
 
         } catch (\Exception $ex) {
-            if ($ex instanceof \Illuminate\Database\Eloquent\ModelNotFoundException) {
+            if ($ex instanceof ModelNotFoundException) {
 
                 connectify('error', 'Invalid Otp', 'The Entered Otp is Invalid !');
 
@@ -166,6 +169,7 @@ class UserResetPassword extends Controller
 
             return view('frontend.user.reset');
         }
+
         return redirect('/');
 
     }
@@ -190,6 +194,7 @@ class UserResetPassword extends Controller
 
         if ($validator->fails()) {
             connectify('error', 'Error', $validator->errors()->first());
+
             return back()->withInput();
         }
 
@@ -216,7 +221,7 @@ class UserResetPassword extends Controller
             return redirect(route('user.dashboard'));
 
         } catch (\Exception $ex) {
-            if ($ex instanceof \Illuminate\Database\Eloquent\ModelNotFoundException) {
+            if ($ex instanceof ModelNotFoundException) {
 
                 connectify('error', 'error', 'Whoops, Email Not Found !');
 

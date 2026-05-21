@@ -23,6 +23,17 @@ class LogisticService
     }
 
     /**
+     * Dummy method to simulate order creation.
+     */
+    public function OrderCreation($order, $user, $payment_mode)
+    {
+        return [
+            'shipment_id' => 'SHP' . rand(100000, 999999),
+            'order_id' => 'ORD' . rand(100000, 999999),
+        ];
+    }
+
+    /**
      * Dummy method to simulate order tracking.
      */
     public function trackOrder($shipment_id)

@@ -445,7 +445,9 @@
                 visibleOnly: true,
             });
 
-            $('.datatable').dataTable();
+            $('.datatable').dataTable({
+                "order": []
+            });
         });
     </script>
     @yield('extrajs')

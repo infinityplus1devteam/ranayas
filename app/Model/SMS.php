@@ -41,16 +41,16 @@ class SMS implements ShouldQueue
             return;
         } else {
             try {
-                $mobile = '91' . $mobile;
+                $mobile = '91'.$mobile;
                 $baseUrl = 'http://login.businesslead.co.in/api/mt/SendSMS?user='.self::$user.'&password='.self::$password.'&senderid='.self::$senderid.'&channel=Trans&DCS=0&flashsms=0&number='.$mobile.'&text='.urlencode($text).'&route='.self::$route.'&Peid='.self::$peid.'&DLTTemplateId='.$templateid;
-                Log::info('SMS API URL: ' . $baseUrl);
+                Log::info('SMS API URL: '.$baseUrl);
                 $client = new Client([
                     'http_errors' => false,
                 ]);
                 $res = $client->get($baseUrl);
-                Log::info('SMS API Response Headers: ' . json_encode($res->getHeaders()));
+                Log::info('SMS API Response Headers: '.json_encode($res->getHeaders()));
                 $body = (string) $res->getBody();
-                Log::info('SMS API Response Body: ' . $body);
+                Log::info('SMS API Response Body: '.$body);
 
                 // If provider returned XML (SmsResponse), parse it and return structured result
                 $parsed = null;

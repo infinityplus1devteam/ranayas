@@ -19,7 +19,7 @@ class ReviewController extends Controller
     public function index()
     {
         $reviews = TxnReview::orderBy('id', 'DESC')->with('product')->paginate(50);
-        $products = TxnProduct::where('status', true)->where('review_status', true)->orderBy('id', 'DESC')->get();
+        $products = TxnProduct::orderBy('id', 'DESC')->get();
         return view('backend.admin.reviews.index', compact('reviews', 'products'));
     }
 
@@ -113,7 +113,7 @@ class ReviewController extends Controller
         try {
 
             $review = TxnReview::where('id', $id)->firstOrFail();
-            $products = TxnProduct::where('status', true)->where('review_status', true)->orderBy('id', 'DESC')->get();
+            $products = TxnProduct::orderBy('id', 'DESC')->get();
             return view('backend.admin.reviews.edit', compact('review', 'products'));
 
         } catch (\Exception $ex) {

@@ -11,18 +11,20 @@ use Laravel\Socialite\Facades\Socialite;
 
 class SocialiteManageController extends Controller
 {
-
     use AuthenticatesUsers;
 
     public function redirectToProvider($provider)
     {
         session(['previous_url' => url()->previous()]);
+
         return Socialite::driver($provider)->redirect();
     }
+
     public function redirect($provider)
     {
         return Socialite::driver($provider)->redirect();
     }
+
     public function handleProviderCallback($provider)
     {
         try {
@@ -31,10 +33,12 @@ class SocialiteManageController extends Controller
             $authUser = $this->findOrCreateUser($user, $provider);
             Auth::guard('user')->login($authUser, true);
             connectify('success', 'Logged in', 'You are successfully Logged in !');
+
             return Redirect::to(session()->get('previous_url'));
         } catch (\Exception $ex) {
             \Log::info($ex->getMessage());
             connectify('error', 'Login Error', 'We are not able to Logged you in !');
+
             return redirect('/');
         }
 
@@ -69,5 +73,4 @@ class SocialiteManageController extends Controller
 
         return $authUser;
     }
-
 }
