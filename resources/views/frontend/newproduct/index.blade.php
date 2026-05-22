@@ -102,6 +102,36 @@
     </section>
     <!-- service end -->
 
+
+    <!-- category image strat -->
+    <section class="home5-category section-t-padding section-b-padding ">
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    <div class="section-title">
+                        <h2>Shop by category</h2>
+                    </div>
+                    <div class="home5-cate-image owl-carousel owl-theme">
+                        @foreach ($categories as $item)
+                            <div class="items">
+                                <div class="cate-image">
+                                    <a href="{{ route('cate', $item->slug_url) }}">
+                                        <img src="{!! asset('storage/images/categories/' . $item->image_url) !!}" alt="{{ $item->name }}" class="img-fluid">
+                                    </a>
+                                    <span>{{ $item->name }}</span>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- category image end -->
+
+
+
+    
     <style>
         /* ==========================================================================
         Custom Banner Slider (Clickable Banner Only)
@@ -164,7 +194,7 @@
         }
     
     </style>
-    
+
     <!-- Custom Banner Slider Start -->
     @if (!empty($homeOfferSliders))
         <section class="banner-slider-sec">
@@ -197,32 +227,6 @@
     @endif
     <!-- Custom Banner Slider End -->
 
-
-    <!-- category image strat -->
-    <section class="home5-category section-t-padding section-b-padding ">
-        <div class="container">
-            <div class="row">
-                <div class="col">
-                    <div class="section-title">
-                        <h2>Shop by category</h2>
-                    </div>
-                    <div class="home5-cate-image owl-carousel owl-theme">
-                        @foreach ($categories as $item)
-                            <div class="items">
-                                <div class="cate-image">
-                                    <a href="{{ route('cate', $item->slug_url) }}">
-                                        <img src="{!! asset('storage/images/categories/' . $item->image_url) !!}" alt="{{ $item->name }}" class="img-fluid">
-                                    </a>
-                                    <span>{{ $item->name }}</span>
-                                </div>
-                            </div>
-                        @endforeach
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    <!-- category image end -->
 
 
 
