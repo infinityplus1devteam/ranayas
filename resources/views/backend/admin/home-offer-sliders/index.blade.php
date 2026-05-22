@@ -19,13 +19,13 @@
                     @csrf
                     <div class="modal-body">
                         <div class="row">
-                            <div class="col-md-12">
+                            {{-- <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="title">Title (Optional)</label>
                                     <input type="text" name="title" id="title" class="form-control"
                                         placeholder="Enter Title" value="{{ old('title') }}">
                                 </div>
-                            </div>
+                            </div> --}}
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="url">Url (Optional)</label>
@@ -84,7 +84,7 @@
                         <tr>
                             <th>#</th>
                             <th>Image</th>
-                            <th>Title</th>
+                            {{-- <th>Title</th> --}}
                             <th>URL</th>
                             <th>Status</th>
                             <th>Added On</th>
@@ -102,7 +102,7 @@
                                         alt="Slider Image" width="50px">
                                 </a>
                             </td>
-                            <td>{{ $slider->title ? Str::limit($slider->title, 20) : 'N/A' }}</td>
+                            {{-- <td>{{ $slider->title ? Str::limit($slider->title, 20) : 'N/A' }}</td> --}}
                             <td>{{ $slider->url ? Str::limit($slider->url, 50) : 'N/A' }}</td>
                             <td>
                                 {{ $slider->status == true ? 'Activated' : 'Deactivated' }}
@@ -146,7 +146,7 @@
                         <tr>
                             <th>#</th>
                             <th>Image</th>
-                            <th>Title</th>
+                            {{-- <th>Title</th> --}}
                             <th>URL</th>
                             <th>Status</th>
                             <th>Added On</th>

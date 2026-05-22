@@ -154,7 +154,13 @@
                                         @endfor
                             </td>
                             <td>
-                                {{ $review->status == true ? 'Active' : 'Blocked' }}
+                                @if (is_null($review->status))
+                                    <span class="badge badge-warning">Pending</span>
+                                @elseif ($review->status == true)
+                                    <span class="badge badge-success">Approved</span>
+                                @else
+                                    <span class="badge badge-danger">Disapproved</span>
+                                @endif
                             </td>
                             <td>{{ date('d-M-Y', strtotime($review->created_at)) }}</td>
                             <td>

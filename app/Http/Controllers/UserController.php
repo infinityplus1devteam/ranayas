@@ -500,7 +500,7 @@ class UserController extends Controller
                     'product_id' => $request->product_id,
                     'rating' => $request->rating,
                     'comment' => $request->comment,
-                    'status' => false,
+                    'status' => null,
                 ]
             );
 

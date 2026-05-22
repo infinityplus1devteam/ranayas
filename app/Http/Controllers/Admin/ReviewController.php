@@ -173,13 +173,20 @@ class ReviewController extends Controller
 
             $review = TxnReview::where('id', $id)->firstOrFail();
 
+            $status = $request->status;
+            if ($status === 'pending') {
+                $status = null;
+            } else {
+                $status = (bool) $status;
+            }
+
             $review->update([
                 'name' => $request->name,
                 'product_id' => $request->product_id,
                 'created_at' => date('Y-m-d', strtotime($request->review_date)),
                 'rating' => $request->rating,
                 'comment' => $request->comment,
-                'status' => $request->status,
+                'status' => $status,
             ]);
 
             connectify('success', 'Updated Review', 'Review has been Updated successfully !');

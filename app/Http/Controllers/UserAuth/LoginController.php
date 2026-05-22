@@ -107,7 +107,7 @@ class LoginController extends Controller
 
         SMS::send(
             $user['mobile'],
-            'Dear user, Your OTP for login to Ranayas is '.$user['otp'].'. Regards, Ranayas Team',
+            'Dear user, Your OTP for login to Dekha OTT is '.$user['otp'].'. Enjoy the videos. Regards, Dekha Team',
             '1207174850771033756'
         );
         // dd('i m here');
@@ -139,7 +139,7 @@ class LoginController extends Controller
 
             SMS::send(
                 $user['mobile'],
-                'Dear user, Your OTP for login to Ranayas is '.$user['otp'].'. Regards, Ranayas Team',
+                'Dear user, Your OTP for login to Dekha OTT is '.$user['otp'].'. Enjoy the videos. Regards, Dekha Team',
                 '1207174850771033756'
             );
 
@@ -282,7 +282,7 @@ class LoginController extends Controller
 
             SMS::send(
                 $user['mobile'],
-                'Dear user, Your OTP for login to Ranayas is '.$user['otp'].'. Regards, Ranayas Team',
+                'Dear user, Your OTP for login to Dekha OTT is '.$user['otp'].'. Enjoy the videos. Regards, Dekha Team',
                 '1207174850771033756'
             );
 

@@ -24,13 +24,13 @@
                 <div class="row">
                     <div class="col-md-8">
                         <div class="row">
-                            <div class="col-md-6">
+                            {{-- <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="title">Title</label>
                                     <input type="text" name="title" id="title" class="form-control"
                                         placeholder="Enter Title" value="{{ $homeOfferSlider->title }}">
                                 </div>
-                            </div>
+                            </div> --}}
                           
                             <div class="col-md-6">
                                 <div class="form-group">

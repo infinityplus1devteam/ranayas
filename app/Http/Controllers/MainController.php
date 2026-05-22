@@ -57,7 +57,10 @@ class MainController extends Controller
         FLOOR(AVG(txn_reviews.rating)) as rating,
         COUNT(txn_reviews.id) as total_rating
     ")
-            ->leftJoin("txn_reviews", "txn_reviews.product_id", "p.id")
+            ->leftJoin("txn_reviews", function ($join) {
+                $join->on("txn_reviews.product_id", "=", "p.id")
+                     ->where("txn_reviews.status", "=", true);
+            })
             ->leftJoin("map_color_sizes as map", "map.product_id", "p.id")
             ->leftJoin("mst_colors as c", "c.id", "map.color_id")
             ->leftJoin("wishlists as w", "w.product_id", "p.id")
@@ -143,7 +146,10 @@ class MainController extends Controller
 
             $related_products = DB::table('txn_products as p')
                 ->selectRaw("p.id as product_id , p.title,w.id as w_id, w.user_id as w_u_id, w.product_id as w_product_id,map.color_id as c_id, map.size_id as s_id,  c.id as cate_id , p.slug_url, p.image_url,map.mrp, map.stock, map.starting_price,GROUP_CONCAT(DISTINCT(co.color_code)) as color_codes, p.image_url1, p.status, p.review_status , FLOOR(AVG(r.rating)) as rating , COUNT(Distinct(r.comment)) as total_comment, c.name as category_name, c.slug_url as category_url")
-                ->leftJoin("txn_reviews as r", "r.product_id", "p.id")
+                ->leftJoin("txn_reviews as r", function ($join) {
+                    $join->on("r.product_id", "=", "p.id")
+                         ->where("r.status", "=", true);
+                })
                 ->leftJoin("map_color_sizes as map", "map.product_id", "p.id")
                 ->leftJoin("mst_colors as co", "co.id", "map.color_id")
                 ->leftJoin("txn_categories as c", "c.id", "p.category_id")
@@ -222,7 +228,10 @@ class MainController extends Controller
             $products = DB::table('txn_products as p')
                 ->selectRaw("p.id , p.title , p.slug_url,w.user_id as w_u_id, w.id as w_id, w.product_id as w_product_id,map.color_id as c_id, map.size_id as s_id , p.image_url, p.image_url1,p.review_status, FLOOR(AVG(r.rating)) as rating , map.mrp, map.starting_price, map.stock,
                 GROUP_CONCAT(DISTINCT(c.color_code)) as color_codes, COUNT(Distinct(r.comment)) as total_comment, p.category_id")
-                ->leftJoin("txn_reviews as r", "r.product_id", "p.id")
+                ->leftJoin("txn_reviews as r", function ($join) {
+                    $join->on("r.product_id", "=", "p.id")
+                         ->where("r.status", "=", true);
+                })
                 ->leftJoin("map_color_sizes as map", "map.product_id", "p.id")
                 ->leftJoin("mst_colors as c", "c.id", "map.color_id")
                 ->leftJoin("txn_keywords as k", "k.product_id", "p.id")
@@ -236,7 +245,10 @@ class MainController extends Controller
                 GROUP_CONCAT(DISTINCT(c.color_code)) as color_codes, COUNT(Distinct(r.comment)) as total_comment, p.category_id")
                 ->leftJoin("map_color_sizes as map", "map.product_id", "p.id")
                 ->leftJoin("mst_colors as c", "c.id", "map.color_id")
-                ->leftJoin("txn_reviews as r", "r.product_id", "p.id")
+                ->leftJoin("txn_reviews as r", function ($join) {
+                    $join->on("r.product_id", "=", "p.id")
+                         ->where("r.status", "=", true);
+                })
                 ->leftJoin("txn_keywords as k", "k.product_id", "p.id")
                 ->leftJoin("wishlists as w", "p.id", "w.product_id")
                 ->where('p.status', '=', true);
@@ -278,7 +290,10 @@ $products = $products->orderByRaw('CASE WHEN p.sort_index IS NULL THEN 1 ELSE 0 
     {
         $products = DB::table('txn_products as p')
             ->selectRaw("p.id , p.title , p.slug_url, p.image_url, p.image_url1,FLOOR(AVG(r.rating)) as rating , COUNT(Distinct(r.comment)) as total_comment")
-            ->leftJoin("txn_reviews as r", "r.product_id", "p.id")
+            ->leftJoin("txn_reviews as r", function ($join) {
+                $join->on("r.product_id", "=", "p.id")
+                     ->where("r.status", "=", true);
+            })
             ->leftJoin("txn_keywords as k", "k.product_id", "p.id")
             ->where('p.status', '=', true);
 
@@ -337,7 +352,10 @@ $products = $products->orderByRaw('CASE WHEN p.sort_index IS NULL THEN 1 ELSE 0 
 
         $products = DB::table('txn_products as p')
             ->selectRaw("p.id , p.title , p.slug_url , p.image_url, p.image_url1, FLOOR(AVG(r.rating)) as rating , COUNT(Distinct(r.comment)) as total_comment")
-            ->leftJoin("txn_reviews as r", "r.product_id", "p.id")
+            ->leftJoin("txn_reviews as r", function ($join) {
+                $join->on("r.product_id", "=", "p.id")
+                     ->where("r.status", "=", true);
+            })
             ->leftJoin("txn_keywords as k", "k.product_id", "p.id")
             ->where('p.status', '=', true)
             ->whereIN('p.category_id', $cateLists);
@@ -398,7 +416,10 @@ $products = $products->orderByRaw('CASE WHEN p.sort_index IS NULL THEN 1 ELSE 0 
                 GROUP_CONCAT(DISTINCT(co.color_code)) as color_codes, p.category_id ,c.parent_id, FLOOR(AVG(r.rating)) as rating , COUNT(Distinct(r.comment)) as total_comment")
                 ->leftJoin("map_color_sizes as map", "map.product_id", "p.id")
                 ->leftJoin("mst_colors as co", "co.id", "map.color_id")
-                ->leftJoin("txn_reviews as r", "r.product_id", "p.id")
+                ->leftJoin("txn_reviews as r", function ($join) {
+                    $join->on("r.product_id", "=", "p.id")
+                         ->where("r.status", "=", true);
+                })
                 ->leftJoin("txn_categories as c", "p.category_id", "c.id")
                 ->leftJoin("wishlists as w", "p.id", "w.product_id")
                 ->where('p.status', true)

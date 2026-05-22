@@ -102,6 +102,102 @@
     </section>
     <!-- service end -->
 
+    <style>
+        /* ==========================================================================
+        Custom Banner Slider (Clickable Banner Only)
+        ========================================================================== */
+        .banner-slider-sec {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .banner-slide-link {
+            position: relative;
+            display: block;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        /* Image styling */
+        .banner-slider-img {
+            width: 100%;
+            display: block;
+            object-fit: cover;
+            object-position: center;
+            transition: transform 0.6s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        /* Premium zoom micro-animation on hover */
+        .banner-slide-link:hover .banner-slider-img {
+            transform: scale(1.025);
+        }
+
+        /* ==========================================================================
+        Responsive Breakpoints
+        ========================================================================== */
+
+        /* Desktop Devices */
+        @media (min-width: 992px) {
+            .banner-slider-img {
+                /* height: auto;  */
+                /* Scales naturally with image aspect-ratio */
+                /* To restrict height on desktop to a fixed size, uncomment below: */
+                height: 500px;
+                object-fit: cover;
+                object-position: 
+            }
+        }
+
+        /* Tablets (less than 991px) */
+        @media (max-width: 991px) {
+            .banner-slider-img {
+                height: auto;
+            }
+        }
+
+        /* Mobile Devices (less than 767px) */
+        @media (max-width: 767px) {
+            .banner-slider-img {
+                height: auto;
+            }
+        }
+    
+    </style>
+    
+    <!-- Custom Banner Slider Start -->
+    @if (!empty($homeOfferSliders))
+        <section class="banner-slider-sec">
+            <div class="banner-slider-main">
+                <div class="banner-slider swiper-container">
+                    <div class="swiper-wrapper">
+                        @foreach ($homeOfferSliders as $homeOfferSlider)
+                            <div class="swiper-slide">
+                                <!-- Wrap the entire image in a link -->
+                                <a href="{{ $homeOfferSlider->url ? $homeOfferSlider->url : 'javascript:void(0)' }}" class="banner-slide-link">
+                                    <img src="{!! asset('storage/images/home-offer-sliders/' . $homeOfferSlider->image_url) !!}" 
+                                        alt="Ranayas Banner" 
+                                        class="banner-slider-img">
+                                </a>
+                            </div>
+                        @endforeach
+                    </div>
+                    
+                    <!-- Swiper Navigation (only if more than 1 slide) -->
+                    @if (count($homeOfferSliders) > 1)
+                        <div class="swiper-buttons">
+                            <button class="swiper-prev"><i class="fa fa-angle-left"></i></button>
+                            <button class="swiper-next"><i class="fa fa-angle-right"></i></button>
+                        </div>
+                        <div class="swiper-pagination"><span></span></div>
+                    @endif
+                </div>
+            </div>
+        </section>
+    @endif
+    <!-- Custom Banner Slider End -->
+
+
     <!-- category image strat -->
     <section class="home5-category section-t-padding section-b-padding ">
         <div class="container">
@@ -145,48 +241,6 @@
             max-width: 100% !important;
         }
     </style>
-    <!-- deal of the day start -->
-    @if (!empty($homeOfferSliders))
-        <section class="home-slider-5 offer-slider-ui">
-            <div class="home-slider-main-5">
-                <div class="home5-slider swiper-container">
-                    <div class="swiper-wrapper">
-                        @foreach ($homeOfferSliders as $homeOfferSlider)
-                            <div class="swiper-slide">
-                                <div class="img-back s-image1 deal5-back"
-                                    style="background-image:url({!! asset('storage/images/home-offer-sliders/' . $homeOfferSlider->image_url) !!});"
-                                    onclick="window.location.href='{{ $homeOfferSlider->url ? $homeOfferSlider->url : 'javascript:void(0)' }}'">
-                                    <div class="container">
-                                        <div class="row">
-                                            <div class="col">
-                                                <div class="deal-area5">
-                                                    <div class="deal-content">
-                                                        <h2>{{ $homeOfferSlider->title }}</h2>
-                                                    </div>
-                                                    @if (!empty($homeOfferSlider->url))
-                                                        <a href="{{ $homeOfferSlider->url }}" class="btn btn-style1">Shop
-                                                            collection</a>
-                                                    @endif
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        @endforeach
-                    </div>
-                    @if (count($homeOfferSliders) > 1)
-                        <div class="swiper-buttons">
-                            <button class="swiper-prev"><i class="fa fa-angle-left"></i></button>
-                            <button class="swiper-next"><i class="fa fa-angle-right"></i></button>
-                        </div>
-                        <div class="swiper-pagination"><span></span></div>
-                    @endif
-                </div>
-            </div>
-        </section>
-    @endif
-    <!-- deal of the day end -->
 
     <!-- products tab start -->
     @foreach ($section_products as $key => $section)
@@ -475,6 +529,163 @@
         </section>
     @endif
     <!-- testimonial end -->
+
+
+    <!-- Custom Slider/Banner Section Start -->
+
+    <style>
+        /* ==========================================================================
+   Custom Absolute Position Banner / Slider Style
+   ========================================================================== */
+.custom-slider-5 {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+}
+
+.custom-slider-slide-wrapper {
+    position: relative;
+    width: 100%;
+    display: block;
+    cursor: pointer;
+    overflow: hidden;
+}
+
+/* Real Image styling */
+.custom-slider-image {
+    width: 100%;
+    display: block;
+    object-fit: cover;
+    object-position: center;
+    transition: transform 0.8s ease;
+}
+
+/* Hover Zoom effect on background image */
+.custom-slider-slide-wrapper:hover .custom-slider-image {
+    transform: scale(1.03);
+}
+
+/* Content Container - Absolute Position Overlay */
+.custom-slider-content-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center; /* Vertically center content */
+    z-index: 5;
+    pointer-events: none; /* Make clicks pass through to the slider link */
+}
+
+/* Make inner content elements clickable */
+.custom-slider-content-overlay * {
+    pointer-events: auto;
+}
+
+/* Premium Card backdrop (Glassmorphism & Shadows) */
+.custom-deal-area {
+    max-width: 520px;
+    background: rgba(255, 255, 255, 0.42);
+    padding: 10px;
+    border-radius: 8px;
+    /* box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08); */
+    /* backdrop-filter: blur(10px); */
+    /* -webkit-backdrop-filter: blur(10px); */
+    /* transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    transform: translateY(0); */
+    text-align: left;
+}
+
+/* Micro interaction card animation */
+.custom-slider-slide-wrapper:hover .custom-deal-area {
+    /* transform: translateY(-8px); */
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+}
+
+.custom-deal-content h2 {
+    /* font-size: 36px; */
+    /* font-weight: 700; */
+    font-size: 20px;
+    font-weight: 500;
+    color: #111111;
+    line-height: 1.25;
+    /* margin-bottom: 20px; */
+}
+
+.custom-deal-area .btn-style1 {
+    display: inline-block;
+    padding: 12px 28px;
+    font-weight: 600;
+    font-size: 15px;
+    border-radius: 6px;
+    transition: background 0.3s, color 0.3s;
+}
+
+/* ==========================================================================
+   Responsive Breakpoints
+   ========================================================================== */
+
+/* Medium Devices (Tablets, less than 991px) */
+@media (max-width: 991px) {
+    
+    .custom-deal-content h2 {
+        font-size: 28px;
+    }
+    
+    .custom-deal-area {
+        max-width: 420px;
+        padding: 30px;
+    }
+}
+
+/* Small Devices (Landscape Phones, less than 767px) */
+@media (max-width: 767px) {
+    
+    /* Center text box on mobile and position at the bottom of slide */
+    .custom-slider-content-overlay {
+        justify-content: center;
+        align-items: flex-end;
+        padding-bottom: 30px;
+    }
+    
+    .custom-deal-area {
+        max-width: 90%;
+        width: 100%;
+        margin: 0 auto;
+        padding: 24px;
+        text-align: center;
+        background: rgba(255, 255, 255, 0.42);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+    
+    .custom-deal-content h2 {
+        font-size: 22px;
+        margin-bottom: 15px;
+    }
+    
+    .custom-deal-area .btn-style1 {
+        padding: 10px 22px;
+        font-size: 14px;
+    }
+}
+
+/* Extra Small Devices (Portrait Phones, less than 479px) */
+@media (max-width: 479px) {
+    
+    .custom-deal-content h2 {
+        font-size: 18px;
+    }
+    
+    .custom-deal-area {
+        padding: 20px;
+    }
+}
+
+    </style>
+
+<!-- Custom Slider/Banner Section End -->
+
 
 
     <!-- hearing test start -->

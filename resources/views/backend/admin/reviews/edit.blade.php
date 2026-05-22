@@ -94,9 +94,9 @@
                         <div class="form-group">
                             <label for="status">Status <span class="text-danger">*</span></label>
                             <select name="status" id="status" class="form-control">
-                                <option value="">--Select--</option>
-                                <option value="1" {{ $review->status == true ? 'selected': '' }}>Active</option>
-                                <option value="0" {{ $review->status == false ? 'selected': '' }}>Inactive</option>
+                                <option value="pending" {{ is_null($review->status) ? 'selected': '' }}>Pending</option>
+                                <option value="1" {{ (!is_null($review->status) && $review->status == true) ? 'selected': '' }}>Approved</option>
+                                <option value="0" {{ (!is_null($review->status) && $review->status == false) ? 'selected': '' }}>Disapproved</option>
                             </select>
                         </div>
                     </div>
