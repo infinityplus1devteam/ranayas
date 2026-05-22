@@ -117,7 +117,7 @@ class OrderController extends Controller
 
             $request['status'] = 'nc';
 
-            $request['payment_mode'] = $cod ? 'cod' : 'paytm';
+            $request['payment_mode'] = $cod ? 'cod' : $request->payment_mode;
 
             $request['shipingcharge'] = 0;
 
@@ -213,103 +213,7 @@ class OrderController extends Controller
 
                 return redirect()->route('order.success', encrypt($order->id));
             } elseif ($request->payment_mode == 'paytm') {
-                // dd($user->id);
-
-                $transaction_data = array(
-                    'merchantId' => env('PHONEPE_MERCHANT_ID'),
-                    'merchantTransactionId' => $order->id,
-                    'amount' => $balance * 100,
-                    "merchantUserId" => strval($user->id),
-                    "param1" => strval($user->id),
-                    'redirectUrl' => route('paytm.callback'),
-                    'redirectMode' => "POST",
-                    'callbackUrl' => route('paytm.callback'),
-                    "paymentInstrument" => array(
-                        "type" => "PAY_PAGE",
-                    )
-                );
-
-                $encode = json_encode($transaction_data);
-                $payloadMain = base64_encode($encode);
-                $salt_index = 1; //key index 1
-                $payload = $payloadMain . "/pg/v1/pay" . env('PHONEPE_API_KEY');
-                $sha256 = hash("sha256", $payload);
-                $final_x_header = $sha256 . '###' . $salt_index;
-                $request = json_encode(array('request' => $payloadMain));
-                $curl = curl_init();
-
-                curl_setopt_array($curl, [
-                    CURLOPT_URL => "https://api.phonepe.com/apis/hermes/pg/v1/pay",
-                    CURLOPT_RETURNTRANSFER => true,
-                    CURLOPT_ENCODING => "",
-                    CURLOPT_MAXREDIRS => 10,
-                    CURLOPT_TIMEOUT => 30,
-                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                    CURLOPT_CUSTOMREQUEST => "POST",
-                    CURLOPT_POSTFIELDS => $request,
-                    CURLOPT_HTTPHEADER => [
-                        "Content-Type: application/json",
-                        "X-VERIFY: " . $final_x_header,
-                        "accept: application/json"
-                    ],
-                ]);
-
-                $response = curl_exec($curl);
-                $err = curl_error($curl);
-
-                curl_close($curl);
-
-                if ($err) {
-                    echo "cURL Error #:" . $err;
-                } else {
-                    $res = json_decode($response);
-
-
-                    // Store information into database
-
-                    // $data = [
-                    //     'amount' => $amount,
-                    //     'transaction_id' => $order_id,
-                    //     'payment_status' => 'PAYMENT_PENDING',
-                    //     'response_msg' => $response,
-                    //     'providerReferenceId' => '',
-                    //     'merchantOrderId' => '',
-                    //     'checksum' => ''
-                    // ];
-
-                    // Payment::create($data);
-
-                    // end database insert
-
-                    if (isset($res->code) && ($res->code == 'PAYMENT_INITIATED')) {
-
-                        $payUrl = $res->data->instrumentResponse->redirectInfo->url;
-
-                        return redirect()->away($payUrl);
-                    } else {
-                        //HANDLE YOUR ERROR MESSAGE HERE
-                        dd('ERROR : ' . json_encode($res));
-                    }
-                }
-
-
-
-
-                // $paytm = new Paytm();
-                // $paramList = [];
-                // $paramList["MID"] = env('PAYTM_MERCHANT_MID');
-                // $paramList["ORDER_ID"] = $order->id;
-                // $paramList["CUST_ID"] = 'CUST' . $user->id;
-                // $paramList["INDUSTRY_TYPE_ID"] = env('INDUSTRY_TYPE_ID');
-                // $paramList["CHANNEL_ID"] = 'WEB';
-                // $paramList["MOBILE_NO"] = $user->mobile;
-                // $paramList["EMAIL"] = $user->email;
-                // $paramList["TXN_AMOUNT"] = $balance;
-                // $paramList["WEBSITE"] = env('PAYTM_MERCHANT_WEBSITE');
-                // $paramList["CALLBACK_URL"] = route('paytm.callback');
-                // $paramList["CHECKSUMHASH"] = $paytm->getChecksumFromArray($paramList, env('PAYTM_MERCHANT_KEY'));
-
-                // return view('frontend.order.pg-redirect')->with('paramList', $paramList);
+                return redirect()->route('razorpay.index', encrypt($order->id));
             }
         }
 
@@ -474,5 +378,127 @@ class OrderController extends Controller
         // } else {
         //     return view('frontend.order.transaction-failed')->with('data', $request->except(['MID', 'CHECKSUMHASH']));
         // }
+    }
+
+    public function razorpayIndex($orderId)
+    {
+        $order = TxnOrder::where('id', decrypt($orderId))->with('user')->firstOrFail();
+
+        // Create a Razorpay Order via cURL
+        $keyId = env('RAZORPAY_KEY_ID');
+        $keySecret = env('RAZORPAY_KEY_SECRET');
+
+        $url = 'https://api.razorpay.com/v1/orders';
+        $postData = [
+            'amount' => $order->total * 100, // Razorpay amount is in paise
+            'currency' => 'INR',
+            'receipt' => 'rcpt_' . $order->id,
+        ];
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_USERPWD, $keyId . ':' . $keySecret);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($postData));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Content-Type: application/json',
+        ]);
+
+        $response = curl_exec($ch);
+        $err = curl_error($ch);
+        curl_close($ch);
+
+        if ($err) {
+            connectify('error', 'Payment Gateway Error', 'Could not initiate payment. Please try again!');
+            return redirect()->route('checkout');
+        }
+
+        $res = json_decode($response);
+
+        if (isset($res->id)) {
+            $razorpay_order_id = $res->id;
+            return view('frontend.order.razorpay-checkout', compact('order', 'razorpay_order_id'));
+        } else {
+            Log::error('Razorpay Order Creation Failed: ' . $response);
+            connectify('error', 'Payment Gateway Error', 'Order initiation failed. Check API credentials.');
+            return redirect()->route('checkout');
+        }
+    }
+
+    public function handleCallbackFromRazorpay(Request $request, LogisticService $logistic)
+    {
+        $razorpay_payment_id = $request->razorpay_payment_id;
+        $razorpay_order_id = $request->razorpay_order_id;
+        $razorpay_signature = $request->razorpay_signature;
+        $order_db_id = $request->order_db_id;
+
+        $order = TxnOrder::where('id', $order_db_id)->with('details', 'user')->firstOrFail();
+
+        // Signature Verification using SHA256 HMAC
+        $keySecret = env('RAZORPAY_KEY_SECRET');
+        $expectedSignature = hash_hmac('sha256', $razorpay_order_id . '|' . $razorpay_payment_id, $keySecret);
+
+        if (hash_equals($expectedSignature, $razorpay_signature)) {
+            
+            // Payment verified successfully!
+            if ($order->status == 'nc') {
+
+                // Create shipment order via logistics
+                $OrderCreation = $logistic->OrderCreation($order, $order->user, "Prepaid");
+
+                $order->update([
+                    'status' => 'Booked',
+                    'payment_status' => 'Paid',
+                    'shipment_id' => isset($OrderCreation['shipment_id']) ? $OrderCreation['shipment_id'] : null,
+                    'shipment_order_id' => isset($OrderCreation['order_id']) ? $OrderCreation['order_id'] : null,
+                ]);
+
+                // Create database record in Transactions table
+                Transaction::create([
+                    'order_id' => $order->id,
+                    'MID' => $razorpay_order_id,
+                    'TXNID' => $razorpay_payment_id,
+                    'TXNAMOUNT' => $order->total,
+                    'PAYMENTMODE' => 'Razorpay',
+                    'CURRENCY' => 'INR',
+                    'TXNDATE' => now(),
+                    'STATUS' => 'Payment Success',
+                    'RESPCODE' => 'Success',
+                    'RESPMSG' => 'Signature Verified successfully',
+                    'GATEWAYNAME' => 'Razorpay',
+                    'BANKTXNID' => $razorpay_payment_id,
+                    'CHECKSUMHASH' => $razorpay_signature,
+                ]);
+
+                Delivery::orderCreation($order, $order->user);
+
+                // Send success notifications
+                try {
+                    Mail::send(['html' => 'backend.mails.received'], ['order' => $order], function ($message) use ($order) {
+                        $message->to($order->user->email)->subject('Your order has been placed successfully! [order no: ' . $order->id . ']');
+                        $message->from(config('mail.from.address'), config('app.name'));
+                    });
+
+                    Mail::send(['html' => 'backend.mails.admin'], ['order' => $order], function ($message) use ($order) {
+                        $message->to(config('mail.from.address'))->subject('You have a new Razorpay order! [order id: ' . $order->id . ']');
+                        $message->from(config('mail.from.address'), config('app.name'));
+                    });
+                } catch (\Exception $e) {
+                    Log::error('Mail sending failed during checkout: ' . $e->getMessage());
+                }
+
+                Cart::clear();
+            }
+
+            return view('frontend.order.transaction-success')->with('order', $order)->with('TXNID', $razorpay_payment_id);
+        } else {
+            // Verification failed
+            Log::warning('Razorpay Signature Verification Failed for Order: ' . $order->id);
+            return view('frontend.order.transaction-failed')->with('data', [
+                'message' => 'Razorpay Payment Signature verification failed.',
+                'order_id' => $order->id
+            ]);
+        }
     }
 }

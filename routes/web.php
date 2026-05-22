@@ -84,6 +84,9 @@ Route::namespace('App\Http\Controllers')->group(function () {
         Route::get('/checkout', 'OrderController@index')->name('checkout');
         Route::POST('/checkout', 'OrderController@checkout')->name('order.checkout');
         Route::POST('/transaction-callback', 'OrderController@handleCallbackFromPaytm')->name('paytm.callback');
+        Route::get('/checkout/razorpay/{order}', 'OrderController@razorpayIndex')->name('razorpay.index');
+        Route::post('/payment/razorpay-callback', 'OrderController@handleCallbackFromRazorpay')->name('razorpay.callback');
+
         Route::POST('/pincode', 'MainController@verifyPincode')->name('verify.pincode');
         Route::get('/order/success/{order}', 'OrderController@handleCallbackofCOD')->name('order.success');
         // Wishlist
