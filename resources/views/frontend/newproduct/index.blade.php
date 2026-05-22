@@ -197,17 +197,17 @@
 
     <!-- Custom Banner Slider Start -->
     @if (!empty($homeOfferSliders))
-        <section class="banner-slider-sec">
-            <div class="banner-slider-main">
-                <div class="banner-slider swiper-container">
+        <section class="home-slider-5 offer-slider-ui">
+            <div class="home-slider-main-5">
+                <div class="home5-slider swiper-container">
                     <div class="swiper-wrapper">
                         @foreach ($homeOfferSliders as $homeOfferSlider)
                             <div class="swiper-slide">
                                 <!-- Wrap the entire image in a link -->
                                 <a href="{{ $homeOfferSlider->url ? $homeOfferSlider->url : 'javascript:void(0)' }}" class="banner-slide-link">
                                     <img src="{!! asset('storage/images/home-offer-sliders/' . $homeOfferSlider->image_url) !!}" 
-                                        alt="Ranayas Banner" 
-                                        class="banner-slider-img">
+                                         alt="Ranayas Banner" 
+                                         class="banner-slider-img">
                                 </a>
                             </div>
                         @endforeach
@@ -816,8 +816,10 @@
                 slidesPerColumn: 1,
                 slidesPerView: 1,
                 effect: "fade",
+                loop: true,
                 autoplay: {
                     delay: 5000,
+                    disableOnInteraction: false,
                 },
                 navigation: {
                     nextEl: ".offer-slider-ui .swiper-next",
