@@ -104,6 +104,9 @@ Route::namespace('App\Http\Controllers')->group(function () {
         Route::middleware(['guest:admin'])->group(function () {
             Route::GET('/login', 'AdminAuth\LoginController@showLoginForm')->name('login');
             Route::POST('/login', 'AdminAuth\LoginController@login');
+            Route::GET('/login/otp', 'AdminAuth\LoginController@showOtpForm')->name('admin.login.otp');
+            Route::POST('/login/otp', 'AdminAuth\LoginController@verifyOtp');
+            Route::POST('/login/otp/resend', 'AdminAuth\LoginController@resendOtp')->name('admin.login.otp.resend');
             Route::POST('/password/email', 'AdminAuth\ForgotPasswordController@sendResetLinkEmail');
             Route::GET('/password/email', 'AdminAuth\ForgotPasswordController@showLinkRequestForm')->name('password.request');
             Route::POST('/password/email', 'AdminAuth\ForgotPasswordController@sendResetLinkEmail')->name('password.email');
