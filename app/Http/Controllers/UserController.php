@@ -13,7 +13,7 @@ use App\Model\TxnUser;
 use App\Model\User;
 use App\Model\Wishlist;
 use App\Services\LogisticService;
-use Barryvdh\DomPDF\Facade as PDF;
+use Barryvdh\DomPDF\Facade\Pdf as PDF;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;

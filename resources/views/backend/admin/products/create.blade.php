@@ -257,7 +257,7 @@
                                     <div class="form-group">
                                         <label for="stock">Stock <span class="text-danger">*</span></label>
                                         <input type="number" name="stock" id="stock" class="form-control"
-                                            value="{{ old('stock') }}" min="0" placeholder="Enter Stock"
+                                            value="{{ old('stock', 0) }}" min="0" placeholder="Enter Stock"
                                             required>
                                     </div>
                                 </div>

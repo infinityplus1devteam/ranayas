@@ -194,6 +194,7 @@
                                 <li><a class="nav-link" href="{{ route('admin.warranties.all') }}">Warranties</a>
                                 </li>
                                 <li><a class="nav-link" href="{{ route('admin.sections.all') }}">Sections</a></li>
+                                <li><a class="nav-link" href="{{ route('admin.coupons.all') }}">Coupons</a></li>
                                 <!-- <li><a class="nav-link" href="{{ route('admin.offers.all') }}">Offers</a></li> -->
                             </ul>
                         </li>

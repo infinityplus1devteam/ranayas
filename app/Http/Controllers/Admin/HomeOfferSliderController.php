@@ -145,11 +145,28 @@ class HomeOfferSliderController extends Controller
 
         $homeOfferSlider = HomeOfferSlider::findOrFail($slider);
 
+        // if ($request->hasFile('image_url')) {
+        //     $old_image = "images/home-offer-sliders/" . $homeOfferSlider->image_url;
+        //     Storage::disk('public')->delete($old_image);
+        //     $request->image_url->storeAs('images/home-offer-sliders', $homeOfferSlider->image_url, 'public');
+
+        // }
+
+        // $homeOfferSlider->update([
+        //     'status' => $request->status,
+        //     'sort_index' => $request->sort_index,
+        //     'title' => $request->title,
+        //     'url' => $request->url,
+        // ]);
+
         if ($request->hasFile('image_url')) {
             $old_image = "images/home-offer-sliders/" . $homeOfferSlider->image_url;
             Storage::disk('public')->delete($old_image);
-            $request->image_url->storeAs('images/home-offer-sliders', $homeOfferSlider->image_url, 'public');
 
+            // Generate a unique name
+            $new_image_name = uniqid() . '.' . $request->image_url->getClientOriginalExtension();
+            $request->image_url->storeAs('images/home-offer-sliders', $new_image_name, 'public');
+            $homeOfferSlider->image_url = $new_image_name;
         }
 
         $homeOfferSlider->update([
@@ -157,6 +174,8 @@ class HomeOfferSliderController extends Controller
             'sort_index' => $request->sort_index,
             'title' => $request->title,
             'url' => $request->url,
+            // Save the new image name to the database
+            'image_url' => $homeOfferSlider->image_url,
         ]);
 
         connectify('success', 'Home Offer Slider Updated', 'Slider has been updated successfully !');

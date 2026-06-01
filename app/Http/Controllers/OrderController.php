@@ -37,7 +37,8 @@ class OrderController extends Controller
         }
 
         $promocodes = DB::table('txn_users')->select('*')->where('elite', true)->inRandomOrder()->limit(5)->get();
-        return view('frontend.order.checkout', compact('promocodes', 'addresses'));
+        $coupons = \App\Model\Coupon::where('status', true)->get();
+        return view('frontend.order.checkout', compact('promocodes', 'addresses', 'coupons'));
     }
 
     public function checkout(Request $request, LogisticService $logistic)
@@ -82,13 +83,21 @@ class OrderController extends Controller
             $is_valid_promocode = false;
             $is_discount = false;
             $gst_value = 0;
-            if ($request->session()->has('promocode')) {
+            if ($request->session()->has('promocode_new')) {
+                $coupon = $request->session()->pull('promocode_new');
+                if ($coupon) {
+                    $promocode = $coupon->code;
+                    $is_valid_promocode = true;
+                    $is_discount = true;
+                    // We'll calculate the actual discount amount after calculating $total
+                }
+            } elseif ($request->session()->has('promocode')) {
                 // $a = $request->session()->get('promocode');
                 $a = $request->session()->pull('promocode', 'default');
-                if ($a['promocode']) {
+                if (isset($a['promocode']) && $a['promocode']) {
                     $promo = TxnUser::select('promocode')->where('promocode', $a['promocode'])->first();
                     $promocode = $promo['promocode'];
-                } elseif ($a['shop_code']) {
+                } elseif (isset($a['shop_code']) && $a['shop_code']) {
                     $promo = Shop::select('shop_code')->where('shop_code', $a['shop_code'])->where('status', true)->first();
                     $promocode = $promo['shop_code'];
                     $is_valid_promocode = true;
@@ -121,11 +130,20 @@ class OrderController extends Controller
 
             $request['shipingcharge'] = 0;
 
-            $request['discount'] = $is_valid_promocode ? round($total * 0.10, 2) : 0;
+            if (isset($coupon) && $coupon) {
+                if ($coupon->type == 'percentage') {
+                    $request['discount'] = round($total * ($coupon->value / 100), 2);
+                } else {
+                    $request['discount'] = $coupon->value;
+                }
+            } else {
+                $request['discount'] = $is_valid_promocode ? round($total * 0.10, 2) : 0;
+            }
 
             $balance = $total - $request->discount;
 
             if ($total < 1000) {
+                $request['shipingcharge'] = 60;
                 $balance = $balance + $request->shipingcharge;
             }
 
@@ -440,7 +458,7 @@ class OrderController extends Controller
         $expectedSignature = hash_hmac('sha256', $razorpay_order_id . '|' . $razorpay_payment_id, $keySecret);
 
         if (hash_equals($expectedSignature, $razorpay_signature)) {
-            
+
             // Payment verified successfully!
             if ($order->status == 'nc') {
 

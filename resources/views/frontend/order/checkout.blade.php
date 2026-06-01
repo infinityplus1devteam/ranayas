@@ -259,6 +259,23 @@
                                                                     <div class="promo_success text-success mt-3"></div>
                                                                     <div class="promo_error text-danger mt-3"></div>
                                                                 </div>
+                                                                
+                                                                @if(isset($coupons) && $coupons->count() > 0)
+                                                                <div class="mt-3">
+                                                                    <p class="font-weight-bold mb-2">Available Coupons:</p>
+                                                                    <div class="list-group">
+                                                                        @foreach($coupons as $coupon)
+                                                                            <a href="javascript:void(0)" class="list-group-item list-group-item-action coupon-item" data-code="{{ $coupon->code }}" style="padding: 10px;">
+                                                                                <div class="d-flex w-100 justify-content-between align-items-center">
+                                                                                    <h6 class="mb-0 text-primary"><i class="fa fa-tag"></i> {{ $coupon->code }}</h6>
+                                                                                    <small class="text-success font-weight-bold">{{ $coupon->type == 'percentage' ? $coupon->value . '%' : '₹' . $coupon->value }} OFF</small>
+                                                                                </div>
+                                                                            </a>
+                                                                        @endforeach
+                                                                    </div>
+                                                                </div>
+                                                                @endif
+
                                                             </div>
                                                         </div>
 
@@ -467,6 +484,16 @@
                                                     <div class="title-area text-center">
                                                         <h3>Login</h3>
                                                     </div> <!-- /.title-area -->
+                                                    <ul class="social-icon-wrapper row">
+                                                        <li class="col-12">
+                                                            <a href="{{ route('user.login.otp') }}" class="otp"><i class="fa fa-mobile" aria-hidden="true"></i> Login With OTP</a>
+                                                        </li>
+                                                        <li class="col-12">
+                                                            <a href="{{ route('user.auth.socialite', 'google') }}" class="gmail"><i class="fa fa-google" aria-hidden="true"></i> Google</a>
+                                                        </li>
+                                                    </ul>
+                                                    <p class="or-text mt-4 mb-4"><span>or</span></p>
+
                                                     <form id="login-form" action="{{ route('user.login') }}"
                                                         method="POST" autocomplete="off" class="login needs-validation">
                                                         @csrf
@@ -500,25 +527,6 @@
                                                             Login
                                                         </button>
                                                     </form>
-                                                    {{-- <p class="signUp-text text-center">
-                                                <a href="{{ route('user.login.otp') }}">Or Login With Otp</a>
-                                            </p> --}}
-                                                    {{-- <p class="or-text"><span>or</span></p> --}}
-                                                    <ul class="social-icon-wrapper row">
-                                                        {{-- <li class="col-12"><a href="{{ route('user.login.otp') }}"
-                                                        class="otp"><i class="fa fa-key" aria-hidden="true"></i>
-                                                        Login With OTP</a></li> --}}
-                                                        {{-- <li class="col-12"><a
-                                                        href="{{ route('user.auth.socialite', 'google') }}"
-                                                        class="gmail"><i class="fa fa-envelope-o"
-                                                            aria-hidden="true"></i>
-                                                        Gmail</a></li> --}}
-                                                        {{-- <li class="col-12"><a
-                                                        href="{{ route('user.auth.socialite', 'facebook') }}"
-                                                        class="facebook"><i class="fa fa-facebook"
-                                                            aria-hidden="true"></i> Facebook</a>
-                                                </li> --}}
-                                                    </ul>
                                                 </div> <!-- /.sign-up-form-wrapper -->
                                             </div> <!-- /.signUp-page -->
                                         </div>
@@ -1349,6 +1357,13 @@
                 }
             });
 
+            $('.coupon-item').click(function() {
+                var code = $(this).data('code');
+                $('#discountcode').val(code);
+                // Auto click apply button
+                $('.verify_promo').click();
+            });
+
             $('.verify_promo').click(function(e) {
 
                 e.preventDefault();
@@ -1386,10 +1401,8 @@
                                 setTimeout(function() {
                                     $('.promo_success').fadeOut();
                                 }, 4000);
-                                $('#discount_span').html("{{ Cart::getTotal() * 0.1 }}");
-                                $('.order-total-ammount').html(
-                                    "{{ Cart::getTotal() < 1000 ? Cart::getTotal() - Cart::getTotal() * 0.1 + 60 : Cart::getTotal() - Cart::getTotal() * 0.1 }}"
-                                );
+                                $('#discount_span').html(result.discount_amount);
+                                $('.order-total-ammount').html(result.new_total);
                             } else {
                                 $('.promo_success').hide();
                                 $('.promo_error').show();

@@ -6,6 +6,19 @@
         <div class="title-area text-center">
             <h3>Login</h3>
         </div>
+        <ul class="social-icon-wrapper row">
+            <li class="col-12">
+                <a href="{{ route('user.login.otp') }}" class="otp"><i class="fa fa-mobile" aria-hidden="true"></i> Login With OTP</a>
+            </li>
+            <li class="col-12">
+                <a href="{{ route('user.auth.socialite', 'google') }}" class="gmail"><i class="fa fa-google"
+                        aria-hidden="true"></i>
+                    Google</a>
+            </li>
+        </ul>
+
+        <p class="or-text mt-4 mb-4"><span>or</span></p>
+
         <form id="login-form" action="{{ route('user.login') }}" method="POST" autocomplete="off" class="login">
             @csrf
             <div class="row">
@@ -14,20 +27,15 @@
                         <input type="text" name="email" value="{{ old('email') }}" required />
                         <label>Email <span style="color:red">*</span></label>
                     </div>
-                    <!-- /.input-group -->
                 </div>
-                <!-- /.col- -->
                 <div class="col-12">
                     <div class="input-group">
                         <input type="password" name="password" required />
                         <span class="show-password"><i class="showpassword fa fa-eye"></i></span>
                         <label>Password <span style="color:red">*</span></label>
                     </div>
-                    <!-- /.input-group -->
                 </div>
-                <!-- /.col- -->
             </div>
-            <!-- /.row -->
             <div class="agreement-checkbox d-flex justify-content-between align-items-center">
                 <div>
                     <input type="checkbox" name="remember" {{ old('remember') ? 'checked' : '' }} checked
@@ -40,26 +48,10 @@
                 Login
             </button>
         </form>
-        <p class="signUp-text text-center">
+        <p class="signUp-text text-center mt-3">
             Don’t have any account?
             <a href="{{ route('user.register') }}">Register</a> now
         </p>
-        <p class="or-text"><span>or</span></p>
-        <ul class="social-icon-wrapper row">
-            <li class="col-12"><a href="{{ route('user.login.otp') }}" class="otp"><i class="fa fa-key"
-                        aria-hidden="true"></i>
-                    Login With OTP</a></li>
-            <li class="col-12">
-                <a href="{{ route('user.auth.socialite', 'google') }}" class="gmail"><i class="fa fa-google"
-                        aria-hidden="true"></i>
-                    Google</a>
-            </li>
-            {{-- <li class="col-12">
-                <a href="{{ route('user.auth.socialite', 'facebook') }}" class="facebook"><i class="fa fa-facebook"
-                        aria-hidden="true"></i>
-                    Facebook</a>
-            </li> --}}
-        </ul>
     </div>
     <!-- /.sign-up-form-wrapper -->
 </div>

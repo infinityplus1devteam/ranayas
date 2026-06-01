@@ -163,9 +163,27 @@ class SliderController extends Controller
 
             $slider = Slider::where('id', $id)->firstOrFail();
 
+            // if ($request->hasFile('image_url')) {
+            //     Storage::disk('public')->delete('images/sliders/' . $slider->image_url);
+            //     $request->image_url->storeAs('images/sliders', $slider->image_url, 'public');
+            // }
+
+            // $slider->update([
+            //     'status' => $request->status,
+            //     'sort_index' => $request->sort_index,
+            //     'title' => $request->title,
+            //     'subtitle' => $request->subtitle,
+            //     'url' => $request->url,
+            //     'description' => $request->description,
+            // ]);
+
             if ($request->hasFile('image_url')) {
                 Storage::disk('public')->delete('images/sliders/' . $slider->image_url);
-                $request->image_url->storeAs('images/sliders', $slider->image_url, 'public');
+
+                // Generate a unique name
+                $new_image_name = uniqid() . '.' . $request->image_url->getClientOriginalExtension();
+                $request->image_url->storeAs('images/sliders', $new_image_name, 'public');
+                $slider->image_url = $new_image_name;
             }
 
             $slider->update([
@@ -175,6 +193,8 @@ class SliderController extends Controller
                 'subtitle' => $request->subtitle,
                 'url' => $request->url,
                 'description' => $request->description,
+                // Save the new image name to the database
+                'image_url' => $slider->image_url,
             ]);
 
             connectify('success', 'Slider Updated', 'slider has been Updated successfully !');

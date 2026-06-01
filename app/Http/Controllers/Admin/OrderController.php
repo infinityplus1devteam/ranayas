@@ -7,7 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Model\SMS;
 use App\Model\TxnOrder;
 use App\Services\LogisticService;
-use Barryvdh\DomPDF\Facade as PDF;
+use Barryvdh\DomPDF\Facade\Pdf as PDF;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;

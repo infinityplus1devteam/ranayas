@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Exports\OrderExport;
 use App\Http\Controllers\Controller;
 use App\Model\TxnOrder;
-use Barryvdh\DomPDF\Facade as PDF;
+use Barryvdh\DomPDF\Facade\Pdf as PDF;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;

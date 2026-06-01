@@ -59,7 +59,7 @@ class MainController extends Controller
     ")
             ->leftJoin("txn_reviews", function ($join) {
                 $join->on("txn_reviews.product_id", "=", "p.id")
-                     ->where("txn_reviews.status", "=", true);
+                    ->where("txn_reviews.status", "=", true);
             })
             ->leftJoin("map_color_sizes as map", "map.product_id", "p.id")
             ->leftJoin("mst_colors as c", "c.id", "map.color_id")
@@ -148,7 +148,7 @@ class MainController extends Controller
                 ->selectRaw("p.id as product_id , p.title,w.id as w_id, w.user_id as w_u_id, w.product_id as w_product_id,map.color_id as c_id, map.size_id as s_id,  c.id as cate_id , p.slug_url, p.image_url,map.mrp, map.stock, map.starting_price,GROUP_CONCAT(DISTINCT(co.color_code)) as color_codes, p.image_url1, p.status, p.review_status , FLOOR(AVG(r.rating)) as rating , COUNT(Distinct(r.comment)) as total_comment, c.name as category_name, c.slug_url as category_url")
                 ->leftJoin("txn_reviews as r", function ($join) {
                     $join->on("r.product_id", "=", "p.id")
-                         ->where("r.status", "=", true);
+                        ->where("r.status", "=", true);
                 })
                 ->leftJoin("map_color_sizes as map", "map.product_id", "p.id")
                 ->leftJoin("mst_colors as co", "co.id", "map.color_id")
@@ -230,7 +230,7 @@ class MainController extends Controller
                 GROUP_CONCAT(DISTINCT(c.color_code)) as color_codes, COUNT(Distinct(r.comment)) as total_comment, p.category_id")
                 ->leftJoin("txn_reviews as r", function ($join) {
                     $join->on("r.product_id", "=", "p.id")
-                         ->where("r.status", "=", true);
+                        ->where("r.status", "=", true);
                 })
                 ->leftJoin("map_color_sizes as map", "map.product_id", "p.id")
                 ->leftJoin("mst_colors as c", "c.id", "map.color_id")
@@ -247,7 +247,7 @@ class MainController extends Controller
                 ->leftJoin("mst_colors as c", "c.id", "map.color_id")
                 ->leftJoin("txn_reviews as r", function ($join) {
                     $join->on("r.product_id", "=", "p.id")
-                         ->where("r.status", "=", true);
+                        ->where("r.status", "=", true);
                 })
                 ->leftJoin("txn_keywords as k", "k.product_id", "p.id")
                 ->leftJoin("wishlists as w", "p.id", "w.product_id")
@@ -276,10 +276,10 @@ class MainController extends Controller
             }
         }
 
-$products = $products->orderByRaw('CASE WHEN p.sort_index IS NULL THEN 1 ELSE 0 END')
-                ->orderBy('p.sort_index', 'desc')
-                ->orderBy('p.id', 'desc')
-                ->groupBy("p.id")->paginate(50);
+        $products = $products->orderByRaw('CASE WHEN p.sort_index IS NULL THEN 1 ELSE 0 END')
+            ->orderBy('p.sort_index', 'desc')
+            ->orderBy('p.id', 'desc')
+            ->groupBy("p.id")->paginate(50);
 
         $categories = TxnCategory::selectRaw("DISTINCT(name) as category_name, id")->where('status', true)->get();
 
@@ -292,7 +292,7 @@ $products = $products->orderByRaw('CASE WHEN p.sort_index IS NULL THEN 1 ELSE 0 
             ->selectRaw("p.id , p.title , p.slug_url, p.image_url, p.image_url1,FLOOR(AVG(r.rating)) as rating , COUNT(Distinct(r.comment)) as total_comment")
             ->leftJoin("txn_reviews as r", function ($join) {
                 $join->on("r.product_id", "=", "p.id")
-                     ->where("r.status", "=", true);
+                    ->where("r.status", "=", true);
             })
             ->leftJoin("txn_keywords as k", "k.product_id", "p.id")
             ->where('p.status', '=', true);
@@ -354,7 +354,7 @@ $products = $products->orderByRaw('CASE WHEN p.sort_index IS NULL THEN 1 ELSE 0 
             ->selectRaw("p.id , p.title , p.slug_url , p.image_url, p.image_url1, FLOOR(AVG(r.rating)) as rating , COUNT(Distinct(r.comment)) as total_comment")
             ->leftJoin("txn_reviews as r", function ($join) {
                 $join->on("r.product_id", "=", "p.id")
-                     ->where("r.status", "=", true);
+                    ->where("r.status", "=", true);
             })
             ->leftJoin("txn_keywords as k", "k.product_id", "p.id")
             ->where('p.status', '=', true)
@@ -418,7 +418,7 @@ $products = $products->orderByRaw('CASE WHEN p.sort_index IS NULL THEN 1 ELSE 0 
                 ->leftJoin("mst_colors as co", "co.id", "map.color_id")
                 ->leftJoin("txn_reviews as r", function ($join) {
                     $join->on("r.product_id", "=", "p.id")
-                         ->where("r.status", "=", true);
+                        ->where("r.status", "=", true);
                 })
                 ->leftJoin("txn_categories as c", "p.category_id", "c.id")
                 ->leftJoin("wishlists as w", "p.id", "w.product_id")
@@ -518,15 +518,54 @@ $products = $products->orderByRaw('CASE WHEN p.sort_index IS NULL THEN 1 ELSE 0 
     public function verifyPromocode(Request $request)
     {
         $promo = [];
-        if ($request->filled('promocode')) {
-            $promo = TxnUser::select('promocode')->where('elite', true)->where('promocode', $request->promocode)->first();
-        } elseif ($request->filled('discountcode')) {
-            $promo = Shop::select('shop_code')->where('shop_code', strtolower($request->discountcode))->first();
+        $coupon = null;
+        $cartTotal = \Cart::getTotal();
+        $discountAmount = 0;
+
+        $inputCode = $request->filled('promocode') ? $request->promocode : ($request->filled('discountcode') ? $request->discountcode : null);
+
+        if ($inputCode) {
+            // First check the new Coupon table
+            $coupon = \App\Model\Coupon::where('code', $inputCode)->where('status', true)->first();
+
+            if ($coupon) {
+                if ($coupon->min_amount > 0 && $cartTotal < $coupon->min_amount) {
+                    return response()->json(['error' => 'Minimum order amount for this coupon is ₹' . $coupon->min_amount, 'status' => 200], 200);
+                }
+                session(['promocode_new' => $coupon]);
+
+                if ($coupon->type == 'percentage') {
+                    $discountAmount = round($cartTotal * ($coupon->value / 100), 2);
+                } else {
+                    $discountAmount = $coupon->value;
+                }
+
+                $newTotal = $cartTotal - $discountAmount;
+                if ($cartTotal < 1000) {
+                    $newTotal += 60; // adding shipping charge
+                }
+
+                return response()->json(['success' => 'Coupon Applied Successfully !', 'status' => 200, 'discount_amount' => $discountAmount, 'new_total' => $newTotal], 200);
+            }
+
+            // Fallback to old elite users and shops logic
+            if ($request->filled('promocode')) {
+                $promo = TxnUser::select('promocode')->where('elite', true)->where('promocode', $request->promocode)->first();
+            } elseif ($request->filled('discountcode')) {
+                $promo = Shop::select('shop_code')->where('shop_code', strtolower($request->discountcode))->first();
+            }
         }
+
         if (!empty($promo)) {
             session(['promocode' => $promo]);
-            return response()->json(['success' => 'Coupon Applied Successfully !', 'status' => 200], 200);
+            $discountAmount = round($cartTotal * 0.10, 2);
+            $newTotal = $cartTotal - $discountAmount;
+            if ($cartTotal < 1000) {
+                $newTotal += 60; // adding shipping charge
+            }
+            return response()->json(['success' => 'Coupon Applied Successfully !', 'status' => 200, 'discount_amount' => $discountAmount, 'new_total' => $newTotal], 200);
         }
+
         return response()->json(['error' => 'Please Enter Valid Coupon', 'status' => 200], 200);
     }
 

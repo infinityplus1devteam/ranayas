@@ -6,7 +6,7 @@ use App\Exports\CouponExport;
 use App\Http\Controllers\Controller;
 use App\Model\Coupon;
 use App\Model\Shop;
-use Barryvdh\DomPDF\Facade as PDF;
+use Barryvdh\DomPDF\Facade\Pdf as PDF;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;

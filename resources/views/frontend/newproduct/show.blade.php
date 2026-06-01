@@ -29,9 +29,21 @@
                 <div class="col-xl-12 col-lg-12 col-md-12 col-xs-12 pro-image">
                     <div class="row">
                         <div class="col-lg-5 col-xl-5 col-md-6 col-12 col-xs-12 larg-image">
+                            @php
+                                $firstColorImages = collect();
+                                if ($product->colors->count() > 0) {
+                                    $firstColorId = $product->colors[0]->color_id;
+                                    $firstColorImages = $product->images->where('color_id', $firstColorId)->sortByDesc('id')->values();
+                                }
+                            @endphp
                             <div class="tab-content large_image">
-                                @if ($product->colors->count() > 0 && $product->colors[0]->images->count() > 0)
-                                    @foreach ($product->colors[0]->images as $key => $image)
+                                <style>
+                                    .tab-content.large_image .tab-pane:not(.active) {
+                                        display: none !important;
+                                    }
+                                </style>
+                                @if ($firstColorImages->count() > 0)
+                                    @foreach ($firstColorImages as $key => $image)
                                         <div class="tab-pane fade {{ $key == 0 ? 'show active' : '' }}"
                                             id="image-{{ $image->id }}">
                                             <a href="javascript:void(0)" class="long-img">
@@ -46,8 +58,8 @@
                                 @endif
                             </div>
                             <ul class="nav nav-tabs pro-page-slider owl-carousel owl-theme thumb_image">
-                                @if ($product->colors->count() > 0 && $product->colors[0]->images->count() > 0)
-                                    @foreach ($product->colors[0]->images as $key => $image)
+                                @if ($firstColorImages->count() > 0)
+                                    @foreach ($firstColorImages as $key => $image)
                                         <li class="nav-item items">
                                             <a class="thumb_image_active nav-link {{ $key == 0 ? 'active' : '' }}"
                                                 data-bs-toggle="tab" href="#image-{{ $image->id }}">
@@ -517,7 +529,9 @@
                             <div class="pill-header">Description</div>
                         </div>
                         <div class="description-content">
-                            {!! $product->description !!}
+                            <div class="spec-box" style="height: auto;">
+                                {!! $product->description !!}
+                            </div>
                         </div>
                     </div>
 

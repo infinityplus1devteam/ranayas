@@ -213,9 +213,7 @@
                                     <div class="order-bordered {{ $key != 0 ? 'mt-20' : '' }} mb-20">
                                         <div class="row">
                                             <div class="col-md-12">
-                                                <a href="{{ route('user.order', $order->id) }}" class="order-btn">{{
-                                                    $order->id
-                                                    }}</a>
+                                                <a href="{{ route('user.order', $order->id) }}" class="order-btn">Order Detail</a>
                                                 <a href="{{ route('user.invoices.download', $order->id) }}"
                                                     class="download-btn float-right">
                                                     <i class="fa fa-download" aria-hidden="true"></i> Download

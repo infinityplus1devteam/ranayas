@@ -205,6 +205,15 @@ Route::namespace('App\Http\Controllers')->group(function () {
                 Route::POST('/edit/{id}', 'Admin\BrandController@update');
             });
 
+            Route::prefix('/manage-coupons')->group(function () {
+                Route::GET('/', 'Admin\CouponController@index')->name('admin.coupons.all');
+                Route::GET('/create', 'Admin\CouponController@create')->name('admin.coupons.create');
+                Route::POST('/store', 'Admin\CouponController@store')->name('admin.coupons.store');
+                Route::GET('/edit/{id}', 'Admin\CouponController@edit')->name('admin.coupons.edit');
+                Route::POST('/update/{id}', 'Admin\CouponController@update')->name('admin.coupons.update');
+                Route::POST('/delete/{id}', 'Admin\CouponController@destroy')->name('admin.coupons.delete');
+            });
+
             Route::prefix('/manage-gsts')->group(function () {
                 Route::GET('/', 'Admin\GstController@index')->name('admin.gsts.all');
                 Route::POST('/', 'Admin\GstController@store');
