@@ -66,8 +66,8 @@
         </p>
         <p class="or-text"><span>or</span></p>
         <ul class="social-icon-wrapper row">
-            <li class="col-12"><a href="{{ route('user.login.otp') }}" class="otp"><i class="fa fa-key"
-                        aria-hidden="true"></i>
+            <li class="col-12"><a href="{{ route('user.login.otp') }}" class="otp"><i class="fa fa-mobile"
+                        aria-hidden="true" style="position: relative; top: 2px; font-size: 20px; margin-right: 2px;"></i>
                     Login With OTP</a></li>
             <li class="col-12">
                 <a href="{{ route('user.auth.socialite', 'google') }}" class="gmail"><i class="fa fa-google"

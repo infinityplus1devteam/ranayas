@@ -172,9 +172,8 @@
             </div>
 
         </div>
-        <div class="social-icon">
-            <!-- <p class="social-title">Whatsapp</p> -->
-            <div class="social-Whatsaap whatsapp-icon-1">
+        <!-- <div class="social-icon">
+        <div class="social-Whatsaap whatsapp-icon-1">
                 <a
                     href="https://wa.me/9820760951?text=Hi%2C%20There%21%0A%0AI%20am%20interested%20in%20exploring%20your%20digital%20offerings%2E">
                     <i class="fa fa-whatsapp whatsapp-icon text-white" aria-hidden="true">
@@ -183,7 +182,7 @@
                 </a>
 
             </div>
-        </div>
+        </div> -->
 
     </div>
     <!-- For social Start here  -->
@@ -762,48 +761,67 @@
                             <!-- <div class="title-area text-center">
                                     <h3>Login.</h3>
                                 </div>  -->
-                            <ul class="social-icon-wrapper row">
-                                <li class="col-12">
-                                    <a href="{{ route('user.login.otp') }}" class="otp"><i class="fa fa-mobile" aria-hidden="true"></i> Login With OTP</a>
-                                </li>
-                                <li class="col-12">
-                                    <a href="{{ route('user.auth.socialite', 'google') }}" class="gmail"><i class="fa fa-google" aria-hidden="true"></i> Google</a>
-                                </li>
-                            </ul>
+                            <!-- OTP Flow -->
+                            <div class="text-center mb-3">
+                                <h6>Login With OTP</h6>
+                            </div>
+                            <div id="otp-flow-container">
+                                <form id="otp-request-form" class="login" action="{{ route('user.login.otp') }}" method="POST" autocomplete="off">
+                                    @csrf
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="input-group mb-0">
+                                                <input type="number" name="mobile" id="otp-mobile-input" required />
+                                                <label>Enter 10 digit Mobile Number <span style="color:red">*</span></label>
+                                            </div>
+                                            <span class="text-danger" style="font-size: 13px; margin-bottom: 15px; display: block;" id="otp-request-error"></span>
+                                        </div>
+                                    </div>
+                                    <button type="submit" class="line-button-one button-rose mt-1 w-100" id="btn-request-otp">
+                                        Next
+                                    </button>
+                                </form>
+
+                                <form id="otp-verify-form" class="login d-none" action="{{ route('user.otp.verify') }}" method="POST" autocomplete="off">
+                                    @csrf
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="input-group mb-0">
+                                                <input type="number" name="otp" id="otp-input" required />
+                                                <label>Enter OTP <span style="color:red">*</span></label>
+                                            </div>
+                                            <span class="text-danger" style="font-size: 13px; margin-bottom: 15px; display: block;" id="otp-verify-error"></span>
+                                        </div>
+                                    </div>
+                                    <button type="submit" class="line-button-one button-rose mt-1 w-100" id="btn-verify-otp">
+                                        Verify & Login
+                                    </button>
+                                </form>
+                            </div>
 
                             <p class="or-text mt-4 mb-4"><span>or</span></p>
 
-                            <form action="{{ route('user.login') }}" method="POST" autocomplete="off"
-                                id="login-form-submit" class="login">
-                                @csrf
-                                <div class="row">
-                                    <div class="col-12">
-                                        <div class="input-group">
-                                            <input type="text" name="email" value="{{ old('email') }}"
-                                                required />
-                                            <label>Email <span style="color:red">*</span></label>
-                                        </div>
-                                    </div>
-                                    <div class="col-12">
-                                        <div class="input-group">
-                                            <input type="password" name="password" required />
-                                            <label>Password <span style="color:red">*</span></label>
-                                        </div>
-                                        <a href="{{ route('user.password.request') }}" class="mt-2 text-right">Forget
-                                            Password?</a>
-                                    </div>
+                            <style>
+                                .login-with-email-btn {
+                                    border-radius: 5px !important;
+                                    color: var(--theme-color) !important;
+                                }
+                                .login-with-email-btn:hover {
+                                    color: #fff !important;
+                                }
+                            </style>
+                            <div class="row m-0 p-0">
+                                <div class="col-12 p-0">
+                                    <a href="{{ route('user.login') }}" class="line-button-one button-rose mt-1 w-100 login-with-email-btn" style="display: block; text-align: center;"><i class="fa fa-envelope" aria-hidden="true"></i> Login with Email</a>
                                 </div>
-                                <div class="agreement-checkbox d-flex justify-content-between align-items-center">
-                                    <div>
-                                        <input type="checkbox" name="remember" {{ old('remember') ? 'checked' : '' }}
-                                            checked id="remember">
-                                        <label for="remember">Remember Me</label>
-                                    </div>
-                                </div>
-                                <button type="submit" class="line-button-one button-rose button_update_login">
-                                    Login
-                                </button>
-                            </form>
+                            </div>
+
+                            <ul class="social-icon-wrapper row m-0 mb-4 p-0">
+                                <li class="col-12 p-0">
+                                    <a href="{{ route('user.auth.socialite', 'google') }}" class="gmail w-100" style="width: 100%; display: block;"><i class="fa fa-google" aria-hidden="true"></i> Login with Google</a>
+                                </li>
+                            </ul>
+
                             <p class="signUp-text text-center mt-3">
                                 Don’t have any account?
                                 <a href="{{ route('user.register') }}">Register</a> now.
@@ -844,6 +862,90 @@
     <script src="{!! asset('assets/js/custom.js') !!}"></script>
     <script src="{!! asset('assets/js/main.js') !!}"></script>
     @yield('extrajs')
+
+    <script>
+        $(document).ready(function() {
+            $('#otp-request-form').on('submit', function(e) {
+                e.preventDefault();
+                var $form = $(this);
+                var $btn = $('#btn-request-otp');
+                var mobile = $('#otp-mobile-input').val();
+                $('#otp-request-error').text('');
+
+                if(!mobile || mobile.length !== 10) {
+                    $('#otp-request-error').text('Please enter a valid 10-digit mobile number.');
+                    return;
+                }
+
+                $btn.prop('disabled', true).html('<span class="fa fa-spinner fa-spin"></span> Loading...');
+
+                $.ajax({
+                    url: $form.attr('action'),
+                    type: 'POST',
+                    data: $form.serialize(),
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                    success: function(response) {
+                        if (response.success) {
+                            $form.addClass('d-none');
+                            $('#otp-verify-form').removeClass('d-none');
+                        } else {
+                            $('#otp-request-error').text(response.message || 'Something went wrong.');
+                        }
+                    },
+                    error: function(xhr) {
+                        $('#otp-request-error').text('An error occurred. Please try again.');
+                    },
+                    complete: function() {
+                        $btn.prop('disabled', false).text('Next');
+                    }
+                });
+            });
+
+            $('#otp-verify-form').on('submit', function(e) {
+                e.preventDefault();
+                var $form = $(this);
+                var $btn = $('#btn-verify-otp');
+                var otp = $('#otp-input').val();
+                $('#otp-verify-error').text('');
+
+                if(!otp) {
+                    $('#otp-verify-error').text('Please enter OTP.');
+                    return;
+                }
+
+                $btn.prop('disabled', true).html('<span class="fa fa-spinner fa-spin"></span> Verifying...');
+
+                $.ajax({
+                    url: $form.attr('action'),
+                    type: 'POST',
+                    data: $form.serialize(),
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                    success: function(response) {
+                        if (response.success) {
+                            window.location.href = response.redirect;
+                        } else {
+                            $('#otp-verify-error').text(response.message || 'Invalid OTP.');
+                        }
+                    },
+                    error: function(xhr) {
+                        $('#otp-verify-error').text('An error occurred. Please try again.');
+                    },
+                    complete: function() {
+                        $btn.prop('disabled', false).text('Verify & Login');
+                    }
+                });
+            });
+            
+            $('#modalLogin').on('hidden.bs.modal', function () {
+                $('#otp-request-form').removeClass('d-none');
+                $('#otp-verify-form').addClass('d-none');
+                $('#otp-request-form')[0].reset();
+                $('#otp-verify-form')[0].reset();
+                $('#otp-request-error').text('');
+                $('#otp-verify-error').text('');
+            });
+        });
+    </script>
 
     <!-- AlpineJS for laravel-notify -->
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>

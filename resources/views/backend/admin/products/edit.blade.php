@@ -840,9 +840,17 @@
     <script>
         $(document).ready(function() {
 
-
-
-
+            // Return policy radio-button behavior
+            $('#within_days').on('change', function() {
+                if($(this).is(':checked')) {
+                    $('#non_returnable').prop('checked', false);
+                }
+            });
+            $('#non_returnable').on('change', function() {
+                if($(this).is(':checked')) {
+                    $('#within_days').prop('checked', false);
+                }
+            });
 
             $(".delete-object").click(function() {
                 if (window.confirm("Are you sure to delete this Custom Field ?")) {

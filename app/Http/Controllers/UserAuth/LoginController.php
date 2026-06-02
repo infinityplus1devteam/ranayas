@@ -175,6 +175,9 @@ class LoginController extends Controller
         );
 
         if ($validator->fails()) {
+            if ($request->ajax()) {
+                return response()->json(['success' => false, 'message' => $validator->errors()->first()]);
+            }
             connectify('error', 'Invalid Otp', $validator->errors()->first());
 
             return back()->withInput();
@@ -184,6 +187,9 @@ class LoginController extends Controller
 
         // Safeguard against expired sessions
         if (! $userData) {
+            if ($request->ajax()) {
+                return response()->json(['success' => false, 'message' => 'Your session has expired. Please try registering again.']);
+            }
             connectify('error', 'Session Expired', 'Your session has expired. Please try registering again.');
 
             return redirect()->route('user.register');
@@ -229,9 +235,15 @@ class LoginController extends Controller
             // Fallback to dashboard if original URL is missing
             $redirectUrl = $userData['url'] ?? route('user.dashboard');
 
+            if ($request->ajax()) {
+                return response()->json(['success' => true, 'redirect' => $redirectUrl]);
+            }
             return redirect($redirectUrl);
 
         } else {
+            if ($request->ajax()) {
+                return response()->json(['success' => false, 'message' => 'The Entered Otp is Invalid !']);
+            }
             connectify('error', 'Error', 'The Entered Otp is Invalid !');
 
             return back();
@@ -258,6 +270,9 @@ class LoginController extends Controller
         );
 
         if ($validator->fails()) {
+            if ($request->ajax()) {
+                return response()->json(['success' => false, 'message' => $validator->errors()->first()]);
+            }
             connectify('error', 'Otp Login', $validator->errors()->first());
 
             return back()->withInput();
@@ -295,6 +310,9 @@ class LoginController extends Controller
                 Log::error('Mail Error (OTP Login): '.$e->getMessage());
             }
 
+            if ($request->ajax()) {
+                return response()->json(['success' => true, 'message' => 'Otp Send']);
+            }
             connectify('success', 'Otp Send', 'Otp has been sent on mobile & email !');
 
             return redirect()->route('user.otp');
@@ -302,11 +320,17 @@ class LoginController extends Controller
         } catch (\Exception $ex) {
             if ($ex instanceof ModelNotFoundException) {
 
+                if ($request->ajax()) {
+                    return response()->json(['success' => false, 'message' => 'Mobile number not found, try again later !']);
+                }
                 connectify('error', 'Error', 'Email id not found, try again later !');
 
                 return redirect(route('user.login.otp'));
             }
 
+            if ($request->ajax()) {
+                return response()->json(['success' => false, 'message' => 'Something Went Wrong !']);
+            }
             connectify('error', 'Error', 'Something Went Wrong !');
 
             return redirect(route('user.login.otp'));

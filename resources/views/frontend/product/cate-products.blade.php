@@ -1,234 +1,363 @@
 @extends('layouts.master')
-@section('title') {{ $category->name }} @endsection
+@section('title'){{ isset($category) ? $category->name : 'Search' }} @endsection
 @section('content')
-
-<!-- Breadcrumb area Start -->
-<div class="breadcrumb-area pt--70 pt-md--25">
-    <div class="container">
-        <div class="row">
-            <div class="col-12">
-                <ul class="breadcrumb">
-                    <li><a href="{{ route('index') }}">Home</a></li>
-
-                    <li class="current"><span> {{ $category->name }}</span></li>
-                </ul>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- Breadcrumb area End -->
-
-<!-- Main Content Wrapper Start -->
-<div id="content" class="main-content-wrapper">
-    <div class="shop-page-wrapper">
+    <!-- breadcrumb start -->
+    <section class="breadcrumb-area">
         <div class="container">
-            <div class="row shop-fullwidth pb--60 pb-md--50 pb-sm--40">
-                <div class="col-12">
-                    <div class="shop-toolbar">
-                        <div class="shop-toolbar__inner">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="shop-toolbar__left">
-                                        <p class="product-pages">Showing {{count($products)}} results</p>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="shop-toolbar__right">
-                                        <a href="#" class="product-filter-btn shop-toolbar__btn">
-                                            <span>Filters</span>
-                                            <i></i>
-                                        </a>
-
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="advanced-product-filters">
-                            <div class="product-filter">
-                                <form action="{{ route('categories.filter') }}" method="get">
-                                    <div class="row">
-                                        <div class="col-md-3">
-                                            <div class="product-widget product-widget--brand">
-                                                <h3 class="widget-title">Brands</h3>
-                                                <ul class="product-widget__list">
-                                                    @foreach($brands as $brand)
-                                                    <li>
-                                                        <label for="{{ $brand->brand_name.$brand->id }}"
-                                                            class="cb-container">{{ $brand->brand_name }}
-                                                            <input type="checkbox"
-                                                                id="{{ $brand->brand_name.$brand->id }}" name="brands[]"
-                                                                value="{{ $brand->id }}" class="cb_brands filter"
-                                                                data-cate-id="{{ $category->id }}">
-                                                            <span class="cb-checkmark"></span>
-                                                        </label>
-                                                    </li>
-                                                    @endforeach
-                                                </ul>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-3">
-                                            <div class="product-widget product-widget--color">
-                                                <h3 class="widget-title">Conditions</h3>
-                                                <ul class="product-widget__list product-color-swatch">
-                                                    @foreach($conditions as $cond)
-                                                    <li>
-                                                        <label for="{{ $cond->condition.$cond->id }}"
-                                                            class="cb-container">
-                                                            {{ $cond->condition }}
-                                                            <input type="checkbox" id="{{ $cond->condition.$cond->id }}"
-                                                                name="conditions[]" value="{{ $cond->id }}"
-                                                                class="cb_conditions filter">
-                                                            <span class="cb-checkmark"></span>
-                                                        </label>
-                                                    </li>
-                                                    @endforeach
-                                                </ul>
-                                            </div>
-                                        </div>
-                                        <input type="hidden" name="category_id" value="{{ $category->id }}">
-                                        <div class="col-md-3">
-                                            <button type="submit">
-                                                Filter
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <a href="#" class="btn-close"><i class="fa fa-times" aria-hidden="true"></i></i></a>
-                                </form>
-                            </div>
-                        </div>
+            <div class="row">
+                <div class="col">
+                    <div class="breadcrumb-start">
+                        <ul class="breadcrumb-url">
+                            <li class="breadcrumb-url-li">
+                                <a href="{{ route('index') }}">Home</a>
+                            </li>
+                            <li class="breadcrumb-url-li">
+                                <span>{{ isset($category) ? $category->name : 'Search Results' }} </span>
+                            </li>
+                        </ul>
                     </div>
-
-                    <div class="shop-products">
-                        <div class="row grid-space-20 xxl-block-grid-5">
-                            @forelse($products as $product)
-                            <div class="col-lg-3 col-sm-6 col-6 mb--40 mb-md--30">
-                                <div class="airi-product">
-                                    <div class="product-inner">
-                                        <figure class="product-image">
-                                            <div class="product-image--holder">
-                                                <a href="{{ route('product',[$product->slug_url]) }}">
-
-                                                    <img alt="Product Image" class="primary-image lazy"
-                                                        data-src="{!! asset('storage/images/products/' .$product->image_url) !!}">
-
-                                                    <img alt="Product Image" class="secondary-image lazy"
-                                                        data-src="{!! asset('storage/images/products/' .$product->image_url1) !!}">
-                                                </a>
-                                            </div>
-                                            <span class="product-trending">Trending</span>
-                                            @if(auth('user')->check())
-                                            @php
-                                                $wishlistItem = auth('user')->user()->wishlists->where('product_id', $product->id)->first();
-                                            @endphp
-                                            @if ($wishlistItem)
-                                            <span class="product-badge fav wishlist-remove"
-                                                data-w-id="{{ $wishlistItem->id }}"><i class="fa fa-heart colorfull-heart"
-                                                    aria-hidden="true" title="Remove from Wishlist"></i></span>
-                                            @else
-                                            <span class="product-badge fav wishlist" data-p-id="{{ $product->id }}"
-                                                data-c-id="{{ $product->c_id }}" data-s-id="{{ $product->s_id }}"
-                                                title="Add to Wishlist"><i class="fa fa-heart-o"
-                                                    aria-hidden="true"></i></span>
-                                            @endif
-                                            @else
-                                            <span class="product-badge fav wishlist-login"><i class="fa fa-heart-o"
-                                                    aria-hidden="true" title="Add to Wishlist"></i></span>
-                                            @endif
-                                        </figure>
-                                        <!-- Color  -->
-                                        @php
-                                        $getDiff = $product->mrp - $product->starting_price;
-                                        if($product->mrp > 0) {
-                                            $getOffer = round(($getDiff / $product->mrp) * 100, 0);
-                                        } else {
-                                            $getOffer = 0;
-                                        }
-                                        @endphp
-                                        <div class="Pro-lable">
-                                            @if($getOffer > 0)
-                                                <span class="p-discount"> {{ $getOffer }}% off</span>
-                                            @endif
-                                        </div>
-                                        <!-- Color End -->
-                                        <div class="product-info">
-                                            <h3 class="product-title">
-                                                <a href="{{ route('product',$product->slug_url) }}">{{ $product->title
-                                                    }}</a>
-                                            </h3>
-                                            <span class="product-price-wrapper">
-                                                <span class="money"><i class="fa fa-inr"></i> {{ $product->starting_price }}</span>
-                                                @if($product->starting_price < $product->mrp)
-                                                    <span class="product-price-old">
-                                                        <span class="money"><i class="fa fa-inr"></i> {{
-                                                            $product->mrp }}</span>
-                                                    </span>
-                                                @endif
-                                                @if($getOffer > 0)
-                                                    <span style="color:#388e3c">
-                                                        {{ $getOffer }}% off
-                                                    </span>
-                                                @endif
-                                                @if($product->review_status)
-                                                <span class="pull-right">
-                                                    @for($i = 1; $i<= $product->rating; $i++)
-                                                        <i class="fa fa-star rated" aria-hidden="true"></i>
-                                                        @endfor
-                                                        @for($i = 1; $i<= 5 - $product->rating; $i++)
-                                                            <i class="fa fa-star-o" aria-hidden="true"></i>
-                                                            @endfor
-                                                </span>
-                                                @endif
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            @empty
-
-                            <div class="col-md-12">
-                                <h3>No Product Found..</h3>
-                            </div>
-
-                            @endforelse
-                        </div>
-                    </div>
-                    @if(count($products))
-                    <nav class="pagination-wrap">
-                        {{ $products->links() }}
-                    </nav>
-                    @endif
                 </div>
             </div>
         </div>
-    </div>
-</div>
-<!-- Main Content Wrapper Start -->
+    </section>
+    <!-- breadcrumb end -->
 
-@endsection @section('extracss')
-<style>
-    .product-title a {
-        /* color: #fff; */
-        color: #282828;
-    }
-</style>
+    <!-- grid-list start -->
+    <section class="section-tb-padding">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3 col-md-4 col-12">
+                    <div class="all-filter">
+                        <form action="{{ request()->routeIs('search') ? route('search') : route('categories.filter') }}"
+                            method="GET" id="searchForm">
+
+                            <!-- Brands -->
+                            @if(isset($brands) && count($brands) > 0)
+                                <div class="vendor-filter">
+                                    <h4 class="filter-title">Brands</h4>
+                                    <a href="#brand-filter" data-bs-toggle="collapse" class="filter-link"><span>Brands</span><i
+                                            class="fa fa-angle-down"></i></a>
+                                    <ul class="all-vendor collapse show" id="brand-filter">
+                                        @foreach ($brands as $brand)
+                                            <li class="f-vendor">
+                                                <input type="checkbox" class="filter cb_brands" name="brands[]"
+                                                    id="brand_{{ $brand->id }}" value="{{ $brand->id }}">
+                                                <label for="brand_{{ $brand->id }}" style="margin-left: 9px">
+                                                    {{ $brand->brand_name }}
+                                                </label>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            @endif
+
+                            <!-- Conditions -->
+                            @if(isset($conditions) && count($conditions) > 0)
+                                <div class="vendor-filter">
+                                    <h4 class="filter-title">Conditions</h4>
+                                    <a href="#condition-filter" data-bs-toggle="collapse"
+                                        class="filter-link"><span>Conditions</span><i class="fa fa-angle-down"></i></a>
+                                    <ul class="all-vendor collapse show" id="condition-filter">
+                                        @foreach ($conditions as $cond)
+                                            <li class="f-vendor">
+                                                <input type="checkbox" class="filter cb_conditions" name="conditions[]"
+                                                    id="condition_{{ $cond->id }}" value="{{ $cond->id }}">
+                                                <label for="condition_{{ $cond->id }}" style="margin-left: 9px">
+                                                    {{ $cond->condition }}
+                                                </label>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            @endif
+
+                            <!-- Colors -->
+                            @if(isset($colors) && count($colors) > 0)
+                                <div class="vendor-filter">
+                                    <h4 class="filter-title">Colors</h4>
+                                    <a href="#color" data-bs-toggle="collapse" class="filter-link"><span>Colors</span><i
+                                            class="fa fa-angle-down"></i></a>
+                                    <ul class="all-vendor collapse show" id="color">
+                                        @foreach ($colors as $color)
+                                            <li class="f-vendor">
+                                                <input type="checkbox" class="filter cb_colors" name="colors[]"
+                                                    id="color_{{ $color->id }}" value="{{ $color->id }}">
+                                                <label for="color_{{ $color->id }}" style="margin-left: 9px">
+                                                    <span class="color_div"
+                                                        style="background-color: {{ $color->color_code }}; display:inline-block; width:15px; height:15px; border-radius:50%;"></span>
+                                                    {{ $color->title }}
+                                                </label>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            @endif
+
+                            <!-- Volumes -->
+                            @if(isset($sizes) && count($sizes) > 0)
+                                <div class="vendor-filter">
+                                    <h4 class="filter-title">Volumes</h4>
+                                    <a href="#size" data-bs-toggle="collapse" class="filter-link"><span>Volumes</span><i
+                                            class="fa fa-angle-down"></i></a>
+                                    <ul class="all-vendor collapse show" id="size">
+                                        @foreach ($sizes as $size)
+                                            <li class="f-vendor">
+                                                <input type="checkbox" class="filter cb_sizes" name="sizes[]"
+                                                    id="size_{{ $size->id }}" value="{{ $size->id }}">
+                                                <label for="size_{{ $size->id }}" style="margin-left: 9px">
+                                                    {{ $size->title }}
+                                                </label>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            @endif
+
+                            <!-- Price Range -->
+                            <div class="price-filter">
+                                <a href="#price-filter" data-bs-toggle="collapse" class="filter-link"><span>Price
+                                        Range</span><i class="fa fa-angle-down"></i></a>
+                                <ul class="all-price collapse show" id="price-filter" style="padding: 10px 15px;">
+                                    <span id="price-range-label"
+                                        style="font-size: 14px; font-weight: 600; color: #333; display: block; margin-bottom: 15px;">Price:
+                                        ₹0 - ₹5000</span>
+                                    <input type="hidden" id="amount" name="amount" />
+                                    <div id="slider-range"></div>
+                                </ul>
+                            </div>
+
+                            @if(isset($category))
+                                <input type="hidden" name="category_id" value="{{ $category->id }}">
+                            @endif
+                            @if(request()->has('q'))
+                                <input type="hidden" name="q" value="{{ request('q') }}">
+                            @endif
+                        </form>
+                    </div>
+                </div>
+
+                <div class="col-lg-9 col-md-8 col-12">
+                    <div class="grid-list-area">
+                        <div class="grid-pro">
+                            <ul class="grid-product">
+                                @forelse ($products as $product)
+                                                            @php
+                                                                $color_arr = explode(",", $product->color_codes);
+                                                                $getDiff = $product->starting_price - $product->mrp;
+                                                                $getOffer = $product->starting_price > 0 ? round(($getDiff / $product->starting_price) * 100, 0) : 0;
+                                                            @endphp
+                                                            <li class="grid-items">
+                                                                <div class="tred-pro">
+                                                                    <div class="tr-pro-img">
+                                                                        <a href="{{ route('product', $product->slug_url) }}">
+                                                                            <img class="img-fluid"
+                                                                                src="{!! asset('storage/images/products/' . $product->image_url) !!}"
+                                                                                alt="{{ $product->title }}">
+                                                                            <img class="img-fluid additional-image"
+                                                                                src="{!! asset('storage/images/products/' . $product->image_url1) !!}"
+                                                                                alt="{{ $product->title }}">
+                                                                        </a>
+                                                                    </div>
+                                                                    <div class="Pro-lable">
+                                                                        <span class="p-text">New</span>
+                                                                        <span class="p-discount"> {{ $getOffer }}% off</span>
+                                                                    </div>
+                                                                    <div class="pro-icn">
+                                                                        @if(auth('user')->check())
+                                                                            @php
+                                                                                $wishlistItem = auth('user')->user()->wishlists->where('product_id', $product->id)->first();
+                                                                            @endphp
+                                                                            @if ($wishlistItem)
+                                                                                <a href="javascript:void(0)" class="w-c-q-icn wishlist-remove"
+                                                                                    data-w-id="{{ $wishlistItem->id }}" title="Remove from Wishlist"><i
+                                                                                        class="fa fa-heart"></i></a>
+                                                                            @else
+                                                                                <a href="javascript:void(0)" class="w-c-q-icn wishlist"
+                                                                                    data-p-id="{{ $product->id }}" data-c-id="{{ $product->c_id }}"
+                                                                                    data-s-id="{{ $product->s_id }}" title="Add to Wishlist"><i
+                                                                                        class="fa fa-heart-o"></i></a>
+                                                                            @endif
+                                                                        @else
+                                                                            <a href="javascript:void(0)" class="w-c-q-icn wishlist-login"
+                                                                                title="Add to Wishlist"><i class="fa fa-heart-o"></i></a>
+                                                                        @endif
+                                                                        <a href="javascript:void(0)"
+                                                                            onclick="addToCart('{{ $product->id }}', '{{ $product->stock }}', '{{ $product->c_id }}', '{{ $product->s_id }}')"
+                                                                            class="w-c-q-icn" title="Add to Cart"><i class="fa fa-shopping-bag"></i></a>
+                                                                        <a href="{{ route('product', $product->slug_url) }}" class="w-c-q-icn"><i
+                                                                                class="fa fa-eye"></i></a>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="caption">
+                                                                    <h3>
+                                                                        <span class="pull-left">
+                                                                            <a href="{{ route('product', $product->slug_url) }}">
+                                                                                {{ Str::length($product->title) > 20 ? Str::substr(
+                                        $product->title,
+                                        0,
+                                        20
+                                    ) .
+                                        '...' : $product->title }}
+                                                                            </a>
+                                                                        </span>
+                                                                        <span class="pull-right">
+                                                                            @foreach($color_arr as $color_val)
+                                                                                @if(!empty(trim($color_val)))
+                                                                                    <span
+                                                                                        style="background: {{ $color_val }};border-radius:50%;height:10px;width:10px;display:inline-block;box-shadow: 1px 2px 3px 0px #5f5f5f"></span>
+                                                                                @endif
+                                                                            @endforeach
+                                                                        </span>
+                                                                        <div class="clearfix"></div>
+                                                                    </h3>
+                                                                    <div>
+                                                                        <div class="pro-price pull-left">
+                                                                            <span class="new-price"><i class="fa fa-inr"></i> {{ $product->mrp }}</span>
+                                                                            <span class="old-price"><del><i class="fa fa-inr"></i> {{
+                                        $product->starting_price
+                                                                                                                    }}</del></span>
+                                                                        </div>
+                                                                        @if($product->review_status)
+                                                                            <div class="rating pull-right">
+                                                                                @for($i = 1; $i <= $product->rating; $i++)
+                                                                                    <i class="fa fa-star b-star"></i>
+                                                                                @endfor
+                                                                                @for($i = 1; $i <= 5 - $product->rating; $i++)
+                                                                                    <i class="fa fa-star-o"></i>
+                                                                                @endfor
+                                                                            </div>
+                                                                        @endif
+                                                                    </div>
+                                                                </div>
+                                                            </li>
+
+                                @empty
+                                    <li>
+                                        <h3 class="text-danger">No Product Found...</h3>
+                                    </li>
+                                @endforelse
+                            </ul>
+                        </div>
+                    </div>
+                    {{ $products->links('vendor.pagination.default') }}
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- grid-list start -->
 @endsection
-@section('extrajs')
-<script>
-    $(document).ready(function () {
-        var old_brands = {!! json_encode($input->brands) !!};
-        if (old_brands && typeof old_brands == "object") {
-            for (x of old_brands) {
-                $(".cb_brands[value=" + x + "]").attr("checked", "checked");
-            }
-        }
-        var old_conditions = {!! json_encode($input->conditions) !!};
-        if (old_conditions && typeof old_conditions == "object") {
-            for (x of old_conditions) {
-                $(".cb_conditions[value=" + x + "]").attr("checked", "checked");
-            }
-        }
-    });
 
-</script>
+@section('extracss')
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
+    <style>
+        #slider-range {
+            height: 6px !important;
+            background: #e9ecef !important;
+            border: none !important;
+            border-radius: 10px !important;
+            margin: 15px 5px 25px 5px !important;
+            position: relative;
+        }
+
+        #slider-range .ui-slider-range {
+            background: #670cb1 !important;
+            border: none !important;
+        }
+
+        #slider-range .ui-slider-handle {
+            width: 22px !important;
+            height: 22px !important;
+            background: #fff !important;
+            border: 3px solid #670cb1 !important;
+            border-radius: 50% !important;
+            cursor: pointer !important;
+            top: -9px !important;
+            outline: none !important;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2) !important;
+            z-index: 2;
+        }
+
+        #slider-range .ui-slider-handle:hover {
+            background: #670cb1 !important;
+        }
+    </style>
+@endsection
+
+@section('extrajs')
+    <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
+    <script>
+        $(document).ready(function () {
+
+            $('.filter').click(function () {
+                submitFilterForm();
+            });
+
+            var old_brands = {!! json_encode($input->brands ?? []) !!};
+            if (old_brands && typeof old_brands == "object") {
+                for (x of old_brands) {
+                    $(".cb_brands[value=" + x + "]").prop("checked", true);
+                }
+            }
+
+            var old_conditions = {!! json_encode($input->conditions ?? []) !!};
+            if (old_conditions && typeof old_conditions == "object") {
+                for (x of old_conditions) {
+                    $(".cb_conditions[value=" + x + "]").prop("checked", true);
+                }
+            }
+
+            var old_colors = {!! json_encode($input->colors ?? []) !!};
+            if (old_colors && typeof old_colors == "object") {
+                for (x of old_colors) {
+                    $(".cb_colors[value=" + x + "]").prop("checked", true);
+                }
+            }
+
+            var old_sizes = {!! json_encode($input->sizes ?? []) !!};
+            if (old_sizes && typeof old_sizes == "object") {
+                for (x of old_sizes) {
+                    $(".cb_sizes[value=" + x + "]").prop("checked", true);
+                }
+            }
+
+            var max_price = {{ isset($max_price) && $max_price > 0 ? $max_price : 50000 }};
+            var current_amount = "{!! request('amount') !!}";
+            var cur_min = 0;
+            var cur_max = max_price;
+
+            if (current_amount) {
+                var replaced_amt = current_amount.replace(/₹/g, '').replace(/ /g, '');
+                var explode_amt = replaced_amt.split('-');
+                if (explode_amt.length == 2) {
+                    cur_min = parseInt(explode_amt[0]);
+                    cur_max = parseInt(explode_amt[1]);
+                }
+            }
+
+            var options = {
+                range: true,
+                min: 0,
+                max: max_price,
+                values: [cur_min, cur_max],
+                slide: function (event, ui) {
+                    var min = ui.values[0],
+                        max = ui.values[1];
+
+                    $("#amount").val('₹' + min + " - ₹" + max);
+                    $("#price-range-label").text('Price: ₹' + min + " - ₹" + max);
+                },
+                stop: function (event, ui) {
+                    submitFilterForm();
+                }
+            };
+
+            $("#slider-range").slider(options);
+            $("#amount").val('₹' + $("#slider-range").slider("values", 0) + " - ₹" + $("#slider-range").slider("values", 1));
+            $("#price-range-label").text('Price: ₹' + $("#slider-range").slider("values", 0) + " - ₹" + $("#slider-range").slider("values", 1));
+        });
+
+        function submitFilterForm() {
+            $('#searchForm').submit();
+        }
+    </script>
 @endsection

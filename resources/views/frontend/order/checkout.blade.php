@@ -212,72 +212,47 @@
                                                     </ul>
                                                     <div class="checkout-payment">
 
-                                                        <div class="promocode-checkout">
-                                                            <div class="faq-tab-wrapper-three">
-                                                                <div class="faq-panel">
-                                                                    <div class="panel-group theme-accordion"
-                                                                        id="accordion">
-
-                                                                        <div class="panel">
-                                                                            <div class="panel-heading" id="heading2">
-                                                                                <h6 class="panel-title">
-                                                                                    <a data-bs-toggle="collapse"
-                                                                                        href="#collapse2" role="button"
-                                                                                        aria-expanded="false"
-                                                                                        aria-controls="collapse2">
-                                                                                        Apply Coupon</a>
-                                                                                </h6>
-                                                                            </div>
-                                                                            <div id="collapse2"
-                                                                                class="panel-collapse collapse"
-                                                                                aria-labelledby="heading2"
-                                                                                data-parent="#accordion" style="">
-                                                                                <div class="panel-body">
-                                                                                    <div class="check">
-                                                                                        <div class="input-group">
-                                                                                            <input type="text"
-                                                                                                name="discountcode"
-                                                                                                id="discountcode"
-                                                                                                class="single-input-wrapper check-availibility discountcode"
-                                                                                                placeholder="Enter Coupon"
-                                                                                                style="border-right: none;margin-bottom: 0;">
-                                                                                            <div
-                                                                                                class="input-group-append">
-                                                                                                <button type="button"
-                                                                                                    class="verify_promo check-availibility theme-button-three  mr-0">
-                                                                                                    Apply
-                                                                                                </button>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
+                                                        <div class="promocode-checkout mb-4 mt-4" style="padding: 20px 15px; border-top: 1px dashed #ccc; border-bottom: 1px dashed #ccc;">
+                                                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                                                <h6 class="font-weight-bold mb-0" style="font-size: 15px; color: #333;">Have a Coupon?</h6>
+                                                                <div class="text-right">
+                                                                    <span class="promo_success text-success font-weight-bold" style="font-size: 14px; display: none;"></span>
+                                                                    <span class="promo_error text-danger font-weight-bold" style="font-size: 14px; display: none;"></span>
+                                                                </div>
+                                                            </div>
+                                                            <div class="position-relative">
+                                                                <div class="check">
+                                                                    <div class="input-group">
+                                                                        <input type="text"
+                                                                            name="discountcode"
+                                                                            id="discountcode"
+                                                                            class="form-control discountcode"
+                                                                            placeholder="Enter Coupon Code"
+                                                                            style="border: 1px solid #ccc; margin-bottom: 0; height: 45px; box-shadow: none; border-right: none; padding-left: 15px; border-radius: 4px 0 0 4px; background: #fff;" autocomplete="off">
+                                                                        <div class="input-group-append">
+                                                                            <button type="button"
+                                                                                class="verify_promo btn btn-dark mr-0" style="height: 45px; border-radius: 0 4px 4px 0; padding: 0 25px; font-weight: 600; background: #333; color: #fff; border: 1px solid #333;">
+                                                                                Apply
+                                                                            </button>
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                                <div class="form-group text-center">
-                                                                    <div class="promo_success text-success mt-3"></div>
-                                                                    <div class="promo_error text-danger mt-3"></div>
-                                                                </div>
-                                                                
+
                                                                 @if(isset($coupons) && $coupons->count() > 0)
-                                                                <div class="mt-3">
-                                                                    <p class="font-weight-bold mb-2">Available Coupons:</p>
-                                                                    <div class="list-group">
-                                                                        @foreach($coupons as $coupon)
-                                                                            <a href="javascript:void(0)" class="list-group-item list-group-item-action coupon-item" data-code="{{ $coupon->code }}" style="padding: 10px;">
-                                                                                <div class="d-flex w-100 justify-content-between align-items-center">
-                                                                                    <h6 class="mb-0 text-primary"><i class="fa fa-tag"></i> {{ $coupon->code }}</h6>
-                                                                                    <small class="text-success font-weight-bold">{{ $coupon->type == 'percentage' ? $coupon->value . '%' : '₹' . $coupon->value }} OFF</small>
-                                                                                </div>
-                                                                            </a>
-                                                                        @endforeach
-                                                                    </div>
+                                                                <div class="available-coupons-dropdown list-group" style="display: none; position: absolute; z-index: 99999; width: 100%; background-color: #ffffff; box-shadow: 0 8px 24px rgba(0,0,0,0.15); max-height: 250px; overflow-y: auto; top: 100%; left: 0; border: 1px solid #ddd; border-radius: 4px; margin-top: 5px;">
+                                                                    @foreach($coupons as $coupon)
+                                                                        <a href="javascript:void(0)" class="list-group-item list-group-item-action coupon-item" data-code="{{ $coupon->code }}" style="padding: 12px 15px; border-radius: 0; border: none; border-bottom: 1px solid #eee; background-color: #ffffff;">
+                                                                            <div class="d-flex w-100 justify-content-between align-items-center">
+                                                                                <h6 class="mb-0 text-primary" style="font-size: 14px;"><i class="fa fa-tag"></i> {{ $coupon->code }}</h6>
+                                                                                <small class="text-success font-weight-bold" style="font-size: 13px;">{{ $coupon->type == 'percentage' ? $coupon->value . '%' : '₹' . $coupon->value }} OFF</small>
+                                                                            </div>
+                                                                        </a>
+                                                                    @endforeach
                                                                 </div>
                                                                 @endif
-
                                                             </div>
                                                         </div>
+
 
                                                         @if ($isCodAvailable)
                                                             <div class="payment-group pymt-btn mb--10">
@@ -481,52 +456,57 @@
                                         <div class="col-md-6 sm-mb-50">
                                             <div class="signUp-page signUp-minimal">
                                                 <div class="signin-form-wrapper">
-                                                    <div class="title-area text-center">
-                                                        <h3>Login</h3>
-                                                    </div> <!-- /.title-area -->
-                                                    <ul class="social-icon-wrapper row">
-                                                        <li class="col-12">
-                                                            <a href="{{ route('user.login.otp') }}" class="otp"><i class="fa fa-mobile" aria-hidden="true"></i> Login With OTP</a>
-                                                        </li>
-                                                        <li class="col-12">
-                                                            <a href="{{ route('user.auth.socialite', 'google') }}" class="gmail"><i class="fa fa-google" aria-hidden="true"></i> Google</a>
-                                                        </li>
-                                                    </ul>
+                                                    <!-- OTP Flow -->
+                                                    <div class="text-center mb-3">
+                                                        <h6>Login With OTP</h6>
+                                                    </div>
+                                                    <div id="checkout-otp-flow-container">
+                                                        <form id="checkout-otp-request-form" class="login" action="{{ route('user.login.otp') }}" method="POST" autocomplete="off">
+                                                            @csrf
+                                                            <div class="row">
+                                                                <div class="col-12">
+                                                                    <div class="input-group mb-0">
+                                                                        <input type="number" name="mobile" id="checkout-otp-mobile-input" required />
+                                                                        <label>Enter 10 digit Mobile Number <span style="color:red">*</span></label>
+                                                                    </div>
+                                                                    <span class="text-danger" style="font-size: 13px; margin-bottom: 15px; display: block;" id="checkout-otp-request-error"></span>
+                                                                </div>
+                                                            </div>
+                                                            <button type="submit" class="line-button-one button-rose mt-1 w-100" id="checkout-btn-request-otp">
+                                                                Next
+                                                            </button>
+                                                        </form>
+
+                                                        <form id="checkout-otp-verify-form" class="login d-none" action="{{ route('user.otp.verify') }}" method="POST" autocomplete="off">
+                                                            @csrf
+                                                            <div class="row">
+                                                                <div class="col-12">
+                                                                    <div class="input-group mb-0">
+                                                                        <input type="number" name="otp" id="checkout-otp-input" required />
+                                                                        <label>Enter OTP <span style="color:red">*</span></label>
+                                                                    </div>
+                                                                    <span class="text-danger" style="font-size: 13px; margin-bottom: 15px; display: block;" id="checkout-otp-verify-error"></span>
+                                                                </div>
+                                                            </div>
+                                                            <button type="submit" class="line-button-one button-rose mt-1 w-100" id="checkout-btn-verify-otp">
+                                                                Verify & Login
+                                                            </button>
+                                                        </form>
+                                                    </div>
+
                                                     <p class="or-text mt-4 mb-4"><span>or</span></p>
 
-                                                    <form id="login-form" action="{{ route('user.login') }}"
-                                                        method="POST" autocomplete="off" class="login needs-validation">
-                                                        @csrf
-                                                        <div class="row">
-                                                            <div class="col-12">
-                                                                <div class="input-group">
-                                                                    <input type="text" name="email" value=""
-                                                                        required>
-                                                                    <label>Email *</label>
-                                                                </div> <!-- /.input-group -->
-                                                            </div> <!-- /.col- -->
-                                                            <div class="col-12">
-                                                                <div class="input-group">
-                                                                    <input type="password" name="password" required>
-                                                                    <label>Password *</label>
-                                                                </div> <!-- /.input-group -->
-                                                            </div> <!-- /.col- -->
-                                                        </div> <!-- /.row -->
-                                                        <div
-                                                            class="agreement-checkbox d-flex justify-content-between align-items-center">
-                                                            <div>
-                                                                <input type="checkbox" name="remember" checked
-                                                                    id="remember">
-                                                                <label for="remember">Remember Me</label>
-                                                            </div>
-                                                            <a href="{{ route('user.password.request') }}">Forget
-                                                                Password?</a>
+                                                    <div class="row m-0 p-0">
+                                                        <div class="col-12 p-0">
+                                                            <a href="{{ route('user.login') }}" class="line-button-one button-rose mt-1 w-100 login-with-email-btn" style="display: block; text-align: center;"><i class="fa fa-envelope" aria-hidden="true"></i> Login with Email</a>
                                                         </div>
-                                                        <button type="submit"
-                                                            class="line-button-one button-rose button_update_login">
-                                                            Login
-                                                        </button>
-                                                    </form>
+                                                    </div>
+
+                                                    <ul class="social-icon-wrapper row m-0 mt-4 mb-4 p-0">
+                                                        <li class="col-12 p-0">
+                                                            <a href="{{ route('user.auth.socialite', 'google') }}" class="gmail w-100" style="width: 100%; display: block;"><i class="fa fa-google" aria-hidden="true"></i> Login with Google</a>
+                                                        </li>
+                                                    </ul>
                                                 </div> <!-- /.sign-up-form-wrapper -->
                                             </div> <!-- /.signUp-page -->
                                         </div>
@@ -1357,9 +1337,22 @@
                 }
             });
 
-            $('.coupon-item').click(function() {
+            // Coupon Dropdown logic
+            $('#discountcode').on('focus', function() {
+                $('.available-coupons-dropdown').slideDown('fast');
+            });
+
+            $(document).on('click', function(e) {
+                if (!$(e.target).closest('.promocode-checkout').length) {
+                    $('.available-coupons-dropdown').slideUp('fast');
+                }
+            });
+
+            $('.coupon-item').click(function(e) {
+                e.preventDefault();
                 var code = $(this).data('code');
                 $('#discountcode').val(code);
+                $('.available-coupons-dropdown').slideUp('fast');
                 // Auto click apply button
                 $('.verify_promo').click();
             });
@@ -1475,5 +1468,78 @@
                 container.find('.pincode_error').html('Pincode should be of 6 digits');
             }
         }
+
+        $(document).ready(function() {
+            $('#checkout-otp-request-form').on('submit', function(e) {
+                e.preventDefault();
+                var $form = $(this);
+                var $btn = $('#checkout-btn-request-otp');
+                var mobile = $('#checkout-otp-mobile-input').val();
+                $('#checkout-otp-request-error').text('');
+
+                if(!mobile || mobile.length !== 10) {
+                    $('#checkout-otp-request-error').text('Please enter a valid 10-digit mobile number.');
+                    return;
+                }
+
+                $btn.prop('disabled', true).html('<span class="fa fa-spinner fa-spin"></span> Loading...');
+
+                $.ajax({
+                    url: $form.attr('action'),
+                    type: 'POST',
+                    data: $form.serialize(),
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                    success: function(response) {
+                        if (response.success) {
+                            $form.addClass('d-none');
+                            $('#checkout-otp-verify-form').removeClass('d-none');
+                        } else {
+                            $('#checkout-otp-request-error').text(response.message || 'Something went wrong.');
+                        }
+                    },
+                    error: function(xhr) {
+                        $('#checkout-otp-request-error').text('An error occurred. Please try again.');
+                    },
+                    complete: function() {
+                        $btn.prop('disabled', false).text('Next');
+                    }
+                });
+            });
+
+            $('#checkout-otp-verify-form').on('submit', function(e) {
+                e.preventDefault();
+                var $form = $(this);
+                var $btn = $('#checkout-btn-verify-otp');
+                var otp = $('#checkout-otp-input').val();
+                $('#checkout-otp-verify-error').text('');
+
+                if(!otp) {
+                    $('#checkout-otp-verify-error').text('Please enter OTP.');
+                    return;
+                }
+
+                $btn.prop('disabled', true).html('<span class="fa fa-spinner fa-spin"></span> Verifying...');
+
+                $.ajax({
+                    url: $form.attr('action'),
+                    type: 'POST',
+                    data: $form.serialize(),
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                    success: function(response) {
+                        if (response.success) {
+                            window.location.href = response.redirect;
+                        } else {
+                            $('#checkout-otp-verify-error').text(response.message || 'Invalid OTP.');
+                        }
+                    },
+                    error: function(xhr) {
+                        $('#checkout-otp-verify-error').text('An error occurred. Please try again.');
+                    },
+                    complete: function() {
+                        $btn.prop('disabled', false).text('Verify & Login');
+                    }
+                });
+            });
+        });
     </script>
 @endsection

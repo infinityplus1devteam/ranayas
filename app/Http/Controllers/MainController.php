@@ -276,6 +276,14 @@ class MainController extends Controller
             }
         }
 
+        if ($request->filled('brands') && gettype($request->brands) == 'array') {
+            $products = $products->whereIn('p.brand_id', $request->brands);
+        }
+
+        if ($request->filled('conditions') && gettype($request->conditions) == 'array') {
+            $products = $products->whereIn('p.condition_id', $request->conditions);
+        }
+
         $products = $products->orderByRaw('CASE WHEN p.sort_index IS NULL THEN 1 ELSE 0 END')
             ->orderBy('p.sort_index', 'desc')
             ->orderBy('p.id', 'desc')
@@ -283,19 +291,49 @@ class MainController extends Controller
 
         $categories = TxnCategory::selectRaw("DISTINCT(name) as category_name, id")->where('status', true)->get();
 
-        return view('frontend.product.index', compact('products', 'categories', 'colors', 'sizes'))->with('input', $request);
+        $prodLists = [];
+        foreach ($products as $prod) {
+            array_push($prodLists, $prod->id);
+        }
+
+        $brands = DB::table('txn_products as p')
+            ->selectRaw("Distinct(b.id) as id, b.brand_name")
+            ->leftJoin("txn_brands as b", "p.brand_id", "b.id")
+            ->where('p.status', true)
+            ->whereIn('p.id', $prodLists)
+            ->groupBy("p.id")
+            ->get();
+
+        $conditions = \App\Model\TxnCondition::where('status', true)->get();
+
+        $max_price = DB::table('map_color_sizes as map')
+            ->join('txn_products as p', 'p.id', '=', 'map.product_id')
+            ->whereIn('p.id', $prodLists)
+            ->where('p.status', true)
+            ->max('map.mrp') ?? 50000;
+
+        return view('frontend.product.cate-products', compact('products', 'categories', 'colors', 'sizes', 'brands', 'conditions', 'max_price'))->with('input', $request);
     }
 
     public function filter(Request $request)
     {
         $products = DB::table('txn_products as p')
-            ->selectRaw("p.id , p.title , p.slug_url, p.image_url, p.image_url1,FLOOR(AVG(r.rating)) as rating , COUNT(Distinct(r.comment)) as total_comment")
+            ->selectRaw("p.id , p.title , p.slug_url,w.user_id as w_u_id,w.id as w_id, w.product_id as w_product_id,map.color_id as c_id, map.size_id as s_id, p.image_url, p.image_url1,p.review_status, map.mrp, map.starting_price, map.stock,
+                GROUP_CONCAT(DISTINCT(co.color_code)) as color_codes, p.category_id ,c.parent_id, FLOOR(AVG(r.rating)) as rating , COUNT(Distinct(r.comment)) as total_comment")
+            ->leftJoin("map_color_sizes as map", "map.product_id", "p.id")
+            ->leftJoin("mst_colors as co", "co.id", "map.color_id")
             ->leftJoin("txn_reviews as r", function ($join) {
                 $join->on("r.product_id", "=", "p.id")
                     ->where("r.status", "=", true);
             })
+            ->leftJoin("txn_categories as c", "p.category_id", "c.id")
+            ->leftJoin("wishlists as w", "p.id", "w.product_id")
             ->leftJoin("txn_keywords as k", "k.product_id", "p.id")
             ->where('p.status', '=', true);
+
+        if ($request->filled('q')) {
+            $products = $products->where('k.keyword', 'like', '%' . $request->q . '%');
+        }
 
         if ($request->filled('brands') && gettype($request->brands) == 'array') {
             $products = $products->whereIn('p.brand_id', $request->brands);
@@ -303,6 +341,24 @@ class MainController extends Controller
 
         if ($request->filled('conditions') && gettype($request->conditions) == 'array') {
             $products = $products->whereIn('p.condition_id', $request->conditions);
+        }
+
+        if ($request->filled('colors') && gettype($request->colors) == 'array') {
+            $products = $products->whereIn('map.color_id', $request->colors);
+        }
+
+        if ($request->filled('sizes') && gettype($request->sizes) == 'array') {
+            $products = $products->whereIn('map.size_id', $request->sizes);
+        }
+
+        if ($request->filled('amount')) {
+            // Strip out any non-digits from the string to safely extract the min and max price
+            preg_match_all('/\d+/', $request->amount, $matches);
+            if (!empty($matches[0]) && count($matches[0]) >= 2) {
+                $products = $products->whereBetween('map.mrp', [$matches[0][0], $matches[0][1]]);
+            } elseif (!empty($matches[0]) && count($matches[0]) == 1) {
+                $products = $products->where('map.mrp', '<=', $matches[0][0]);
+            }
         }
 
         $products = $products->orderByRaw('CASE WHEN p.sort_index IS NULL THEN 1 ELSE 0 END')
@@ -324,9 +380,19 @@ class MainController extends Controller
 
         $brands = $brands->groupBy("p.id")->get();
 
-        $conditions = TxnCondition::where('status', true)->get();
+        $conditions = \App\Model\TxnCondition::where('status', true)->get();
 
-        return view('frontend.product.index', compact('products', 'brands', 'conditions'))->with('input', $request);
+        $categories = \App\Model\TxnCategory::selectRaw("DISTINCT(name) as category_name, id")->where('status', true)->get();
+        $colors = \App\Model\MstColor::where('status', true)->get();
+        $sizes = \App\Model\MstSize::where('status', true)->get();
+
+        $max_price = DB::table('map_color_sizes as map')
+            ->join('txn_products as p', 'p.id', '=', 'map.product_id')
+            ->whereIn('p.id', $prodLists)
+            ->where('p.status', true)
+            ->max('map.mrp') ?? 50000;
+
+        return view('frontend.product.cate-products', compact('products', 'categories', 'colors', 'sizes', 'brands', 'conditions', 'max_price'))->with('input', $request);
 
         // return response()->json(['products' => $products], 200);
     }
@@ -351,11 +417,16 @@ class MainController extends Controller
         }
 
         $products = DB::table('txn_products as p')
-            ->selectRaw("p.id , p.title , p.slug_url , p.image_url, p.image_url1, FLOOR(AVG(r.rating)) as rating , COUNT(Distinct(r.comment)) as total_comment")
+            ->selectRaw("p.id , p.title , p.slug_url,w.user_id as w_u_id,w.id as w_id, w.product_id as w_product_id,map.color_id as c_id, map.size_id as s_id, p.image_url, p.image_url1,p.review_status, map.mrp, map.starting_price, map.stock,
+                GROUP_CONCAT(DISTINCT(co.color_code)) as color_codes, p.category_id ,c.parent_id, FLOOR(AVG(r.rating)) as rating , COUNT(Distinct(r.comment)) as total_comment")
+            ->leftJoin("map_color_sizes as map", "map.product_id", "p.id")
+            ->leftJoin("mst_colors as co", "co.id", "map.color_id")
             ->leftJoin("txn_reviews as r", function ($join) {
                 $join->on("r.product_id", "=", "p.id")
                     ->where("r.status", "=", true);
             })
+            ->leftJoin("txn_categories as c", "p.category_id", "c.id")
+            ->leftJoin("wishlists as w", "p.id", "w.product_id")
             ->leftJoin("txn_keywords as k", "k.product_id", "p.id")
             ->where('p.status', '=', true)
             ->whereIN('p.category_id', $cateLists);
@@ -378,12 +449,36 @@ class MainController extends Controller
             $products = $products->whereIn('p.condition_id', $request->conditions);
         }
 
+        if ($request->filled('colors') && gettype($request->colors) == 'array') {
+            $products = $products->whereIn('map.color_id', $request->colors);
+        }
+
+        if ($request->filled('sizes') && gettype($request->sizes) == 'array') {
+            $products = $products->whereIn('map.size_id', $request->sizes);
+        }
+
+        if ($request->filled('amount')) {
+            // Strip out any non-digits from the string to safely extract the min and max price
+            preg_match_all('/\d+/', $request->amount, $matches);
+            if (!empty($matches[0]) && count($matches[0]) >= 2) {
+                $products = $products->whereBetween('map.mrp', [$matches[0][0], $matches[0][1]]);
+            } elseif (!empty($matches[0]) && count($matches[0]) == 1) {
+                $products = $products->where('map.mrp', '<=', $matches[0][0]);
+            }
+        }
+
+        $max_price = DB::table('map_color_sizes as map')
+            ->join('txn_products as p', 'p.id', '=', 'map.product_id')
+            ->whereIn('p.category_id', $cateLists)
+            ->where('p.status', true)
+            ->max('map.mrp') ?? 50000;
+
         $products = $products->orderByRaw('CASE WHEN p.sort_index IS NULL THEN 1 ELSE 0 END')
             ->orderBy('p.sort_index', 'desc')
             ->orderBy('p.id', 'desc')
             ->groupBy("p.id")->paginate(20);
 
-        return view('frontend.product.cate-products', compact('products', 'category', 'brands', 'conditions'))->with('input', $request);
+        return view('frontend.product.cate-products', compact('products', 'category', 'brands', 'conditions', 'max_price'))->with('input', $request);
 
         // return response()->json(['products' => $products], 200);
     }
@@ -454,11 +549,21 @@ class MainController extends Controller
                 ->where('p.status', true)
                 ->max('map.mrp') ?? 5000;
 
+            $brands = DB::table('txn_products as p')
+                ->selectRaw("Distinct(b.id) as id, b.brand_name")
+                ->leftJoin("txn_brands as b", "p.brand_id", "b.id")
+                ->where('p.status', true)
+                ->whereIN('p.category_id', $cateLists)
+                ->groupBy("p.id")
+                ->get();
+
+            $conditions = \App\Model\TxnCondition::where('status', true)->get();
+
             $products = $products->orderByRaw('CASE WHEN p.sort_index IS NULL THEN 1 ELSE 0 END')
                 ->orderBy('p.sort_index', 'desc')
                 ->orderBy('p.id', 'desc')
                 ->groupBy("p.id")->paginate(50);
-            return view('frontend.newproduct.category', compact('products', 'category', 'categories', 'colors', 'sizes', 'max_price'))->with('input', $request);
+            return view('frontend.product.cate-products', compact('products', 'category', 'categories', 'colors', 'sizes', 'max_price', 'brands', 'conditions'))->with('input', $request);
         } catch (\Exception $ex) {
             if ($ex instanceof \Illuminate\Database\Eloquent\ModelNotFoundException) {
 
