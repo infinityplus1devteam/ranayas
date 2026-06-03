@@ -64,7 +64,7 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="submit" class="btn btn-style2 button_update">
+                            <button type="submit" class="btn review-submit-btn">
                                 <i class="fa fa-plus"></i> Submit
                             </button>
                         </div>
@@ -112,7 +112,7 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="submit" class="btn btn-style2 button_update">
+                            <button type="submit" class="btn review-submit-btn">
                                 <i class="fa fa-plus"></i> Submit
                             </button>
                         </div>
@@ -184,7 +184,7 @@
                                         Download</a>
                                     @if($order->shipment_id)
                                         <a href="{{ route('user.order.tracking', $order->shipment_id) }}"
-                                            class="download-invoice"><i class="fa fa-download" aria-hidden="true"></i>
+                                            class="tracking-btn"><i class="fa fa-map-marker" aria-hidden="true"></i>
                                             Tracking</a>
                                     @endif
                                     <a href="javascript:void(0);" class="orderHelp">

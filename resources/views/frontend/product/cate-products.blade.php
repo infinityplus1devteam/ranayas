@@ -201,6 +201,7 @@
                                                                             </a>
                                                                         </span>
                                                                         <span class="pull-right">
+                                                                            <span style="display:none"></span>
                                                                             @foreach($color_arr as $color_val)
                                                                                 @if(!empty(trim($color_val)))
                                                                                     <span

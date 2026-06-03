@@ -319,8 +319,7 @@
                                                 <span class="pull-left">
                                                     @foreach ($colors as $color)
                                                         <span
-                                                            style="background: {{ $color }};border-radius:50%;height:10px;width:10px;display:inline-block;box-shadow: 1px 2px 3px 0px #5f5f5f;    transform: translateX(-89%) translateY(47%) scale(1);opacity:1;
-                                                            "></span>
+                                                            style="background: {{ $color }};border-radius:50%;height:10px;width:10px;display:inline-block;box-shadow: 1px 2px 3px 0px #5f5f5f;opacity:1;"></span>
                                                     @endforeach
                                                 </span>
                                                 <div class="clearfix"></div>

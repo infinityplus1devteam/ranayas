@@ -665,7 +665,7 @@
                                         <input type="number" min="1" name="sort_index[{{ $key }}]"
                                             value="{{ $cf->sort_index }}" class="form-control">
                                     </td>
-
+{{ dd($product->sizes) }}
                                     <td class="">
                                         <select name="size_id[{{ $key }}]" class="form-control" required>
                                             <option value="">--Select Sizes--</option>

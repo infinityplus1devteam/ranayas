@@ -654,6 +654,7 @@
                                             </a>
                                         </span>
                                         <span class="pull-right">
+                                            <span style="display:none"></span>
                                             @foreach ($colors as $color)
                                                 <span
                                                     style="background: {{ $color }};border-radius:50%;height:10px;width:10px;display:inline-block;box-shadow: 1px 2px 3px 0px #5f5f5f"></span>

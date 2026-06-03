@@ -335,17 +335,21 @@
                         <td colspan="3"></td>
                     </tr>
                     <tr>
+                        @php 
+                            $shipping = $invoice->total >= 1000 ? 0 : 60; 
+                            $subtotal = $invoice->total + $invoice->discount - $shipping;
+                        @endphp
                         <th colspan="2">
                             Total
                         </th>
                         <td>
-                            Rs. {{ $invoice->tbt }}
+                            Rs. {{ $subtotal }}
                         </td>
                     </tr>
                     @if($invoice->tax > 0)
                         <tr>
                             <th colspan="2">
-                                + CGST
+                                (Includes CGST)
                             </th>
                             <td>
                                 Rs. {{ round($invoice->tax / 2, 2) }}
@@ -353,7 +357,7 @@
                         </tr>
                         <tr>
                             <th colspan="2">
-                                + SGST
+                                (Includes SGST)
                             </th>
                             <td>
                                 Rs. {{ round($invoice->tax / 2, 2) }}
@@ -365,25 +369,25 @@
                             + Shipping
                         </th>
                         <td>
-                            Rs.
-                            {{ $invoice->total >= 1000 ? '0' : '60' }}
+                            Rs. {{ $shipping }}
                         </td>
                     </tr>
-                    <tr>
-                        <th colspan="2">
-                            - Discount
-                        </th>
-                        <td>
-                            Rs. {{ $invoice->discount ? $invoice->discount : 0 }}
-                        </td>
-                    </tr>
+                    @if($invoice->discount)
+                        <tr>
+                            <th colspan="2">
+                                - Discount
+                            </th>
+                            <td>
+                                Rs. {{ $invoice->discount }}
+                            </td>
+                        </tr>
+                    @endif
                     <tr>
                         <th colspan="2">
                             Grand Total
                         </th>
-                        @php $shipping = $invoice->total >= 1000 ? 0 : 60; @endphp
                         <td>
-                            Rs. {{ round($invoice->tbt + $invoice->tax - $invoice->discount + $shipping, 2) }}
+                            Rs. {{ round($invoice->total, 2) }}
                         </td>
                     </tr>
                 </table>

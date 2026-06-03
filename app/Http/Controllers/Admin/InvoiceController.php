@@ -158,7 +158,7 @@ class InvoiceController extends Controller
             $invoice = TxnOrder::where('id', $request->order_id)->with('details', 'user', 'transaction')->firstOrFail();
             $pdf = PDF::loadView('backend.admin.invoices.download', ['invoice' => $invoice]);
             Mail::send(['html' => 'backend.admin.invoices.empty'], ['invoice' => $invoice], function ($message) use ($invoice, $pdf) {
-                $message->from('contact@ranayas.com', 'Ranayas');
+                $message->from(env('MAIL_FROM_ADDRESS', 'info@ranayas.com'), env('MAIL_FROM_NAME', 'Ranayas'));
                 $message->to($invoice->user->email, $invoice->user->name);
                 $message->subject('Invoice copy of Order No ' . $invoice->id . ' From Ranayas');
                 $message->attachData($pdf->output(), 'order_no_' . $invoice->id . '.pdf');
@@ -176,6 +176,9 @@ class InvoiceController extends Controller
                 return redirect(route('admin.invoices.all'));
             }
 
+            \Log::error(['invoice resend' => $ex->getMessage()]);
+            // temporary debug output:
+            // return $ex->getMessage();
             connectify('error', 'Error', 'Whoops, Something Went Wrong from our end !');
 
             return redirect(route('admin.invoices.all'));

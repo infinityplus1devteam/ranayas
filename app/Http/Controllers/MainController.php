@@ -296,13 +296,7 @@ class MainController extends Controller
             array_push($prodLists, $prod->id);
         }
 
-        $brands = DB::table('txn_products as p')
-            ->selectRaw("Distinct(b.id) as id, b.brand_name")
-            ->leftJoin("txn_brands as b", "p.brand_id", "b.id")
-            ->where('p.status', true)
-            ->whereIn('p.id', $prodLists)
-            ->groupBy("p.id")
-            ->get();
+        $brands = \App\Model\TxnBrand::where('status', true)->get();
 
         $conditions = \App\Model\TxnCondition::where('status', true)->get();
 
@@ -372,13 +366,7 @@ class MainController extends Controller
             array_push($prodLists, $prod->id);
         }
 
-        $brands = DB::table('txn_products as p')
-            ->selectRaw("Distinct(b.id) as id, b.brand_name")
-            ->leftJoin("txn_brands as b", "p.brand_id", "b.id")
-            ->where('p.status', true)
-            ->whereIN('p.id', $prodLists);
-
-        $brands = $brands->groupBy("p.id")->get();
+        $brands = \App\Model\TxnBrand::where('status', true)->get();
 
         $conditions = \App\Model\TxnCondition::where('status', true)->get();
 
@@ -431,15 +419,13 @@ class MainController extends Controller
             ->where('p.status', '=', true)
             ->whereIN('p.category_id', $cateLists);
 
-        $brands = DB::table('txn_products as p')
-            ->selectRaw("Distinct(b.id) as id, b.brand_name")
-            ->leftJoin("txn_brands as b", "p.brand_id", "b.id")
-            ->where('p.status', true)
-            ->whereIN('p.category_id', $cateLists)
-            ->groupBy("p.id")
-            ->get();
+        $brands = \App\Model\TxnBrand::where('status', true)->get();
 
         $conditions = TxnCondition::where('status', true)->get();
+        
+        $colors = MstColor::where('status', true)->get();
+        
+        $sizes = MstSize::where('status', true)->get();
 
         if ($request->filled('brands') && gettype($request->brands) == 'array') {
             $products = $products->whereIn('p.brand_id', $request->brands);
@@ -478,7 +464,7 @@ class MainController extends Controller
             ->orderBy('p.id', 'desc')
             ->groupBy("p.id")->paginate(20);
 
-        return view('frontend.product.cate-products', compact('products', 'category', 'brands', 'conditions', 'max_price'))->with('input', $request);
+        return view('frontend.product.cate-products', compact('products', 'category', 'colors', 'sizes', 'brands', 'conditions', 'max_price'))->with('input', $request);
 
         // return response()->json(['products' => $products], 200);
     }
@@ -549,13 +535,7 @@ class MainController extends Controller
                 ->where('p.status', true)
                 ->max('map.mrp') ?? 5000;
 
-            $brands = DB::table('txn_products as p')
-                ->selectRaw("Distinct(b.id) as id, b.brand_name")
-                ->leftJoin("txn_brands as b", "p.brand_id", "b.id")
-                ->where('p.status', true)
-                ->whereIN('p.category_id', $cateLists)
-                ->groupBy("p.id")
-                ->get();
+            $brands = \App\Model\TxnBrand::where('status', true)->get();
 
             $conditions = \App\Model\TxnCondition::where('status', true)->get();
 

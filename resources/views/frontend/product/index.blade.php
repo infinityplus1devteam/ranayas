@@ -57,7 +57,7 @@
                                             <label for="color_{{ $color->id }}" style="margin-left: 9px">
                                                 <span class="color_div"
                                                     style="background-color: {{ $color->color_code }}"></span> {{ $color->title
-                                                }}
+                                                        }}
                                             </label>
                                         </li>
                                     @endforeach
@@ -180,6 +180,7 @@
                                                                             </a>
                                                                         </span>
                                                                         <span class="pull-right">
+                                                                            <span style="display:none"></span>
                                                                             @foreach($colors as $color)
                                                                                 <span
                                                                                     style="background: {{ $color }};border-radius:50%;height:10px;width:10px;display:inline-block;box-shadow: 1px 2px 3px 0px #5f5f5f"></span>
@@ -192,7 +193,7 @@
                                                                             <span class="new-price"><i class="fa fa-inr"></i> {{ $product->mrp }}</span>
                                                                             <span class="old-price"><del><i class="fa fa-inr"></i> {{
                                         $product->starting_price
-                                                                                    }}</del></span>
+                                                                                                                    }}</del></span>
                                                                         </div>
                                                                         @if($product->review_status)
                                                                             <div class="rating pull-right">

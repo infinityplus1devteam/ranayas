@@ -81,7 +81,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary button_update">
+                        <button type="submit" class="btn review-submit-btn">
                             <i class="fa fa-plus"></i> Submit
                         </button>
                     </div>
@@ -128,7 +128,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary button_update">
+                        <button type="submit" class="btn review-submit-btn">
                             <i class="fa fa-plus"></i> Submit
                         </button>
                     </div>
@@ -378,6 +378,23 @@
 <style>
     .cancelBtn {
         float: right;
+    }
+    
+    .review-submit-btn {
+        background-color: transparent !important;
+        border: 2px solid #8a2be2 !important;
+        color: #8a2be2 !important;
+        padding: 8px 24px !important;
+        font-size: 15px !important;
+        font-weight: 600 !important;
+        border-radius: 5px !important;
+        transition: all 0.3s ease !important;
+        cursor: pointer !important;
+    }
+
+    .review-submit-btn:hover {
+        background-color: #8a2be2 !important;
+        color: #ffffff !important;
     }
 </style>
 @endsection
