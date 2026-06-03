@@ -186,6 +186,18 @@ Route::namespace('App\Http\Controllers')->group(function () {
                 Route::POST('/delete/question/{id}', 'Admin\ProductController@deleteQuestion')->name('admin.product-faqs.delete');
             });
 
+            Route::prefix('/manage-shop-by-budgets')->group(function () {
+                Route::GET('/', 'Admin\ShopByBudgetController@index')->name('admin.shop_by_budgets.index');
+                Route::POST('/', 'Admin\ShopByBudgetController@store');
+                Route::GET('/edit/{id}', 'Admin\ShopByBudgetController@edit')->name('admin.shop_by_budgets.edit');
+                Route::POST('/edit/{id}', 'Admin\ShopByBudgetController@update');
+                Route::POST('/delete/{id}', 'Admin\ShopByBudgetController@destroy');
+                Route::GET('/assign/{id}', 'Admin\ShopByBudgetController@assignPage')->name('admin.shop_by_budgets.assign');
+                Route::POST('/assign/{id}', 'Admin\ShopByBudgetController@assignProduct');
+                Route::POST('/remove-assign/{id}', 'Admin\ShopByBudgetController@removeAssign');
+                Route::POST('/update-sort/{id}', 'Admin\ShopByBudgetController@updateSort');
+            });
+
             Route::prefix('/manage-color-sizes')->group(function () {
 
                 Route::POST('/add-product-color/{id}', 'Admin\ProductController@addColor')->name('admin.products.add.color');

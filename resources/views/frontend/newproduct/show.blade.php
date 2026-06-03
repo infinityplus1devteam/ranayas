@@ -33,7 +33,15 @@
                                 $firstColorImages = collect();
                                 if ($product->colors->count() > 0) {
                                     $firstColorId = $product->colors[0]->color_id;
-                                    $firstColorImages = $product->images->where('color_id', $firstColorId)->sortByDesc('id')->values();
+                                    $firstSizeId = $product->colors[0]->size_id;
+                                    
+                                    // First try to get images for the specific color AND size
+                                    $firstColorImages = $product->images->where('color_id', $firstColorId)->where('size_id', $firstSizeId)->sortByDesc('id')->values();
+                                    
+                                    // Fallback to just color if no specific size images exist
+                                    if ($firstColorImages->count() == 0) {
+                                        $firstColorImages = $product->images->where('color_id', $firstColorId)->sortByDesc('id')->values();
+                                    }
                                 }
                             @endphp
                             <div class="tab-content large_image">
@@ -174,10 +182,10 @@
                                             <li>
                                                 <a href="javascript:void(0)"
                                                     class="size_btn {{ $key == 0 ? 'active' : '' }}" data-toggle="tooltip"
-                                                    data-placement="top" title="{{ $item->title }}{{-- . ' ' . $product->unit->unit --}}"
+                                                    data-placement="top" title="{{ $item->size->title ?? $item->title }}{{-- . ' ' . $product->unit->unit --}}"
                                                     data-size-id="{{ $item->size_id }}"
                                                     data-prod-id="{{ $product->id }}">
-                                                    {{ $item->title }}
+                                                    {{ $item->size->title ?? $item->title }}
                                                 </a>
                                             </li>
                                             {{-- @else
@@ -922,8 +930,18 @@
 
             if (available_colors.length > 0) {
                 var color_html = '';
+                var currentColorId = $('#cart_color_id').val();
+                var colorExists = available_colors.some(item => item.color_id == currentColorId);
+                
                 available_colors.forEach((item, index) => {
-                    color_html += `<a href="javascript:void(0)" class="color_btn ${index==0 ? 'active' : ''}"
+                    var activeClass = '';
+                    if (colorExists) {
+                        activeClass = (item.color_id == currentColorId) ? 'active' : '';
+                    } else {
+                        activeClass = (index == 0) ? 'active' : '';
+                    }
+                    
+                    color_html += `<a href="javascript:void(0)" class="color_btn ${activeClass}"
                     data-toggle="tooltip" data-placement="top" title="${item.color.title}"
                     data-color-id="${item.color_id}" data-prod-id="${item.product_id}">
                     <span style="background-color: ${item.color.color_code}"></span>

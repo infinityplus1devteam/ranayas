@@ -665,17 +665,10 @@
                                         <input type="number" min="1" name="sort_index[{{ $key }}]"
                                             value="{{ $cf->sort_index }}" class="form-control">
                                     </td>
-{{ dd($product->sizes) }}
-                                    <td class="">
-                                        <select name="size_id[{{ $key }}]" class="form-control" required>
-                                            <option value="">--Select Sizes--</option>
-                                            @foreach ($product->sizes as $size)
-                                                <option value="{{ $size->size_id }}"
-                                                    {{ $cf->size_id === $size->size_id ? 'selected' : '' }}>
-                                                    {{ $size->title }}
-                                                </option>
-                                            @endforeach
-                                        </select>
+                                    <td>
+                                        <input type="hidden" name="size_id[{{ $key }}]"
+                                            value="{{ $cf->size_id }}">
+                                        <input value="{{ $cf->size_name }}" class="form-control" disabled>
                                     </td>
 
                                     <td>
@@ -718,11 +711,11 @@
                                                     <i class="fa fa-save"></i> Update
                                                 </a>
 
-                                                <a href="javascript:void(0)"
+                                                {{-- <a href="javascript:void(0)"
                                                     class="dropdown-item has-icon delete-color-object"
                                                     data-object-index="{{ $key }}" title="Delete Detail">
                                                     <i class="fa fa-trash text-danger"></i> Delete
-                                                </a>
+                                                </a> --}}
 
                                             </div>
                                         </div>
@@ -900,7 +893,7 @@
                 var id = $("input[name='map_id[" + key + "]']").val();
 
                 $("#txtColorIDUpdate").val($("input[name='colour_id[" + key + "]']").val());
-                $("#txtSizeIDUpdate").val($("select[name='size_id[" + key + "]']").val());
+                $("#txtSizeIDUpdate").val($("input[name='size_id[" + key + "]']").val());
                 $("#txtMrpUpdate").val($("input[name='mrp[" + key + "]']").val());
                 $("#txtStartingPriceUpdate").val($("input[name='starting_price[" + key + "]']").val());
                 $("#txtStockUpdate").val($("input[name='stock[" + key + "]']").val());

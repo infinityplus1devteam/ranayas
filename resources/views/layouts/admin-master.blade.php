@@ -219,6 +219,11 @@
                         </li>
 
                         <li class="dropdown">
+                            <a href="{{ route('admin.shop_by_budgets.index') }}" class="nav-link"><i
+                                    data-feather="tag"></i><span>Shop by Budget</span></a>
+                        </li>
+
+                        <li class="dropdown">
                             <a href="#" class="menu-toggle nav-link has-dropdown">
                                 <i data-feather="file-text"></i><span>Policies</span>
                             </a>

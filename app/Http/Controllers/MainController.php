@@ -104,7 +104,23 @@ class MainController extends Controller
             $section_products[$sec->section_name] = $temp->all();
         }
 
-        return view('frontend.newproduct.index', compact('sliders', 'section_products', 'reviews', 'homeOfferSliders', 'categories'));
+        // Add Shop By Budget
+        $shopByBudgets = \App\Model\ShopByBudget::where('is_active', true)->orderBy('budget', 'asc')->get();
+        $shopByBudgetProducts = [];
+        foreach($shopByBudgets as $budget) {
+            $productIds = \App\Model\MapShopByBudgetProduct::where('shop_by_budget_id', $budget->id)->orderBy('sort_index')->pluck('product_id')->toArray();
+            if(!empty($productIds)) {
+                $budgetProds = collect($productIds)->map(function($pid) use ($products) {
+                    return $products->firstWhere('id', $pid);
+                })->filter()->all();
+                
+                if(!empty($budgetProds)) {
+                    $shopByBudgetProducts[$budget->name] = $budgetProds;
+                }
+            }
+        }
+
+        return view('frontend.newproduct.index', compact('sliders', 'section_products', 'reviews', 'homeOfferSliders', 'categories', 'shopByBudgetProducts'));
     }
 
     /* public function subscribers(Request $request)
@@ -181,27 +197,57 @@ class MainController extends Controller
 
     public function getSizes(Request $request)
     {
+        $resolved_color_id = $request->color_id;
+        $resolved_size_id = $request->size_id;
+
         $results = MapColorSize::select('mrp', 'starting_price', 'color_id', 'size_id', 'stock')->where('product_id', $request->product_id);
 
         if ($request->source == 'size') {
             $results = $results->where('size_id', $request->size_id);
         }
-        ;
 
         if ($request->source == 'color') {
             $results = $results->where('color_id', $request->color_id)->where('size_id', $request->size_id);
         }
-        ;
 
         $results = $results->where('status', true)->orderBy('sort_index', 'asc')->get();
 
-        $images = TxnImage::select('id', 'image_url')->where('product_id', $request->product_id)->where('color_id', $request->color_id)->orderBy('id', 'DESC')->get();
+        if ($request->source == 'size') {
+            $matchingResult = $results->firstWhere('color_id', $request->color_id);
+            if ($matchingResult) {
+                $resolved_color_id = $matchingResult->color_id;
+                // Put the matching result at the beginning of the collection so JS picks it up as result.success[0]
+                $results = $results->reject(function ($item) use ($resolved_color_id) {
+                    return $item->color_id == $resolved_color_id;
+                })->prepend($matchingResult);
+            } else if ($results->isNotEmpty()) {
+                $resolved_color_id = $results->first()->color_id;
+            }
+        }
+        
+        if ($request->source == 'color' && $results->isEmpty()) {
+            $fallback = MapColorSize::select('mrp', 'starting_price', 'color_id', 'size_id', 'stock')->where('product_id', $request->product_id)->where('color_id', $request->color_id)->where('status', true)->orderBy('sort_index', 'asc')->first();
+            if ($fallback) {
+                $resolved_size_id = $fallback->size_id;
+                $results = collect([$fallback]);
+            }
+        }
 
-        $available_sizes = MapColorSize::select('size_id', 'product_id')->where('product_id', $request->product_id)->where('color_id', $request->color_id)->where('status', true)->with('size')->get();
+        $imageQuery = TxnImage::select('id', 'image_url')->where('product_id', $request->product_id)->where('color_id', $resolved_color_id);
+        if ($resolved_size_id) {
+            $imageQuery->where('size_id', $resolved_size_id);
+        }
+        $images = $imageQuery->orderBy('id', 'DESC')->get();
+        
+        if ($images->isEmpty()) {
+            $images = TxnImage::select('id', 'image_url')->where('product_id', $request->product_id)->where('color_id', $resolved_color_id)->orderBy('id', 'DESC')->get();
+        }
 
-        $available_colors = MapColorSize::select('color_id', 'product_id')->where('product_id', $request->product_id)->where('size_id', $request->size_id)->where('status', true)->with('color')->get();
+        $available_sizes = MapColorSize::select('size_id', 'product_id')->where('product_id', $request->product_id)->where('color_id', $resolved_color_id)->where('status', true)->with('size')->get();
 
-        if ($results) {
+        $available_colors = MapColorSize::select('color_id', 'product_id')->where('product_id', $request->product_id)->where('size_id', $resolved_size_id)->where('status', true)->with('color')->get();
+
+        if ($results->isNotEmpty()) {
             return response()->json(['success' => $results, 'images' => $images, 'available_sizes' => $available_sizes, 'available_colors' => $available_colors, 'source' => $request->source]);
         }
         return response()->json(['error' => []]);
