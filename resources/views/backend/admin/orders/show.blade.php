@@ -69,7 +69,22 @@
                         <tr>
                             <th>Order Status</th>
                             <td>
-                                {{ $order->status }}
+                                <div class="mt-1">
+                                    <form action="{{ url('adranayas753/manage-orders/show/'.$order->id) }}" method="post" class="form-inline">
+                                        @csrf
+                                        <div class="form-group mr-2">
+                                            <select name="status" id="status" class="form-control" required>
+                                                <option value="">--Select Status--</option>
+                                                <option value="Processing" {{ $order->status == 'Processing' ? 'selected' : '' }}>Processing</option>
+                                                <option value="Shipped" {{ $order->status == 'Shipped' ? 'selected' : '' }}>Shipped</option>
+                                                <option value="Out for Delivery" {{ $order->status == 'Out for Delivery' ? 'selected' : '' }}>Out for Delivery</option>
+                                                <option value="Delivered" {{ $order->status == 'Delivered' ? 'selected' : '' }}>Delivered</option>
+                                                <option value="Cancelled" {{ $order->status == 'Cancelled' ? 'selected' : '' }}>Cancelled</option>
+                                            </select>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">Update Status</button>
+                                    </form>
+                                </div>
                             </td>
                         </tr>
 
@@ -99,7 +114,7 @@
                                                     <form action="{{ route('admin.orders.return-status', $order->id) }}" method="post"
                                                         class="form-inline">
                                                         @csrf
-                                                        <div class="form-group">
+                                                        <div class="form-group mr-2">
                                                             <select name="return_status" id="return_status" class="form-control">
                                                                 <option value="">--Select Status--</option>
                                                                 <option value="Applied" {{ $order->return_status == 'Applied' ? 'selected' : ''
@@ -232,15 +247,21 @@
 
                         <tr>
                             <th colspan="5" class="bg-silver text-right text-uppercase">
-                                <p>Total Amount : &#8377; {{ $order->tbt }}</p>
+                                @php
+                                    $itemSubtotal = 0;
+                                    foreach($order->details as $detail) {
+                                        $itemSubtotal += $detail->mrp * $detail->quantity;
+                                    }
+                                    $shipping = $itemSubtotal < 1000 ? 60 : 0;
+                                @endphp
+                                <p>Item Subtotal : &#8377; {{ $itemSubtotal }}</p>
                                 @if($order->tax > 0)
                                     <p>+ CGST : &#8377; {{ round($order->tax / 2, 2) }}</p>
                                     <p>+ SGST : &#8377; {{ round($order->tax / 2, 2) }}</p>
                                 @endif
-                                @php $shipping = $order->total >= 1000 ? 0 : 60; @endphp
                                 <p>+ Shipping : &#8377; {{ $shipping }}</p>
                                 <p>- Discount : &#8377; {{ $order->discount ? $order->discount : 0 }}</p>
-                                <p>Grand Total : &#8377; {{ round($order->tbt + $order->tax - $order->discount + $shipping, 2) }}</p>
+                                <p>Grand Total : &#8377; {{ $order->total }}</p>
                             </th>
                         </tr>
                     </tbody>

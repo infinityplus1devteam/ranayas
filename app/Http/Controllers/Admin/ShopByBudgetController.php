@@ -15,7 +15,7 @@ class ShopByBudgetController extends Controller
 {
     public function index()
     {
-        $budgets = ShopByBudget::orderBy('id', 'DESC')->paginate(50);
+        $budgets = ShopByBudget::orderBy('sort_index', 'ASC')->paginate(50);
         return view('backend.admin.shop_by_budgets.index', compact('budgets'));
     }
 
@@ -24,6 +24,7 @@ class ShopByBudgetController extends Controller
         $request->validate([
             'name' => 'required|string|max:191',
             'budget' => 'required|numeric',
+            'description' => 'nullable|string',
         ],
         [
             'name.required' => 'Please Enter Budget Title',
@@ -33,6 +34,7 @@ class ShopByBudgetController extends Controller
         ShopByBudget::create([
             'name' => $request->name,
             'budget' => $request->budget,
+            'description' => $request->description,
             'is_active' => true,
         ]);
 
@@ -57,6 +59,7 @@ class ShopByBudgetController extends Controller
         $request->validate([
             'name' => 'required|string|max:191',
             'budget' => 'required|numeric',
+            'description' => 'nullable|string',
         ]);
 
         try {
@@ -64,6 +67,7 @@ class ShopByBudgetController extends Controller
             $budget->update([
                 'name' => $request->name,
                 'budget' => $request->budget,
+                'description' => $request->description,
                 'is_active' => $request->is_active ?? 0,
             ]);
 
@@ -97,12 +101,15 @@ class ShopByBudgetController extends Controller
         try {
             $budget = ShopByBudget::where('id', $id)->firstOrFail();
             
-            // All active products
-            $products = TxnProduct::where('status', true)->get();
+            // All active products filtered by budget amount
+            $products = TxnProduct::with('colors')->where('status', true)->get()->filter(function ($product) use ($budget) {
+                $price = $product->colors->first()->mrp ?? 0;
+                return $price <= $budget->budget;
+            });
             
             // Assigned products
             $assignedProducts = MapShopByBudgetProduct::where('shop_by_budget_id', $id)
-                                    ->with('product')
+                                    ->with(['product', 'product.colors'])
                                     ->orderBy('sort_index')
                                     ->get();
                                     
@@ -180,6 +187,17 @@ class ShopByBudgetController extends Controller
                 MapShopByBudgetProduct::where('id', $mapId)->update(['sort_index' => $sortIndex]);
             }
             connectify('success', 'Sort Updated', 'Sort order updated successfully!');
+        }
+        return redirect()->back();
+    }
+
+    public function updateBudgetsSort(Request $request)
+    {
+        if ($request->has('sort_data') && is_array($request->sort_data)) {
+            foreach ($request->sort_data as $budgetId => $sortIndex) {
+                ShopByBudget::where('id', $budgetId)->update(['sort_index' => $sortIndex]);
+            }
+            connectify('success', 'Sort Updated', 'Budgets sort order updated successfully!');
         }
         return redirect()->back();
     }

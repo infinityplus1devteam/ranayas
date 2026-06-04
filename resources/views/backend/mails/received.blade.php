@@ -267,9 +267,19 @@
                     @endforeach
                     <tr>
                         <th colspan="12" class="bg-silver text-right text-uppercase">
-                            <p>Total Amount : &#8377; {{ $order->tbt }}</p>
-                            <p>+ CGST : &#8377; {{ round($order->tax / 2, 2) }}</p>
-                            <p>+ SGST : &#8377; {{ round($order->tax / 2, 2) }}</p>
+                            @php
+                                $itemSubtotal = 0;
+                                foreach($order->details as $detail) {
+                                    $itemSubtotal += $detail->mrp * $detail->quantity;
+                                }
+                                $shipping = $itemSubtotal < 1000 ? 60 : 0;
+                            @endphp
+                            <p>Item Subtotal : &#8377; {{ $itemSubtotal }}</p>
+                            @if($order->tax > 0)
+                                <p>+ CGST : &#8377; {{ round($order->tax / 2, 2) }}</p>
+                                <p>+ SGST : &#8377; {{ round($order->tax / 2, 2) }}</p>
+                            @endif
+                            <p>+ Shipping : &#8377; {{ $shipping }}</p>
                             @if ($order->discount)
                                 <p>- Discount : &#8377; {{ $order->discount }}</p>
                             @endif

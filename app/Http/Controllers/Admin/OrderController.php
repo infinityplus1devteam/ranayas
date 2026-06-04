@@ -157,7 +157,15 @@ class OrderController extends Controller
                 'status' => $request->status,
             ]);
 
-            SMS::send($order->user->mobile, 'Ranayas - Your Order ID : ' . $order->id . ', has been ' . $order->status . ',  Login for more detail on ' . route('user.login'));
+            // SMS::send($order->user->mobile, 'Ranayas - Your Order ID : ' . $order->id . ', has been ' . $order->status . ',  Login for more detail on ' . route('user.login'));
+            
+            // Using the OTP template for now as requested
+            $rand_otp = rand(100000, 999999);
+            SMS::send(
+                $order->user->mobile,
+                'Dear user, Your OTP for login to Dekha OTT is '.$rand_otp.'. Enjoy the videos. Regards, Dekha Team',
+                '1207174850771033756'
+            );
 
             if ($request->filled('status') && $request->status == 'delivered') {
 

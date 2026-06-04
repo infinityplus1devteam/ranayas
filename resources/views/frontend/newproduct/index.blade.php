@@ -362,17 +362,20 @@
 
     <!-- budget tab start -->
     @if(isset($shopByBudgetProducts))
-        @foreach ($shopByBudgetProducts as $budgetName => $budgetProducts)
-            @if (count($budgetProducts))
-                <section class="home5-featured section-b-padding featured-products" style="margin-top:20px;">
+        @foreach ($shopByBudgetProducts as $budgetName => $budgetData)
+            @if (count($budgetData['products']))
+                <section class="home5-featured section-b-padding featured-products" style="padding-top: 80px !important; padding-bottom: {{ $loop->last ? '80px' : '0px' }} !important; margin-top: 0px;">
                     <div class="container">
                         <div class="row">
                             <div class="col">
                                 <div class="section-title">
                                     <h2><span>{{ $budgetName }}</span></h2>
+                                    @if(!empty($budgetData['description']))
+                                        <p class="text-secondary mt-3">{{ $budgetData['description'] }}</p>
+                                    @endif
                                 </div>
                                 <div class="featured5-pro owl-carousel owl-theme">
-                                    @foreach ($budgetProducts as $k => $product)
+                                    @foreach ($budgetData['products'] as $k => $product)
                                         @php
                                             $colors = explode(',', $product->color_codes);
                                             $getDiff = $product->starting_price - $product->mrp;

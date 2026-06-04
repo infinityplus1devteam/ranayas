@@ -97,7 +97,7 @@
                             <td>{{ $order->city }}</td>
                             <td>{{ $order->pincode }}</td>
                             <td class="text-capitalize">{{ $order->status }}</td>
-                            <td>{{ date('d-m-Y h:m A' , strtotime($order->created_at)) }}</td>
+                            <td>{{ date('d-m-Y h:i A' , strtotime($order->created_at)) }}</td>
                             <td>
                                 <a href="{{ route('admin.orders.show', $order->id) }}" class="btn btn-outline-primary"
                                     title="View Detail">

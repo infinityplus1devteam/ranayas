@@ -334,11 +334,14 @@
                                                 <tbody>
                                                     <tr>
                                                         @php 
-                                                            $shipping = $order->total >= 1000 ? 0 : 60; 
-                                                            $subtotal = $order->total + $order->discount - $shipping;
+                                                            $itemSubtotal = 0;
+                                                            foreach($order->details as $detail) {
+                                                                $itemSubtotal += $detail->mrp * $detail->quantity;
+                                                            }
+                                                            $shipping = $itemSubtotal < 1000 ? 60 : 0;
                                                         @endphp
                                                         <th>Total</th>
-                                                        <td><strong>&#8377; {{ $subtotal }}</strong></td>
+                                                        <td><strong>&#8377; {{ $itemSubtotal }}</strong></td>
                                                     </tr>
                                                     @if($order->tax > 0)
                                                         <tr>

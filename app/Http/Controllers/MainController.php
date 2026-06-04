@@ -105,7 +105,7 @@ class MainController extends Controller
         }
 
         // Add Shop By Budget
-        $shopByBudgets = \App\Model\ShopByBudget::where('is_active', true)->orderBy('budget', 'asc')->get();
+        $shopByBudgets = \App\Model\ShopByBudget::where('is_active', true)->orderBy('sort_index', 'asc')->get();
         $shopByBudgetProducts = [];
         foreach($shopByBudgets as $budget) {
             $productIds = \App\Model\MapShopByBudgetProduct::where('shop_by_budget_id', $budget->id)->orderBy('sort_index')->pluck('product_id')->toArray();
@@ -115,7 +115,10 @@ class MainController extends Controller
                 })->filter()->all();
                 
                 if(!empty($budgetProds)) {
-                    $shopByBudgetProducts[$budget->name] = $budgetProds;
+                    $shopByBudgetProducts[$budget->name] = [
+                        'description' => $budget->description,
+                        'products' => $budgetProds
+                    ];
                 }
             }
         }

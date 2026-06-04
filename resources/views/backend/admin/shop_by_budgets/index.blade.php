@@ -30,6 +30,12 @@
                                     value="{{ old('budget') }}" placeholder="e.g. 99" required>
                             </div>
                         </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="description">Description</label>
+                                <textarea name="description" id="description" class="form-control" rows="3" placeholder="Enter short description (optional)">{{ old('description') }}</textarea>
+                            </div>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="submit" class="btn btn-primary btnSubmit">
@@ -42,6 +48,60 @@
     </div>
 </div>
 {{-- Modal End --}}
+
+{{-- Edit Modal --}}
+<div class="modal" id="editModal">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header bg-dark text-white-all">
+                <h5 class="modal-title">Edit Budget Section</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="" method="POST" role="form" class="needs-validation" id="formEditBudget">
+                    @csrf
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="edit_name">Name <span class="text-danger">*</span></label>
+                                <input type="text" name="name" id="edit_name" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="edit_budget">Budget Amount <span class="text-danger">*</span></label>
+                                <input type="number" name="budget" id="edit_budget" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="edit_description">Description</label>
+                                <textarea name="description" id="edit_description" class="form-control" rows="3"></textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="edit_is_active">Status</label>
+                                <select name="is_active" id="edit_is_active" class="form-control">
+                                    <option value="1">Active</option>
+                                    <option value="0">Inactive</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary btnEditSubmit">
+                            <i class="fa fa-save"></i> Save Changes
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{{-- Edit Modal End --}}
 
 <section class="section">
     <nav aria-label="breadcrumb">
@@ -57,10 +117,13 @@
         </div>
         <div class="card-body">
             <div class="table-responsive">
+                <form action="{{ route('admin.shop_by_budgets.update_budgets_sort') }}" method="POST">
+                    @csrf
                 <table class="table table-striped table-hover datatable" style="width:100%;">
                     <thead>
                         <tr>
                             <th>#</th>
+                            <th>Sort Index</th>
                             <th>Name</th>
                             <th>Budget</th>
                             <th>Status</th>
@@ -71,6 +134,9 @@
                         @forelse ($budgets as $budget)
                         <tr>
                             <td>{{ $budget->id }}</td>
+                            <td>
+                                <input type="number" name="sort_data[{{ $budget->id }}]" class="form-control" value="{{ $budget->sort_index }}" style="width: 80px;" min="0">
+                            </td>
                             <td>{{ $budget->name }} </td>
                             <td>₹ {{ $budget->budget }} </td>
                             <td>
@@ -92,6 +158,14 @@
                                             class="dropdown-item has-icon" title="View & Assign Products">
                                             <i class="fa fa-eye"></i> View
                                         </a>
+                                        <a href="javascript:void(0)" class="dropdown-item has-icon edit-budget"
+                                            data-id="{{ $budget->id }}"
+                                            data-name="{{ $budget->name }}"
+                                            data-budget="{{ $budget->budget }}"
+                                            data-description="{{ $budget->description }}"
+                                            data-status="{{ $budget->is_active }}">
+                                            <i class="fa fa-edit"></i> Edit
+                                        </a>
                                         <form action="{{ url('adranayas753/manage-shop-by-budgets/delete/'.$budget->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this budget?');">
                                             @csrf
                                             <button type="submit" class="dropdown-item has-icon text-danger" title="Delete" style="border: none; background: transparent; cursor: pointer; width: 100%; text-align: left;">
@@ -104,20 +178,24 @@
                         </tr>
                         @empty
                         <tr class="text-center">
-                            <td class="text-danger" colspan="5">
+                            <td class="text-danger" colspan="6">
                                 <h4>No Record Found..</h4>
                             </td>
                         </tr>
                         @endforelse
                         @if($budgets->total() > 50)
                         <tr class="text-center">
-                            <td colspan="5">
+                            <td colspan="6">
                                 {{ $budgets->links() }}
                             </td>
                         </tr>
                         @endif
                     </tbody>
                 </table>
+                <div class="mt-3">
+                    <button type="submit" class="btn btn-success bg-success text-white"><i class="fa fa-sort"></i> Update Sort Index</button>
+                </div>
+                </form>
             </div>
         </div>
     </div>
@@ -142,6 +220,40 @@
                 $(".btnSubmit").html('<span class="fa fa-spinner fa-spin"></span> Loading...');
                 form.submit();
             }
+        });
+
+        $("#formEditBudget").validate({
+            rules: {
+                name: { required: true },
+                budget: { required: true, number: true },
+            },
+            messages: {
+                name: { required: "Please Enter Name" },
+                budget: { required: "Please Enter Budget Amount" },
+            },
+            submitHandler: function (form) {
+                $('.btnEditSubmit').attr('disabled', 'disabled');
+                $(".btnEditSubmit").html('<span class="fa fa-spinner fa-spin"></span> Loading...');
+                form.submit();
+            }
+        });
+
+        $('.edit-budget').on('click', function() {
+            var id = $(this).data('id');
+            var name = $(this).data('name');
+            var budget = $(this).data('budget');
+            var description = $(this).data('description');
+            var status = $(this).data('status');
+
+            $('#edit_name').val(name);
+            $('#edit_budget').val(budget);
+            $('#edit_description').val(description);
+            $('#edit_is_active').val(status);
+
+            var formAction = "{{ url('adranayas753/manage-shop-by-budgets/edit') }}/" + id;
+            $('#formEditBudget').attr('action', formAction);
+
+            $('#editModal').modal('show');
         });
     });
 </script>

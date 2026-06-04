@@ -138,8 +138,15 @@
                                     <table class="table table-striped table-bordered table-hover table-dark">
                                         <tbody>
                                             <tr>
+                                                @php 
+                                                    $itemSubtotal = 0;
+                                                    foreach($order->details as $detail) {
+                                                        $itemSubtotal += $detail->mrp * $detail->quantity;
+                                                    }
+                                                    $shipping = $itemSubtotal < 1000 ? 60 : 0;
+                                                @endphp
                                                 <th>Total</th>
-                                                <td><strong>&#8377; {{ $order->tbt }}</strong></td>
+                                                <td><strong>&#8377; {{ $itemSubtotal }}</strong></td>
                                             </tr>
                                             @if($order->tax > 0)
                                                 <tr>
@@ -158,13 +165,12 @@
                                                 </tr>
                                             @endif
                                             <tr>
-                                                @php $shipping = $order->total >= 1000 ? 0 : 60; @endphp
                                                 <th> + Shipping Charges </th>
                                                 <td> &#8377; {{ $shipping }} </td>
                                             </tr>
                                             <tr>
                                                 <th> <strong>Grand Total</strong> </th>
-                                                <td> <strong>&#8377; {{ round($order->tbt + $order->tax - $order->discount + $shipping, 2) }}</strong> </td>
+                                                <td> <strong>&#8377; {{ $order->total }}</strong> </td>
                                             </tr>
                                         </tbody>
                                     </table>

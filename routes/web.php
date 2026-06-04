@@ -196,6 +196,7 @@ Route::namespace('App\Http\Controllers')->group(function () {
                 Route::POST('/assign/{id}', 'Admin\ShopByBudgetController@assignProduct');
                 Route::POST('/remove-assign/{id}', 'Admin\ShopByBudgetController@removeAssign');
                 Route::POST('/update-sort/{id}', 'Admin\ShopByBudgetController@updateSort');
+                Route::POST('/update-budgets-sort', 'Admin\ShopByBudgetController@updateBudgetsSort')->name('admin.shop_by_budgets.update_budgets_sort');
             });
 
             Route::prefix('/manage-color-sizes')->group(function () {

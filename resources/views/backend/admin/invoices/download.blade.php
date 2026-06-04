@@ -336,14 +336,17 @@
                     </tr>
                     <tr>
                         @php 
-                            $shipping = $invoice->total >= 1000 ? 0 : 60; 
-                            $subtotal = $invoice->total + $invoice->discount - $shipping;
+                            $itemSubtotal = 0;
+                            foreach($invoice->details as $detail) {
+                                $itemSubtotal += $detail->mrp * $detail->quantity;
+                            }
+                            $shipping = $itemSubtotal < 1000 ? 60 : 0;
                         @endphp
                         <th colspan="2">
                             Total
                         </th>
                         <td>
-                            Rs. {{ $subtotal }}
+                            Rs. {{ $itemSubtotal }}
                         </td>
                     </tr>
                     @if($invoice->tax > 0)

@@ -78,14 +78,13 @@
                                         </td>
                                         <td>
                                             @php
-                                                $img = $map->product->images->first();
-                                                $imgPath = $img ? '/storage/images/products/'.$img->image_url : '/assets/image/placeholder.png';
+                                                $imgPath = $map->product->image_url ? '/storage/images/products/'.$map->product->image_url : '/assets/image/placeholder.png';
                                             @endphp
                                             <img src="{{ $imgPath }}" alt="product" style="width: 40px; height: 40px; object-fit: cover;">
                                         </td>
-                                        <td style="font-size: 12px; line-height: 1.2;">{{ Str::limit($map->product->ProductName, 30) }}</td>
-                                        <td class="text-center">
-                                            <button type="button" class="btn btn-sm btn-danger remove-btn" data-id="{{ $map->id }}"><i class="fa fa-times"></i></button>
+                                        <td style="font-size: 12px; line-height: 1.2;">{{ Str::limit($map->product->title, 30) }}</td>
+                                        <td class="text-center align-middle">
+                                            <a href="javascript:void(0);" class="text-danger remove-btn" style="font-size: 1.2rem; display: inline-block; padding: 0;" data-id="{{ $map->id }}"><i class="fas fa-trash"></i></a>
                                         </td>
                                     </tr>
                                     @empty
@@ -97,7 +96,7 @@
                             </table>
                         </div>
                         @if($assignedProducts->count() > 0)
-                            <button type="submit" class="btn btn-success btn-sm btn-block mt-2"><i class="fa fa-sort"></i> Update Sort Order</button>
+                            <button type="submit" class="btn btn-success bg-success text-white btn-sm btn-block mt-2"><i class="fa fa-sort"></i> Update Sort Order</button>
                         @endif
                     </form>
 
@@ -124,7 +123,10 @@
                                 <thead>
                                     <tr>
                                         <th>
-                                            <input type="checkbox" id="selectAll">
+                                            <div class="custom-control custom-checkbox">
+                                                <input type="checkbox" class="custom-control-input" id="selectAll">
+                                                <label class="custom-control-label" for="selectAll" style="margin-bottom: 0;"></label>
+                                            </div>
                                         </th>
                                         <th>ID</th>
                                         <th>Image</th>
@@ -140,19 +142,21 @@
                                         if($isAssigned) continue;
                                     @endphp
                                     <tr>
-                                        <td>
-                                            <input type="checkbox" name="assign[]" value="{{ $product->id }}" class="product-checkbox">
+                                        <td class="align-middle">
+                                            <div class="custom-control custom-checkbox">
+                                                <input type="checkbox" name="assign[]" value="{{ $product->id }}" class="custom-control-input product-checkbox" id="check_{{ $product->id }}">
+                                                <label class="custom-control-label" for="check_{{ $product->id }}" style="margin-bottom: 0;"></label>
+                                            </div>
                                         </td>
                                         <td>{{ $product->id }}</td>
                                         <td>
                                             @php
-                                                $img = $product->images->first();
-                                                $imgPath = $img ? '/storage/images/products/'.$img->image_url : '/assets/image/placeholder.png';
+                                                $imgPath = $product->image_url ? '/storage/images/products/'.$product->image_url : '/assets/image/placeholder.png';
                                             @endphp
                                             <img src="{{ $imgPath }}" alt="product" style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;">
                                         </td>
-                                        <td>{{ $product->ProductName }}</td>
-                                        <td>₹ {{ $product->MRP }}</td>
+                                        <td>{{ $product->title }}</td>
+                                        <td>₹ {{ $product->colors->first()->mrp ?? 'N/A' }}</td>
                                     </tr>
                                     @endforeach
                                 </tbody>

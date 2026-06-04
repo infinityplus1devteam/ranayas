@@ -327,11 +327,18 @@
                         <td colspan="4"></td>
                     </tr>
                     <tr>
+                        @php 
+                            $itemSubtotal = 0;
+                            foreach($invoice->details as $detail) {
+                                $itemSubtotal += $detail->mrp * $detail->quantity;
+                            }
+                            $shipping = $itemSubtotal < 1000 ? 60 : 0;
+                        @endphp
                         <th colspan="3">
                             Total
                         </th>
                         <td>
-                            Rs. {{ $invoice->tbt }}
+                            Rs. {{ $itemSubtotal }}
                         </td>
                     </tr>
                     @if($invoice->tax > 0)
@@ -358,7 +365,7 @@
                         </th>
                         <td>
                             Rs.
-                            {{ $invoice->total >= 1000 ? '0' : '60' }}
+                            {{ $shipping }}
                         </td>
                     </tr>
                     <tr>
@@ -374,9 +381,8 @@
                         <th colspan="3">
                             Grand Total
                         </th>
-                        @php $shipping = $invoice->total >= 1000 ? 0 : 60; @endphp
                         <td>
-                            Rs. {{ round($invoice->tbt + $invoice->tax - $invoice->discount + $shipping, 2) }}
+                            Rs. {{ $invoice->total }}
                         </td>
                     </tr>
                 </table>
