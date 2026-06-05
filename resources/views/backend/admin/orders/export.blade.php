@@ -37,8 +37,8 @@
         <tr>
             <td>{{ $order->id }}</td>
             <td>{{ $order->user->name }}</td>
-            <td>{{ $order->user->email }}</td>
-            <td>{{ $order->user->mobile }}</td>
+            <td>{{ $order->user?->email ?? 'N/A' }}</td>
+            <td>{{ $order->user?->mobile ?? 'N/A' }}</td>
             <td>{{ $order->address }}</td>
             <td>{{ $order->landmark }}</td>
             <td>{{ $order->city }}</td>

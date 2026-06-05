@@ -31,11 +31,11 @@
                         </tr>
                         <tr>
                             <th>Email ID</th>
-                            <td>{{ $order->user->email }}</td>
+                            <td>{{ $order->user?->email ?? 'N/A' }}</td>
                         </tr>
                         <tr>
                             <th>Mobile Number</th>
-                            <td>{{ $order->user->mobile }}</td>
+                            <td>{{ $order->user?->mobile ?? 'N/A' }}</td>
                         </tr>
                         <tr>
                             <th>Address</th>

@@ -266,7 +266,7 @@
                         <tr>
                             <td>{{ $order->id }}</td>
                             <td>{{ $order->user_name }}</td>
-                            <td>{{ $order->user->email }}</td>
+                            <td>{{ $order->user?->email ?? 'N/A' }}</td>
                             <td>{{ $order->city }}</td>
                             <td>{{ $order->pincode }}</td>
                             <td>Rs.{{ $order->total }}</td>

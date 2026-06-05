@@ -253,14 +253,14 @@
                     <tr>
                         <td colspan="2">
                             Name : {{ $invoice->user_name }}
-                            <span class="invoice_span">Consumer ID : {{ $invoice->user->id }}</span>
+                            <span class="invoice_span">Consumer ID : {{ $invoice->user?->id ?? 'N/A' }}</span>
                         </td>
                     </tr>
 
                     <tr>
                         <td colspan="2">
-                            Contact No. : {{ $invoice->user->mobile }}
-                            <span class="invoice_span">Email : {{ $invoice->user->email }}</span>
+                            Contact No. : {{ $invoice->user?->mobile ?? 'N/A' }}
+                            <span class="invoice_span">Email : {{ $invoice->user?->email ?? 'N/A' }}</span>
                         </td>
                     </tr>
                     <tr>
