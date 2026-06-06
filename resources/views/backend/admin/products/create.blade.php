@@ -437,20 +437,17 @@
                                 <div class="col-md-8 mb-3">
                                     <label>Return Policy </label> <br>
                                     <div class="form-check form-check-inline">
-                                        <div class="custom-control custom-checkbox my-1 mr-sm-2">
-                                            <input type="checkbox" class="custom-control-input" id="within_days"
-                                                name="within_days" {{ old('within_days') ? 'checked' : '' }}
-                                                value="1">
+                                        <div class="custom-control custom-radio my-1 mr-sm-2">
+                                            <input type="radio" class="custom-control-input" id="within_days"
+                                                name="return_policy" value="within_days" {{ old('return_policy') == 'within_days' ? 'checked' : '' }}>
                                             <label class="custom-control-label" for="within_days">Within 7 Days</label>
                                         </div>
 
-                                        <div class="custom-control custom-checkbox my-1 mr-sm-2">
-                                            <input type="checkbox" class="custom-control-input" id="non_returnable"
-                                                value="1" name="non_returnable"
-                                                {{ old('non_returnable') ? 'checked' : '' }}>
+                                        <div class="custom-control custom-radio my-1 mr-sm-2">
+                                            <input type="radio" class="custom-control-input" id="non_returnable"
+                                                name="return_policy" value="non_returnable" {{ old('return_policy') == 'non_returnable' ? 'checked' : '' }}>
                                             <label class="custom-control-label text-danger fw-bold"
-                                                for="non_returnable">Non
-                                                Returnable</label>
+                                                for="non_returnable">Non Returnable</label>
                                         </div>
                                     </div>
                                 </div>
@@ -702,17 +699,6 @@
                 }
             }); */
 
-            // Return policy radio-button behavior
-            $('#within_days').on('change', function() {
-                if($(this).is(':checked')) {
-                    $('#non_returnable').prop('checked', false);
-                }
-            });
-            $('#non_returnable').on('change', function() {
-                if($(this).is(':checked')) {
-                    $('#within_days').prop('checked', false);
-                }
-            });
 
         });
 

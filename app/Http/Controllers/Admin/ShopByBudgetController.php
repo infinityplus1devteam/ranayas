@@ -23,17 +23,15 @@ class ShopByBudgetController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:191',
-            'budget' => 'required|numeric',
             'description' => 'nullable|string',
         ],
         [
             'name.required' => 'Please Enter Budget Title',
-            'budget.required' => 'Please Enter Budget Amount',
         ]);
 
         ShopByBudget::create([
             'name' => $request->name,
-            'budget' => $request->budget,
+            'budget' => 0,
             'description' => $request->description,
             'is_active' => true,
         ]);
@@ -58,7 +56,6 @@ class ShopByBudgetController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:191',
-            'budget' => 'required|numeric',
             'description' => 'nullable|string',
         ]);
 
@@ -66,7 +63,7 @@ class ShopByBudgetController extends Controller
             $budget = ShopByBudget::where('id', $id)->firstOrFail();
             $budget->update([
                 'name' => $request->name,
-                'budget' => $request->budget,
+                'budget' => 0,
                 'description' => $request->description,
                 'is_active' => $request->is_active ?? 0,
             ]);
@@ -101,11 +98,8 @@ class ShopByBudgetController extends Controller
         try {
             $budget = ShopByBudget::where('id', $id)->firstOrFail();
             
-            // All active products filtered by budget amount
-            $products = TxnProduct::with('colors')->where('status', true)->get()->filter(function ($product) use ($budget) {
-                $price = $product->colors->first()->mrp ?? 0;
-                return $price <= $budget->budget;
-            });
+            // All active products
+            $products = TxnProduct::with('colors')->where('status', true)->get();
             
             // Assigned products
             $assignedProducts = MapShopByBudgetProduct::where('shop_by_budget_id', $id)

@@ -84,25 +84,7 @@ class MainController extends Controller
         //     ->get();
 
 
-        $sections = DB::table('map_product_sections as mps')
-            ->selectRaw('ms.SectionName as section_name, GROUP_CONCAT(mps.product_id) as product_ids')
-            ->leftJoin('ms_sections as ms', 'mps.section_id', '=', 'ms.id')
-            ->where('ms.status', true)
-            ->groupBy('ms.id', 'ms.SectionName')
-            ->get();
 
-        // $sections = DB::table('map_product_sections as mps')
-        //     ->selectRaw('ms.SectionName as section_name, GROUP_CONCAT(mps.product_id) as product_ids')
-        //     ->leftJoin('ms_sections as ms', 'mps.section_id', '=', 'ms.id')
-        //     ->where('ms.status', true)
-        //     ->groupBy('ms.id')
-        //     ->get();
-
-        $section_products = array();
-        foreach ($sections as $key => $sec) {
-            $temp = $products->whereIn('id', explode(',', $sec->product_ids));
-            $section_products[$sec->section_name] = $temp->all();
-        }
 
         // Add Shop By Budget
         $shopByBudgets = \App\Model\ShopByBudget::where('is_active', true)->orderBy('sort_index', 'asc')->get();
@@ -123,7 +105,7 @@ class MainController extends Controller
             }
         }
 
-        return view('frontend.newproduct.index', compact('sliders', 'section_products', 'reviews', 'homeOfferSliders', 'categories', 'shopByBudgetProducts'));
+        return view('frontend.newproduct.index', compact('sliders', 'reviews', 'homeOfferSliders', 'categories', 'shopByBudgetProducts'));
     }
 
     /* public function subscribers(Request $request)
@@ -647,6 +629,18 @@ class MainController extends Controller
 
             return back();
         }
+    }
+
+    public function removePromocode(Request $request)
+    {
+        $request->session()->forget('promocode_new');
+        $request->session()->forget('promocode');
+        $cartTotal = \Cart::getTotal();
+        $newTotal = $cartTotal;
+        if ($cartTotal < 1000) {
+            $newTotal += 60; // adding shipping charge
+        }
+        return response()->json(['success' => 'Coupon Removed !', 'status' => 200, 'new_total' => $newTotal], 200);
     }
 
     public function verifyPromocode(Request $request)

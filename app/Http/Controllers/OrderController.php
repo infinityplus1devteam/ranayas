@@ -147,6 +147,8 @@ class OrderController extends Controller
                 $balance = $balance + $request->shipingcharge;
             }
 
+            $balance = round($balance);
+
             $request['tbt'] = round($balance / $gst_value, 2);
 
             $request['tax'] = round($balance - $request->tbt, 2);

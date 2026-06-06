@@ -246,119 +246,7 @@
         }
     </style>
 
-    <!-- products tab start -->
-    @foreach ($section_products as $key => $section)
-        @if (count($section))
-            <section class="home5-featured section-b-padding featured-products">
-                <div class="main-card-conatiner">
-                    <div class="row">
-                        <div class="col">
-                            <div class="section-title">
-                                <h2><span>{{ $key }}</span></h2>
-                            </div>
-                            <div class="featured5-pro owl-carousel owl-theme">
-                                @foreach ($section as $k => $product)
-                                    @php
-                                        $colors = explode(',', $product->color_codes);
-                                        $getDiff = $product->starting_price - $product->mrp;
-                                        $getOffer = round(($getDiff / $product->starting_price) * 100, 0);
-                                    @endphp
-                                    <div class="items">
-                                        <div class="tred-pro">
-                                            <div class="tr-pro-img">
-                                                <a href="{{ route('product', $product->slug_url) }}">
-                                                    <img class="img-fluid lazy" src="{!! asset('storage/images/products/' . $product->image_url) !!}"
-                                                        alt="{{ $product->title }}">
-                                                    <img class="img-fluid additional-image lazy"
-                                                        src="{!! asset('storage/images/products/' . $product->image_url1) !!}" alt="{{ $product->title }}">
-                                                </a>
-                                            </div>
-                                            <div class="Pro-lable">
-                                                <span class="p-text">New</span>
-                                                <span class="p-discount"> {{ $getOffer }}% off</span>
-                                            </div>
-                                            <div class="pro-icn">
-                                                @if (auth('user')->check())
-                                                    @php
-                                                        $wishlistItem = auth('user')
-                                                            ->user()
-                                                            ->wishlists->where('product_id', $product->id)
-                                                            ->first();
-                                                    @endphp
-                                                    @if ($wishlistItem)
-                                                        <a href="javascript:void(0)" class="w-c-q-icn wishlist-remove"
-                                                            data-w-id="{{ $wishlistItem->id }}"
-                                                            title="Remove from Wishlist"><i class="fa fa-heart"></i></a>
-                                                    @else
-                                                        <a href="javascript:void(0)" class="w-c-q-icn wishlist"
-                                                            data-p-id="{{ $product->id }}"
-                                                            data-c-id="{{ $product->c_id }}"
-                                                            data-s-id="{{ $product->s_id }}" title="Add to Wishlist"><i
-                                                                class="fa fa-heart-o"></i></a>
-                                                    @endif
-                                                @else
-                                                    <a href="javascript:void(0)" class="w-c-q-icn wishlist-login"
-                                                        title="Add to Wishlist"><i class="fa fa-heart-o"></i></a>
-                                                @endif
-                                                <a href="javascript:void(0)"
-                                                    onclick="addToCart('{{ $product->id }}', '{{ $product->stock }}', '{{ $product->c_id }}', '{{ $product->s_id }}')"
-                                                    class="w-c-q-icn" title="Add to Cart"><i
-                                                        class="fa fa-shopping-bag"></i></a>
-                                                <a href="{{ route('product', $product->slug_url) }}" class="w-c-q-icn"><i
-                                                        class="fa fa-eye"></i></a>
-                                            </div>
-                                        </div>
 
-                                        <div class="caption caption-9">
-                                            <h3 class="title">
-                                                <span class="pull-left">
-                                                    <a href="{{ route('product', $product->slug_url) }}">
-                                                        {{ Str::length($product->title) > 20 ? Str::substr($product->title, 0, 20) . '...' : $product->title }}
-                                                    </a>
-                                                </span>
-                                                <span class="pull-left">
-                                                    @foreach ($colors as $color)
-                                                        <span
-                                                            style="background: {{ $color }};border-radius:50%;height:10px;width:10px;display:inline-block;box-shadow: 1px 2px 3px 0px #5f5f5f;opacity:1;"></span>
-                                                    @endforeach
-                                                </span>
-                                                <div class="clearfix"></div>
-                                            </h3>
-                                            <div>
-                                                <div class="price-star">
-
-                                                    @if ($product->review_status)
-                                                        <div class="rating pull-right">
-                                                            @for ($i = 1; $i <= $product->rating; $i++)
-                                                                <i class="fa fa-star"></i>
-                                                            @endfor
-                                                            @for ($i = 1; $i <= 5 - $product->rating; $i++)
-                                                                <i class="fa fa-star-o"></i>
-                                                            @endfor
-                                                        </div>
-                                                    @endif
-
-                                                    <div class="pro-price pull-left">
-                                                        <span class="new-price"><i class="fa fa-inr"></i>
-                                                            {{ $product->mrp }}</span>
-                                                        <span class="old-price"><del><i class="fa fa-inr"></i>
-                                                                {{ $product->starting_price }}</del></span>
-                                                    </div>
-
-                                                </div>
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                @endforeach
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-        @endif
-    @endforeach
-    <!-- product tab end -->
 
     <!-- budget tab start -->
     @if(isset($shopByBudgetProducts))
@@ -818,7 +706,7 @@
 
             <div class="btns">
                 <a href="#">Browse products</a>
-                <a href="#">Get buying advice</a>
+                <a href="javascript:void(0);" onclick="document.getElementById('enquiry-form').style.display = 'block'; document.getElementById('modal_background').classList.remove('d-none');">Get buying advice</a>
                 {{-- <a href="#">Browse products</a>
     <a href="#">Get buying advice</a> --}}
             </div>

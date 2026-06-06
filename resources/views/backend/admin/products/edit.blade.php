@@ -465,19 +465,16 @@
                             <div class="col-md-8 mb-3">
                                 <label>Return Policy </label> <br>
                                 <div class="form-check form-check-inline">
-                                    <div class="custom-control custom-checkbox my-1 mr-sm-2">
-                                        <input type="checkbox" class="custom-control-input" id="within_days"
-                                            name="within_days" {{ $product->within_days == true ? 'checked' : '' }}
-                                            value="1">
+                                    <div class="custom-control custom-radio my-1 mr-sm-2">
+                                        <input type="radio" class="custom-control-input" id="within_days"
+                                            name="return_policy" value="within_days" {{ $product->within_days == true ? 'checked' : '' }}>
                                         <label class="custom-control-label" for="within_days">Within 7 Days</label>
                                     </div>
 
-                                    <div class="custom-control custom-checkbox my-1 mr-sm-2">
-                                        <input type="checkbox" class="custom-control-input" id="non_returnable"
-                                            name="non_returnable" {{ $product->non_returnable == true ? 'checked' : '' }}
-                                            value="1">
-                                        <label class="custom-control-label text-danger fw-bold" for="non_returnable">Non
-                                            Returnable</label>
+                                    <div class="custom-control custom-radio my-1 mr-sm-2">
+                                        <input type="radio" class="custom-control-input" id="non_returnable"
+                                            name="return_policy" value="non_returnable" {{ $product->non_returnable == true ? 'checked' : '' }}>
+                                        <label class="custom-control-label text-danger fw-bold" for="non_returnable">Non Returnable</label>
                                     </div>
                                 </div>
                             </div>
@@ -833,17 +830,7 @@
     <script>
         $(document).ready(function() {
 
-            // Return policy radio-button behavior
-            $('#within_days').on('change', function() {
-                if($(this).is(':checked')) {
-                    $('#non_returnable').prop('checked', false);
-                }
-            });
-            $('#non_returnable').on('change', function() {
-                if($(this).is(':checked')) {
-                    $('#within_days').prop('checked', false);
-                }
-            });
+
 
             $(".delete-object").click(function() {
                 if (window.confirm("Are you sure to delete this Custom Field ?")) {

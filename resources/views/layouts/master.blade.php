@@ -714,7 +714,7 @@
                 <div class="col">
                     <ul class="f-bottom">
                         <li class="f-c f-copyright">
-                            <p>Copyright <i class="fa fa-copyright"></i> 2026 ranayas.com - All Rights Reserved.</p>
+                            <p>Copyright <i class="fa fa-copyright"></i> 2026 <a style="color:white;" href="https://ranayas.com/"> Ranayas</a> - All Rights Reserved.</p>
                         </li>
                         <li class="f-c">
                             <ul class="f-bottom">
@@ -818,7 +818,7 @@
 
                             <ul class="social-icon-wrapper row m-0 mb-4 p-0">
                                 <li class="col-12 p-0">
-                                    <a href="{{ route('user.auth.socialite', 'google') }}" class="gmail w-100" style="width: 100%; display: block;"><i class="fa fa-google" aria-hidden="true"></i> Login with Google</a>
+                                    <a href="{{ route('user.auth.socialite', 'google') }}" class="gmail w-100" style="width: 100%; display: block;"><i class="fa fa-google" aria-hidden="true" style="font-size: 14px; margin-right: 6px;"></i> Login with Google</a>
                                 </li>
                             </ul>
 

@@ -314,10 +314,7 @@
                                                                 Return
                                                             </a>
                                                         </div>
-                                                        @endif @if($order->return_status ===
-                                                        null && $order->status != 'Delivered' &&
-                                                        $order->status != 'Cancelled') @if($order->status !=
-                                                        'Shipped')
+                                                        @endif @if($order->return_status === null && $order->status == 'Processing')
                                                         <div class="col">
                                                             <a href="javascript:void(0);" class="cancelBtn"
                                                                 data-obj-id="{{ $order->id }}">
@@ -325,21 +322,7 @@
                                                                 Cancel
                                                             </a>
                                                         </div>
-                                                        @else
-                                                        <div class="col">
-                                                            <a href="javascript:void(0);" class="cancelBtn"
-                                                                data-obj-id="{{ $order->id }}">
-                                                                <i class="fa fa-times" aria-hidden="true"></i>
-                                                                Cancel
-                                                            </a>
-                                                            <p>
-                                                                <strong class="text-danger">
-                                                                    Note : Extra Shipping Charges
-                                                                    will be charged.
-                                                                </strong>
-                                                            </p>
-                                                        </div>
-                                                        @endif @endif
+                                                        @endif
                                                         <div class="col">
                                                             <a href="javascript:void(0)" class="need-help-btn"
                                                                 data-obj-id="{{ $order->id }}">
@@ -427,6 +410,8 @@
             }
         });
     });
+
+
 
 </script>
 

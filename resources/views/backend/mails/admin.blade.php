@@ -279,13 +279,13 @@
                             @endphp
                             <p>Item Subtotal : &#8377; {{ $itemSubtotal }}</p>
                             @if($order->tax > 0)
-                                <p>+ CGST : &#8377; {{ round($order->tax / 2, 2) }}</p>
-                                <p>+ SGST : &#8377; {{ round($order->tax / 2, 2) }}</p>
+                                <p style="font-weight: normal; color: #555;">(Includes CGST : &#8377; {{ round($order->tax / 2, 2) }})</p>
+                                <p style="font-weight: normal; color: #555;">(Includes SGST : &#8377; {{ round($order->tax / 2, 2) }})</p>
                             @endif
-                            <p>+ Shipping : &#8377; {{ $shipping }}</p>
                             @if ($order->discount)
                                 <p>- Discount : &#8377; {{ $order->discount }}</p>
                             @endif
+                            <p>+ Shipping : &#8377; {{ $shipping }}</p>
                             <p>Grand Total : &#8377; {{ $order->total }}</p>
                         </th>
                     </tr>

@@ -193,24 +193,11 @@
                                     <a href="javascript:void(0);" class="review">
                                         <i class="fa fa-star" aria-hidden="true"></i> Rate & Review
                                     </a>
-                                    @if(
-                                            $order->return_status === null && $order->status != 'Delivered' &&
-                                            $order->status != 'Cancelled'
-                                        )
-                                        @if($order->status != 'Shipped')
-                                            <a href="javascript:void(0);" class="cancelBtn" data-obj-id="{{ $order->id }}">
-                                                <i class="fa fa-times" aria-hidden="true"></i>
-                                                Cancel
-                                            </a>
-                                        @else
-                                            <a href="javascript:void(0);" class="cancelBtn" data-obj-id="{{ $order->id }}">
-                                                <i class="fa fa-times" aria-hidden="true"></i>
-                                                Cancel
-                                            </a>
-                                            <p>
-                                                <strong class="text-danger">Note : Extra Shipping Charges will be charged.</strong>
-                                            </p>
-                                        @endif
+                                    @if($order->return_status === null && $order->status == 'Processing')
+                                        <a href="javascript:void(0);" class="cancelBtn" data-obj-id="{{ $order->id }}">
+                                            <i class="fa fa-times" aria-hidden="true"></i>
+                                            Cancel
+                                        </a>
                                     @endif
 
                                     @if($order->return_status === null && $order->status === 'Delivered')
@@ -340,27 +327,28 @@
                                                             }
                                                             $shipping = $itemSubtotal < 1000 ? 60 : 0;
                                                         @endphp
-                                                        <th>Total</th>
+                                                        <th>Subtotal</th>
                                                         <td><strong>&#8377; {{ $itemSubtotal }}</strong></td>
                                                     </tr>
                                                     @if($order->tax > 0)
                                                         <tr>
-                                                            <th> (Includes CGST: </th>
-                                                            <td> &#8377; {{ round($order->tax / 2, 2) }} )</td>
+                                                            <td style="font-size: 13px; font-weight: normal; color: #555;">(Includes CGST)</td>
+                                                            <td style="font-size: 13px; color: #555;">&#8377; {{ round($order->tax / 2, 2) }}</td>
                                                         </tr>
                                                         <tr>
-                                                            <th> (Includes SGST: </th>
-                                                            <td> &#8377; {{ round($order->tax / 2, 2) }} )</td>
+                                                            <td style="font-size: 13px; font-weight: normal; color: #555;">(Includes SGST)</td>
+                                                            <td style="font-size: 13px; color: #555;">&#8377; {{ round($order->tax / 2, 2) }}</td>
                                                         </tr>
                                                     @endif
+
                                                     @if($order->discount)
                                                         <tr>
-                                                            <th> - Discount </th>
+                                                            <td> - Discount </td>
                                                             <td> &#8377; {{ $order->discount }} </td>
                                                         </tr>
                                                     @endif
                                                     <tr>
-                                                        <th> + Shipping Charges </th>
+                                                        <td> + Shipping Charges </td>
                                                         <td> &#8377; {{ $shipping }} </td>
                                                     </tr>
                                                     <tr>
@@ -593,12 +581,6 @@
 
     <script>
         $(document).ready(function () {
-            var val = '';
-            reason(val);
-            $('#reason').change(function () {
-                var val = $(this).val();
-                reason(val);
-            });
 
             $('.cancelBtn').click(function () {
 
@@ -621,7 +603,7 @@
             });
 
             $('.returnBtn').click(function () {
-                $('#returnBtn').modal('show')
+                $('#orderReturn').modal('show')
             });
         });
 
@@ -634,16 +616,7 @@
             }, 2000);
         }
 
-        function reason(val) {
 
-            if (val == 'other') {
-                $('.other_reason').show();
-                $('#other_reason').attr('required', 'required');
-            } else {
-                $('.other_reason').hide();
-                $('#other_reason').removeAttr('required', 'required');
-            }
-        }
 
     </script>
 @endsection

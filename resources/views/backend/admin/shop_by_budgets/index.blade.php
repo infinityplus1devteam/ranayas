@@ -23,13 +23,7 @@
                                     value="{{ old('name') }}" placeholder="e.g. Under 99" required>
                             </div>
                         </div>
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                <label for="budget">Budget Amount <span class="text-danger">*</span></label>
-                                <input type="number" name="budget" id="budget" class="form-control"
-                                    value="{{ old('budget') }}" placeholder="e.g. 99" required>
-                            </div>
-                        </div>
+
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label for="description">Description</label>
@@ -69,12 +63,7 @@
                                 <input type="text" name="name" id="edit_name" class="form-control" required>
                             </div>
                         </div>
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                <label for="edit_budget">Budget Amount <span class="text-danger">*</span></label>
-                                <input type="number" name="budget" id="edit_budget" class="form-control" required>
-                            </div>
-                        </div>
+
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label for="edit_description">Description</label>
@@ -125,7 +114,7 @@
                             <th>#</th>
                             <th>Sort Index</th>
                             <th>Name</th>
-                            <th>Budget</th>
+
                             <th>Status</th>
                             <th>Action</th>
                         </tr>
@@ -138,7 +127,7 @@
                                 <input type="number" name="sort_data[{{ $budget->id }}]" class="form-control" value="{{ $budget->sort_index }}" style="width: 80px;" min="0">
                             </td>
                             <td>{{ $budget->name }} </td>
-                            <td>₹ {{ $budget->budget }} </td>
+
                             <td>
                                 @if($budget->is_active)
                                     <span class="badge badge-success">Active</span>
@@ -161,7 +150,6 @@
                                         <a href="javascript:void(0)" class="dropdown-item has-icon edit-budget"
                                             data-id="{{ $budget->id }}"
                                             data-name="{{ $budget->name }}"
-                                            data-budget="{{ $budget->budget }}"
                                             data-description="{{ $budget->description }}"
                                             data-status="{{ $budget->is_active }}">
                                             <i class="fa fa-edit"></i> Edit
@@ -209,11 +197,9 @@
         $("#formAddBudget").validate({
             rules: {
                 name: { required: true },
-                budget: { required: true, number: true },
             },
             messages: {
                 name: { required: "Please Enter Name" },
-                budget: { required: "Please Enter Budget Amount" },
             },
             submitHandler: function (form) {
                 $('.btnSubmit').attr('disabled', 'disabled');
@@ -225,11 +211,9 @@
         $("#formEditBudget").validate({
             rules: {
                 name: { required: true },
-                budget: { required: true, number: true },
             },
             messages: {
                 name: { required: "Please Enter Name" },
-                budget: { required: "Please Enter Budget Amount" },
             },
             submitHandler: function (form) {
                 $('.btnEditSubmit').attr('disabled', 'disabled');
@@ -241,12 +225,10 @@
         $('.edit-budget').on('click', function() {
             var id = $(this).data('id');
             var name = $(this).data('name');
-            var budget = $(this).data('budget');
             var description = $(this).data('description');
             var status = $(this).data('status');
 
             $('#edit_name').val(name);
-            $('#edit_budget').val(budget);
             $('#edit_description').val(description);
             $('#edit_is_active').val(status);
 

@@ -2,24 +2,24 @@
 @section('title', 'Update Ticket')
 @section('content')
 
-<div class="card borderless-card">
-    <div class="card-block inverse-breadcrumb">
-        <div class="breadcrumb-header">
-            <h5>Update Ticket</h5>
-        </div>
-        <div class="page-header-breadcrumb">
-            <ul class="breadcrumb-title">
+    <section class="section">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb bg-dark text-white-all">
                 <li class="breadcrumb-item">
-                    <a href="/adrana951">Dashboard</a>
+                    <a href="{{ route('admin.dashboard') }}"><i class="fas fa-home"></i> Dashboard</a>
                 </li>
                 <li class="breadcrumb-item">
-                    <a href="{{ route('admin.return-tickets.all') }}">Manage Tickets</a>
+                    <a href="{{ route('admin.return-tickets.all') }}"> Manage Tickets</a>
                 </li>
+                <li class="breadcrumb-item active" aria-current="page"><i class="fas fa-pencil-alt"></i> Update Ticket</li>
+            </ol>
+        </nav>
 
-            </ul>
-        </div>
-    </div>
-    <div class="card-body">
+        <div class="card">
+            <div class="card-header bg-dark text-white-all">
+                <h4>Update Ticket</h4>
+            </div>
+            <div class="card-body">
         <form method="post" class="needs-validation">
             @csrf
             <div class="row">
@@ -120,5 +120,6 @@
         </form>
     </div>
 </div>
+</section>
 
 @endsection

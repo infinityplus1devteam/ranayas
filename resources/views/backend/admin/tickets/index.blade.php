@@ -90,7 +90,7 @@
                         <tr>
                             <td>{{ $ticket->id }}</td>
                             <td>{{ $ticket->email }}</td>
-                            <td>{{ Str::limit($ticket->subject, 30) }}</td>
+                            <td>Ticket raised by {{ $ticket->open_by }} {{ Str::limit($ticket->subject, 30) }}</td>
                             <td>{{ $ticket->open_by }}</td>
                             <td>{{ $ticket->status == true ? 'Open' : 'Closed' }}</td>
                             <td>{{ date('d-M-Y h:i A', strtotime($ticket->created_at)) }}</td>

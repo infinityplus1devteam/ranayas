@@ -90,10 +90,7 @@ class TxnProduct extends Model
         return $this->hasMany(TxnKeyword::class, 'product_id', 'id');
     }
 
-    public function section()
-    {
-        return $this->hasMany(MapProductSection::class, 'product_id', 'id');
-    }
+
 
     public function offers()
     {

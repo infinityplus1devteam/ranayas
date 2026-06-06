@@ -335,7 +335,7 @@
                             $shipping = $itemSubtotal < 1000 ? 60 : 0;
                         @endphp
                         <th colspan="3">
-                            Total
+                            Subtotal
                         </th>
                         <td>
                             Rs. {{ $itemSubtotal }}
@@ -343,22 +343,23 @@
                     </tr>
                     @if($invoice->tax > 0)
                         <tr>
-                            <th colspan="3">
-                                + CGST
+                            <th colspan="3" style="font-weight: normal; color: #555;">
+                                (Includes CGST)
                             </th>
-                            <td>
+                            <td style="color: #555;">
                                 Rs. {{ round($invoice->tax / 2, 2) }}
                             </td>
                         </tr>
                         <tr>
-                            <th colspan="3">
-                                + SGST
+                            <th colspan="3" style="font-weight: normal; color: #555;">
+                                (Includes SGST)
                             </th>
-                            <td>
+                            <td style="color: #555;">
                                 Rs. {{ round($invoice->tax / 2, 2) }}
                             </td>
                         </tr>
                     @endif
+
                     <tr>
                         <th colspan="3">
                             + Shipping

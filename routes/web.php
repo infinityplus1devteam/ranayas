@@ -61,6 +61,7 @@ Route::namespace('App\Http\Controllers')->group(function () {
         Route::GET('/search', 'MainController@search')->name('search');
         Route::POST('/get-sizes', 'MainController@getSizes')->name('get.sizes');
         Route::POST('/verify-promocode', 'MainController@verifyPromocode')->name('verify.promocode');
+        Route::POST('/remove-promocode', 'MainController@removePromocode')->name('remove.promocode');
         Route::POST('/get-size-price', 'MainController@getSizePrice')->name('get.size.price');
 
         // Start Socialite
@@ -283,17 +284,6 @@ Route::namespace('App\Http\Controllers')->group(function () {
                 Route::POST('/edit/{id}', 'Admin\WarrantyController@update');
             });
 
-            Route::prefix('/manage-sections')->group(function () {
-                Route::GET('/', 'Admin\MasterSectionController@index')->name('admin.sections.all');
-                Route::POST('/', 'Admin\MasterSectionController@store');
-                Route::GET('/edit/{id}', 'Admin\MasterSectionController@edit')->name('admin.sections.edit');
-                Route::GET('/assign/{id}', 'Admin\MasterSectionController@assignPage')->name('admin.sections.assign');
-                Route::POST('/assign/{id}', 'Admin\MasterSectionController@assign');
-                Route::GET('/view/assign/{id}', 'Admin\MasterSectionController@viewAssign')->name('admin.sections.viewAssign');
-                Route::POST('/view/assign/{id}', 'Admin\MasterSectionController@removeAssign');
-                Route::POST('/edit/{id}', 'Admin\MasterSectionController@update');
-                Route::POST('/delete/{id}', 'Admin\MasterSectionController@destroy');
-            });
 
             Route::prefix('/manage-reviews')->group(function () {
                 Route::GET('/', 'Admin\ReviewController@index')->name('admin.reviews.all');

@@ -145,19 +145,20 @@
                                                     }
                                                     $shipping = $itemSubtotal < 1000 ? 60 : 0;
                                                 @endphp
-                                                <th>Total</th>
+                                                <th>Subtotal</th>
                                                 <td><strong>&#8377; {{ $itemSubtotal }}</strong></td>
                                             </tr>
                                             @if($order->tax > 0)
                                                 <tr>
-                                                    <th> + CGST </th>
-                                                    <td> &#8377; {{ round($order->tax / 2, 2) }} </td>
+                                                    <th style="font-weight: normal; color: #555;">(Includes CGST)</th>
+                                                    <td style="color: #555;">&#8377; {{ round($order->tax / 2, 2) }}</td>
                                                 </tr>
                                                 <tr>
-                                                    <th> + SGST </th>
-                                                    <td> &#8377; {{ round($order->tax / 2, 2) }} </td>
+                                                    <th style="font-weight: normal; color: #555;">(Includes SGST)</th>
+                                                    <td style="color: #555;">&#8377; {{ round($order->tax / 2, 2) }}</td>
                                                 </tr>
                                             @endif
+
                                             @if($order->discount)
                                                 <tr>
                                                     <th> - Discount </th>

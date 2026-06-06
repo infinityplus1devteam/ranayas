@@ -20,19 +20,13 @@
             <form action="{{ url('adranayas753/manage-shop-by-budgets/edit/'.$budget->id) }}" method="POST">
                 @csrf
                 <div class="row align-items-end">
-                    <div class="col-md-3">
+                    <div class="col-md-4">
                         <div class="form-group mb-0">
                             <label>Name</label>
                             <input type="text" name="name" class="form-control" value="{{ $budget->name }}" required>
                         </div>
                     </div>
-                    <div class="col-md-3">
-                        <div class="form-group mb-0">
-                            <label>Budget Amount</label>
-                            <input type="number" name="budget" class="form-control" value="{{ $budget->budget }}" required>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
+                    <div class="col-md-4">
                         <div class="form-group mb-0">
                             <label>Status</label>
                             <select name="is_active" class="form-control">
@@ -41,8 +35,8 @@
                             </select>
                         </div>
                     </div>
-                    <div class="col-md-3">
-                        <button type="submit" class="btn btn-primary btn-block"><i class="fa fa-save"></i> Update Budget</button>
+                    <div class="col-md-4">
+                        <button type="submit" class="btn btn-primary btn-block"><i class="fa fa-save"></i> Update Section</button>
                     </div>
                 </div>
             </form>

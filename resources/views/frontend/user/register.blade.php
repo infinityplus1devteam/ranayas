@@ -71,7 +71,7 @@
                     Login With OTP</a></li>
             <li class="col-12">
                 <a href="{{ route('user.auth.socialite', 'google') }}" class="gmail"><i class="fa fa-google"
-                        aria-hidden="true"></i>
+                        aria-hidden="true" style="font-size: 14px; margin-right: 6px;"></i>
                     Google</a>
             </li>
             {{-- <li class="col-12">
