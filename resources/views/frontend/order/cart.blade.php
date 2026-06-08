@@ -94,15 +94,17 @@
                                                                             <div class="plus-minus">
                                                                                 <span>
                                                                                     <a href="javascript:void(0)"
-                                                                                        class="minus-btn text-black quantity-input"
+                                                                                        class="text-black quantity-input"
                                                                                         data-index="{{ $item->id }}"
-                                                                                        data-stock="{{ $item->attributes->stock }}">-</a>
+                                                                                        data-stock="{{ $item->attributes->stock }}"
+                                                                                        onclick="updateCartItem(this, -1)">-</a>
                                                                                     <input type="number" id="qty_{{ $item->id }}" name="qty"
                                                                                         class="qty" value="{{ $item->quantity }}" min="1" disabled>
                                                                                     <a href="javascript:void(0)"
-                                                                                        class="plus-btn text-black quantity-input"
+                                                                                        class="text-black quantity-input"
                                                                                         data-index="{{ $item->id }}"
-                                                                                        data-stock="{{ $item->attributes->stock }}">+</a>
+                                                                                        data-stock="{{ $item->attributes->stock }}"
+                                                                                        onclick="updateCartItem(this, 1)">+</a>
                                                                                 </span>
                                                                             </div>
                                                                             <a href="javascript:void(0)" data-remove-id="{{ $item->id }}"
@@ -194,46 +196,66 @@
 @endsection
 @section('extrajs')
     <script>
-        $(document).ready(function () {
-
-            $('.quantity-input').click(function (e) {
-                e.preventDefault();
-                var itemid = $(this).attr('data-index');
-                var quantity = parseInt($('#qty_' + itemid).val());
-                var stock = parseInt($(this).attr('data-stock'));
-                if (quantity > stock) {
-                    swal('Out Of Stock', 'Product is Currently Out of Stock, Stay Tuned !', 'error');
-                } else {
-                    $.ajaxSetup({
-                        headers: {
-                            'X-CSRF-TOKEN': "{{ csrf_token() }}"
-                        }
-                    });
-                    $('.qty').attr('readonly', 'readonly');
-                    $('.quantity-input').attr('disabled', 'disabled');
-                    $('.quantity-input').html(
-                        '<i class="fa fa-spinner fa-pulse fa-fw"></i><span class="sr-only">Loading...</span>'
-                    );
-                    $.ajax({
-                        url: "{{ route('cart.update') }}",
-                        type: 'POST',
-                        data: {
-                            quantity: quantity,
-                            itemid: itemid,
-                        },
-                        success: function (result) {
-                            var success = result.success;
-                            if (success) {
-                                $('.quantity-input').removeAttr('disabled', 'disabled');
-                            } else {
-                                $('.quantity-input').removeAttr('disabled', 'disabled');
-                            }
-                            location.reload(true);
-                        }
-                    });
+        function updateCartItem(element, delta) {
+            try {
+                var btn = $(element);
+                var itemid = btn.attr('data-index');
+                var input = btn.closest('div').find('.qty');
+                var stock = parseInt(btn.attr('data-stock'));
+                
+                var currentVal = parseInt(input.val());
+                if (isNaN(currentVal)) {
+                    currentVal = 1;
                 }
-            });
-        });
-
+                
+                var newQty = currentVal + delta;
+                
+                if (newQty < 1) {
+                    return;
+                }
+                
+                if (newQty > stock) {
+                    if (typeof swal !== 'undefined') {
+                        swal('Out Of Stock', 'Product is Currently Out of Stock, Stay Tuned !', 'error');
+                    } else {
+                        alert('Product is Currently Out of Stock, Stay Tuned !');
+                    }
+                    
+                    // Revert to original input value so it doesn't look like it changed
+                    input.val(currentVal);
+                    return;
+                }
+                
+                // Update input visually immediately
+                input.val(newQty);
+                
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': "{{ csrf_token() }}"
+                    }
+                });
+                
+                $('.qty').attr('readonly', 'readonly');
+                $('.quantity-input').attr('disabled', 'disabled');
+                
+                $.ajax({
+                    url: "{{ route('cart.update') }}",
+                    type: 'POST',
+                    data: {
+                        quantity: newQty,
+                        itemid: itemid,
+                    },
+                    success: function (result) {
+                        window.location.reload(true);
+                    },
+                    error: function () {
+                        window.location.reload(true);
+                    }
+                });
+            } catch(e) {
+                console.error("Cart update error: ", e);
+                alert("Error updating cart: " + e.message);
+            }
+        }
     </script>
 @endsection

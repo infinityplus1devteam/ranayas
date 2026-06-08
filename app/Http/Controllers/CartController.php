@@ -136,22 +136,14 @@ class CartController extends Controller
                 'value' => $request->quantity,
             ),
 
-            'attributes' => array(
-                'size_id' => $cart->attributes->size_id,
+            'attributes' => array_merge($cart->attributes->toArray(), array(
                 'color_id' => $size->color_id,
-                'color_name' => $cart->attributes->color_name,
-                'size_name' => $cart->attributes->size_name,
-                'map_id' => $cart->attributes->map_id,
+                'stock' => $size->stock,
                 'image_url' => $product->image_url,
                 'slug_url' => $product->slug_url,
-                'product_id' => $product->id,
-                'category_id' => $product->category_id,
-                'stock' => $size->stock,
-                'offer_map_id' => $cart->attributes->offer_map_id,
-                'offers' => $cart->attributes->offers,
                 'unit' => $product->unit ? $product->unit->unit : null,
                 'isCodAvailable' => $product->isCodAvailable,
-            ),
+            )),
         ));
 
         connectify('success', 'Cart Updated', 'Cart has been updated successfully !');
