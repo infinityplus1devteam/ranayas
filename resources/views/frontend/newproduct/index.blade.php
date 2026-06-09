@@ -173,7 +173,7 @@
                 /* height: auto;  */
                 /* Scales naturally with image aspect-ratio */
                 /* To restrict height on desktop to a fixed size, uncomment below: */
-                height: 500px;
+                /* height: 500px; */
                 object-fit: cover;
                 object-position: 
             }
