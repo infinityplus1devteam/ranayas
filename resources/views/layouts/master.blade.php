@@ -448,7 +448,7 @@
             </div>
         @endif
         <ul class="cart-item-loop">
-            @foreach (Cart::getcontent() as $item)
+            @foreach (Cart::getContent()->sortBy('id') as $item)
                 <li class="cart-item">
                     <div class="cart-img">
                         <a href="{{ route('product', $item->attributes->slug_url) }}">

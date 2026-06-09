@@ -151,7 +151,7 @@
                                                             @php
                                                                 $isCodAvailable = true;
                                                             @endphp
-                                                            @foreach (Cart::getContent() as $item)
+                                                            @foreach (Cart::getContent()->sortBy('id') as $item)
                                                                 @php
                                                                     $isCodAvailable =
                                                                         $item->attributes->isCodAvailable &&

@@ -48,7 +48,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    @foreach (Cart::getContent() as $item)
+                                    @foreach (Cart::getContent()->sortBy('id') as $item)
                                                         <div class="cart-area">
                                                             <div class="cart-details">
                                                                 <div class="cart-all-pro">

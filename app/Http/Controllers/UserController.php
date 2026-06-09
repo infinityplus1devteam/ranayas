@@ -345,11 +345,12 @@ class UserController extends Controller
 
             SMS::send($order->user->mobile, 'Ranayas - You have applied for Return and Refund against Order ID : ' . $order->id . ', Stay tuned for approval on ' . route('user.login'));
 
-            Mail::send(['html' => 'backend.mails.ticket'], ['ticket' => $ticket], function ($message) use ($ticket) {
+            // Email to Admin
+            $adminEmail = \App\Model\Admin::first()->email;
+            Mail::send(['html' => 'backend.mails.ticket-admin'], ['ticket' => $ticket], function ($message) use ($ticket, $adminEmail) {
                 $message->from('info@ranayas.com', 'Ranayas');
-                $message->to($ticket->email, 'Ranayas');
-                $message->bcc('info@ranayas.com', 'Ranayas');
-                $message->subject('Ranayas RE:' . $ticket->subject . ' Ticket ID : ' . $ticket->id);
+                $message->to($adminEmail, 'Admin');
+                $message->subject('[ADMIN ALERT] New Return/Refund Request - ' . $ticket->subject . ' [Ticket ID: ' . $ticket->id . ']');
             });
 
             connectify('success', 'Return Order', 'Order Return applied successfully, stay tuned for approval !');
@@ -440,11 +441,12 @@ class UserController extends Controller
                 'status' => true,
             ]);
 
-            Mail::send(['html' => 'backend.mails.ticket'], ['ticket' => $ticket], function ($message) use ($ticket) {
+            // Email to Admin
+            $adminEmail = \App\Model\Admin::first()->email;
+            Mail::send(['html' => 'backend.mails.ticket-admin'], ['ticket' => $ticket], function ($message) use ($ticket, $adminEmail) {
                 $message->from('info@ranayas.com', 'Ranayas');
-                $message->to($ticket->email, 'Ranayas');
-                $message->bcc('info@ranayas.com', 'Ranayas');
-                $message->subject('Ranayas' . $ticket->subject . ' Ticket ID : ' . $ticket->id);
+                $message->to($adminEmail, 'Admin');
+                $message->subject('[ADMIN ALERT] New Support Query - ' . $ticket->subject . ' [Ticket ID: ' . $ticket->id . ']');
             });
 
             connectify('success', 'Need Help', 'Your query has been sent successfully, our expert will get in touch with you soon, stay tuned !');
