@@ -198,17 +198,23 @@
                                                     <ul class="order-history">
                                                         <li class="order-details">
                                                             <span>Total:</span>
-                                                            <span>₹{{ Cart::getTotal() }}</span>
+                                                            <span>₹<span id="cart-total-span">{{ Cart::getTotal() }}</span></span>
                                                         </li>
+                                                        @if(Cart::getTotal() < 1000)
+                                                        <li class="order-details shipping-row">
+                                                            <span class="text-danger">Shipping Charge:</span>
+                                                            <span class="text-danger">+ ₹60</span>
+                                                        </li>
+                                                        @endif
                                                         <li class="order-details discount-row" style="display: none;">
                                                             <span class="text-success">Discount:</span>
                                                             <span class="text-success">- ₹<span id="discount_span">0</span></span>
                                                         </li>
                                                         <li class="order-details grand-total-row"
-                                                            style="font-weight: bold; border-top: 1px solid #ddd; padding-top: 10px; margin-top: 10px; display: none;">
+                                                            style="font-weight: bold; border-top: 1px solid #ddd; padding-top: 10px; margin-top: 10px; {{ Cart::getTotal() < 1000 ? '' : 'display: none;' }}">
                                                             <span>Grand Total:</span>
                                                             <span>₹<span
-                                                                    class="order-total-ammount">{{ Cart::getTotal() }}</span></span>
+                                                                    class="order-total-ammount">{{ Cart::getTotal() < 1000 ? Cart::getTotal() + 60 : Cart::getTotal() }}</span></span>
                                                         </li>
                                                     </ul>
                                                     <div class="checkout-payment">
@@ -1459,7 +1465,11 @@
                             $('#discount_span').html('0');
                             $('.order-total-ammount').html(result.new_total);
                             $('.discount-row').hide();
-                            $('.grand-total-row').hide();
+                            if (result.new_total != {{ Cart::getTotal() }}) {
+                                $('.grand-total-row').show();
+                            } else {
+                                $('.grand-total-row').hide();
+                            }
                         }
                     }
                 });
