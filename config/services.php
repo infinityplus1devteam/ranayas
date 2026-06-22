@@ -36,11 +36,13 @@ return [
     ],
 
     'sms' => [
-        'user' => env('SMS_USER'),
-        'password' => env('SMS_PASSWORD'),
-        'senderid' => env('SMS_SENDER_ID'),
-        'route' => env('SMS_ROUTE'),
-        'peid' => env('SMS_PEID'),
+        'api_key' => env('SMS_API_KEY'),
+        'client_id' => env('SMS_CLIENT_ID'),
+        'sender_id' => env('SMS_SENDER_ID'),
+        'dlt_otp_template_id' => env('SMS_DLT_OTP_TEMPLATE_ID'),
+        'dlt_order_template_id' => env('SMS_DLT_ORDER_TEMPLATE_ID'),
+        'dlt_return_template_id' => env('SMS_DLT_RETURN_TEMPLATE_ID'),
+        'dlt_cancel_template_id' => env('SMS_DLT_CANCEL_TEMPLATE_ID'),
     ],
 
     'google' => [

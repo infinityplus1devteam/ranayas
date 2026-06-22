@@ -28,6 +28,7 @@ class SMS implements ShouldQueue
         self::$peid = config('services.sms.peid');
     }
 
+    /*
     public static function send($mobile, $text, $templateid = '')
     {
         self::init();
@@ -70,6 +71,75 @@ class SMS implements ShouldQueue
 
                 return;
             }
+        }
+    }
+    */
+
+    public static function send($mobile, $text, $templateid = '')
+    {
+        $val = Validator::make(['mobile' => $mobile, 'text' => $text], [
+            'mobile' => 'required|min:10|max:12',
+            'text' => 'required|string|max:250',
+        ]);
+
+        if ($val->fails()) {
+            Log::info($val->errors());
+            return;
+        }
+
+        try {
+            // MyLogin Mantra API Credentials
+            $apiKey = config('services.sms.api_key');
+            $clientId = config('services.sms.client_id');
+            $senderId = config('services.sms.sender_id');
+            // Optional: You could pass DLT template ID if the API requires it as a parameter, 
+            // but standard v2 uses SenderId and Message match for DLT approval.
+            $dltTemplateId = config('services.sms.dlt_template_id');
+
+            // Ensure the mobile number has the 91 country code prefix for Indian telecom routing
+            $formattedMobile = $mobile;
+            if (strlen($formattedMobile) == 10) {
+                $formattedMobile = '91' . $formattedMobile;
+            }
+
+            $queryData = [
+                'ApiKey' => $apiKey,
+                'ClientId' => $clientId,
+                'SenderId' => $senderId,
+                'Message' => $text,
+                'MobileNumbers' => $formattedMobile,
+            ];
+
+            if (!empty($templateid)) {
+                $queryData['TemplateId'] = $templateid;
+            }
+
+            $baseUrl = 'https://api.mylogin.co.in/api/v2/SendSMS?' . http_build_query($queryData);
+
+            Log::info('SMS API URL: ' . $baseUrl);
+
+            $client = new Client([
+                'http_errors' => false,
+            ]);
+
+            $res = $client->get($baseUrl);
+            
+            Log::info('SMS API Response Headers: ' . json_encode($res->getHeaders()));
+            $body = (string) $res->getBody();
+            Log::info('SMS API Response Body: ' . $body);
+
+            $parsed = json_decode($body, true);
+
+            return [
+                'success' => $res->getStatusCode() >= 200 && $res->getStatusCode() < 300, 
+                'status' => $res->getStatusCode(), 
+                'body' => $body, 
+                'parsed' => $parsed
+            ];
+
+        } catch (\Exception $ex) {
+            Log::info('Error : ' . $ex->getMessage());
+            return;
         }
     }
 }

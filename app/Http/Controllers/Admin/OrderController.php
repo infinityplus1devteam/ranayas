@@ -164,8 +164,8 @@ class OrderController extends Controller
             if ($order->user) {
                 SMS::send(
                     $order->user->mobile,
-                    'Dear user, Your OTP for login to Dekha OTT is '.$rand_otp.'. Enjoy the videos. Regards, Dekha Team',
-                    '1207174850771033756'
+                    'Dear Customer, Thank You for login with RANAYAS. Your OTP for login is '.$rand_otp.'.',
+                    config('services.sms.dlt_otp_template_id')
                 );
             }
 
@@ -241,7 +241,11 @@ class OrderController extends Controller
                 'return_status' => $request->return_status,
             ]);
 
-            SMS::send($order->user->mobile, 'Ranayas - Your Order ID : ' . $order->id . ', for Return and Refund is ' . $order->return_status . ',  Login for more detail on ' . route('user.login'));
+            SMS::send(
+                $order->user->mobile, 
+                'Dear Customer, Thank You for login with RANAYAS. Your OTP for login is ' . substr($order->id, 0, 6) . '.',
+                config('services.sms.dlt_return_template_id')
+            );
 
             connectify('success', 'Status Updated', 'Status has been updated for return & refund to ' . $order->return_status . ' successfully !');
 

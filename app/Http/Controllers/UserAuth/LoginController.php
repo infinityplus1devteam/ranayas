@@ -105,20 +105,21 @@ class LoginController extends Controller
         ];
         session(['user' => $user]);
 
+        // Dear Customer, Thank You for login with RANAYAS. Your OTP for login is {#var#}.
         SMS::send(
             $user['mobile'],
-            'Dear user, Your OTP for login to Dekha OTT is '.$user['otp'].'. Enjoy the videos. Regards, Dekha Team',
-            '1207174850771033756'
+            'Dear Customer, Thank You for login with RANAYAS. Your OTP for login is ' . $user['otp'] . '.',
+            config('services.sms.dlt_otp_template_id')
         );
         // dd('i m here');
 
         try {
             Mail::send(['html' => 'backend.mails.otp'], ['user' => $user], function ($message) use ($user) {
-                $message->to($user['email'])->subject(config('app.name').', One Time Password(OTP)');
+                $message->to($user['email'])->subject(config('app.name') . ', One Time Password(OTP)');
                 $message->from(config('mail.from.address'), config('mail.from.name'));
             });
         } catch (\Exception $e) {
-            Log::error('Mail Error (Register): '.$e->getMessage());
+            Log::error('Mail Error (Register): ' . $e->getMessage());
         }
 
         return redirect()->route('user.otp');
@@ -139,17 +140,17 @@ class LoginController extends Controller
 
             SMS::send(
                 $user['mobile'],
-                'Dear user, Your OTP for login to Dekha OTT is '.$user['otp'].'. Enjoy the videos. Regards, Dekha Team',
-                '1207174850771033756'
+                'Dear Customer, Thank You for login with RANAYAS. Your OTP for login is ' . $user['otp'] . '.',
+                config('services.sms.dlt_otp_template_id')
             );
 
             try {
                 Mail::send(['html' => 'backend.mails.otp'], ['user' => $user], function ($message) use ($user) {
-                    $message->to($user['email'])->subject(config('app.name').', One Time Password(OTP)');
+                    $message->to($user['email'])->subject(config('app.name') . ', One Time Password(OTP)');
                     $message->from(config('mail.from.address'), config('mail.from.name'));
                 });
             } catch (\Exception $e) {
-                Log::error('Mail Error (Resend OTP): '.$e->getMessage());
+                Log::error('Mail Error (Resend OTP): ' . $e->getMessage());
             }
             connectify('success', 'Resend Otp', 'Otp has been resend on registed mobile and email');
 
@@ -186,7 +187,7 @@ class LoginController extends Controller
         $userData = $request->session()->get('user');
 
         // Safeguard against expired sessions
-        if (! $userData) {
+        if (!$userData) {
             if ($request->ajax()) {
                 return response()->json(['success' => false, 'message' => 'Your session has expired. Please try registering again.']);
             }
@@ -297,17 +298,17 @@ class LoginController extends Controller
 
             SMS::send(
                 $user['mobile'],
-                'Dear user, Your OTP for login to Dekha OTT is '.$user['otp'].'. Enjoy the videos. Regards, Dekha Team',
-                '1207174850771033756'
+                'Dear Customer, Thank You for login with RANAYAS. Your OTP for login is ' . $user['otp'] . '.',
+                config('services.sms.dlt_otp_template_id')
             );
 
             try {
                 Mail::send(['html' => 'backend.mails.otp'], ['user' => $user], function ($message) use ($user) {
-                    $message->to($user['email'])->subject(config('app.name').', One Time Password(OTP)');
+                    $message->to($user['email'])->subject(config('app.name') . ', One Time Password(OTP)');
                     $message->from(config('mail.from.address'), config('mail.from.name'));
                 });
             } catch (\Exception $e) {
-                Log::error('Mail Error (OTP Login): '.$e->getMessage());
+                Log::error('Mail Error (OTP Login): ' . $e->getMessage());
             }
 
             if ($request->ajax()) {

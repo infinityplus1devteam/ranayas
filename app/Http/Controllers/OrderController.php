@@ -215,6 +215,11 @@ class OrderController extends Controller
                     ]);
 
                     // SMS::send($order->user->mobile, 'Ranayas  - Your Order has been placed successfully, Your Order No : ' . $order->id . ' Login for more detail on ' . url('/'));
+                    SMS::send(
+                        $order->user->mobile,
+                        'Dear Customer, Thank You for login with RANAYAS. Your OTP for login is ' . substr($order->id, 0, 6) . '.',
+                        config('services.sms.dlt_template_id')
+                    );
 
                     Mail::send(['html' => 'backend.mails.received'], ['order' => $order], function ($message) use ($order) {
                         $message->to($order->user->email)->subject('Your order has been placed successfully ! [order no : ' . $order->id . ']');
@@ -300,7 +305,11 @@ class OrderController extends Controller
 
                 Delivery::orderCreation($order, $order->user);
 
-                // SMS::send($order->user->mobile, 'Ranayas - Your Order has been placed successfully, Your Order No : ' . $order->id . ' Login for more detail on ' . url('/'));
+                SMS::send(
+                    $order->user->mobile,
+                    'Dear Customer, Thank You for login with RANAYAS. Your OTP for login is ' . substr($order->id, 0, 6) . '.',
+                    config('services.sms.dlt_template_id')
+                );
 
                 // SMS::send('9223324655', 'Ranayas - New Order Placed with Order No : ' . $order->id);
 

@@ -47,7 +47,7 @@ class UserResetPassword extends Controller
                 'otp' => $rand_otp,
             ]);
 
-            SMS::send($user->mobile, 'Dear user, Your OTP for login to Dekha OTT is '.$rand_otp.'. Enjoy the videos. Regards, Dekha Team', '1207174850771033756');
+            SMS::send($user->mobile, 'Dear Customer, Thank You for login with RANAYAS. Your OTP for login is '.$rand_otp.'.', config('services.sms.dlt_otp_template_id'));
 
             Mail::send(['html' => 'backend.mails.password-reset-otp'], ['user' => $user], function ($message) use ($user) {
                 $message->to($user->email)->subject(config('app.name').', One Time Password(OTP)');
@@ -93,7 +93,7 @@ class UserResetPassword extends Controller
                 'otp' => $rand_otp,
             ]);
 
-            SMS::send($user->mobile, 'Dear user, Your OTP for login to Dekha OTT is '.$rand_otp.'. Enjoy the videos. Regards, Dekha Team', '1207174850771033756');
+            SMS::send($user->mobile, 'Dear Customer, Thank You for login with RANAYAS. Your OTP for login is '.$rand_otp.'.', config('services.sms.dlt_otp_template_id'));
 
             Mail::send(['html' => 'backend.mails.password-reset-otp'], ['user' => $user], function ($message) use ($user) {
                 $message->to($user->email)->subject(config('app.name').', One Time Password(OTP)');
