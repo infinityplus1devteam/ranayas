@@ -1628,7 +1628,7 @@
                 }
 
                 $btn.prop('disabled', true).html(
-                '<span class="fa fa-spinner fa-spin"></span> Verifying...');
+                    '<span class="fa fa-spinner fa-spin"></span> Verifying...');
 
                 $.ajax({
                     url: $form.attr('action'),

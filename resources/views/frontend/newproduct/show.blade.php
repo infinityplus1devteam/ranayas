@@ -746,6 +746,10 @@
                     $(this).html(
                         '<i class="fa fa-spinner fa-pulse fa-fw text-light"></i><span class="sr-only">Loading...</span>'
                     );
+                    var btn = $(this);
+                    setTimeout(function() {
+                        btn.html('<i class="fa fa-shopping-bag"></i> Add to cart');
+                    }, 2000);
                 }
             });
 
@@ -779,6 +783,17 @@
                     `<i class="fa fa-spinner fa-pulse fa-fw"></i><span class="sr-only">Loading...</span>`
                 );
                 $('#cartForm').submit();
+                
+                var btn = $(this);
+                setTimeout(function() {
+                    btn.html('<i class="fa fa-shopping-bag"></i> Add to cart');
+                }, 2000);
+            });
+
+            window.addEventListener('pageshow', function (event) {
+                if (event.persisted || window.performance && window.performance.navigation.type === 2) {
+                    $('.add-cart').html('<i class="fa fa-shopping-bag"></i> Add to cart');
+                }
             });
 
         });

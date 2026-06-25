@@ -239,6 +239,10 @@
                     $(this).html(
                         '<i class="fa fa-spinner fa-pulse fa-fw"></i><span class="sr-only">Loading...</span>'
                     );
+                    var btn = $(this);
+                    setTimeout(function() {
+                        btn.html('<i class="fa fa-shopping-bag"></i> Add to Cart');
+                    }, 2000);
                 } else {
                     swal({
                         title: "Out of Stock !",
@@ -248,6 +252,12 @@
                     });
                 }
             });
+        });
+
+        window.addEventListener('pageshow', function (event) {
+            if (event.persisted || window.performance && window.performance.navigation.type === 2) {
+                $('.add-cart').html('<i class="fa fa-shopping-bag"></i> Add to Cart');
+            }
         });
     </script>
 @endsection

@@ -1,4 +1,4 @@
-@extends('layouts.master') @section('title','My Account') @section('content')
+@extends('layouts.master') @section('title', 'My Account') @section('content')
 
 <!-- Breadcrumb area Start -->
 <section class="breadcrumb-area">
@@ -31,8 +31,7 @@
                         <div class="order-pro">
                             <div class="pro-img">
                                 <a href="javascript:void(0)">
-                                    <img src="{!! asset('assets/image/user-dark.png') !!}" alt="img" class="img-fluid"
-                                        width="90">
+                                    <img src="{!! asset('assets/image/user-dark.png') !!}" alt="img" class="img-fluid" width="90">
                                 </a>
                             </div>
                             <div class="order-name">
@@ -147,6 +146,18 @@
     #password-error {
         padding-left: 5px
     }
+
+    .profile-form .btn-style1 {
+        color: #fff !important;
+        background-color: var(--theme-color) !important;
+        border: 2px solid transparent !important;
+    }
+
+    .profile-form .btn-style1:hover {
+        color: var(--theme-color) !important;
+        border-color: var(--theme-color) !important;
+        background-color: transparent !important;
+    }
 </style>
 @endsection
 
@@ -154,31 +165,30 @@
 @section('extrajs')
 <script>
     $("#formUpdatePassword").validate({
-            rules: {
-                password: {
-                    required: true
-                },
-                con_password: {
-                    required: true,
-                    equalTo:"#password"
-                },
+        rules: {
+            password: {
+                required: true
             },
-            messages: {
-
-                password: {
-                    required: "Please Enter Password"
-                },
-                con_password: {
-                    required: "Please Enter Confirm Password",
-                    equalTo: "Please Enter Confirm Password same as above password"
-                },
+            con_password: {
+                required: true,
+                equalTo: "#password"
             },
-            submitHandler: function (form) {
-                $('.submit_button').attr('disabled', 'disabled');
-                $(".submit_button").html('<span class="fa fa-spinner fa-spin"></span> Loading...');
-                form.submit();
-            }
-        });
+        },
+        messages: {
 
+            password: {
+                required: "Please Enter Password"
+            },
+            con_password: {
+                required: "Please Enter Confirm Password",
+                equalTo: "Please Enter Confirm Password same as above password"
+            },
+        },
+        submitHandler: function(form) {
+            $('.submit_button').attr('disabled', 'disabled');
+            $(".submit_button").html('<span class="fa fa-spinner fa-spin"></span> Loading...');
+            form.submit();
+        }
+    });
 </script>
 @endsection

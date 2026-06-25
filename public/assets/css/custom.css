@@ -977,6 +977,7 @@ span.p-discount {
 .signUp-page form .input-group input:valid~label {
     top: 4px;
     z-index: 1;
+    font-size: 12px;
 }
 
 .signUp-page form .input-group input:focus {
