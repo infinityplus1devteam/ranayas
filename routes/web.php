@@ -404,6 +404,8 @@ Route::namespace('App\Http\Controllers')->group(function () {
             Route::POST('/login', 'UserAuth\LoginController@login')->name('user.login');
             Route::GET('/register', 'UserAuth\LoginController@create')->name('user.register');
             Route::POST('/register', 'UserAuth\LoginController@store')->name('user.register');
+            Route::POST('/register/phone', 'UserAuth\LoginController@registerPhone')->name('user.register.phone');
+            Route::GET('/register/mail', 'UserAuth\LoginController@createMail')->name('user.register.mail');
             Route::GET('/otp', 'UserAuth\LoginController@otp')->name('user.otp');
             Route::POST('/otp/resend', 'UserAuth\LoginController@resendOtp')->name('user.otp.resend');
             Route::POST('/otp/verify', 'UserAuth\LoginController@verifyOtp')->name('user.otp.verify');

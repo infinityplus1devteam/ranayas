@@ -419,7 +419,7 @@ class OrderController extends Controller
 
         $url = 'https://api.razorpay.com/v1/orders';
         $postData = [
-            'amount' => $order->total * 100, // Razorpay amount is in paise
+            'amount' => (int) round($order->total * 100), // Razorpay amount is in paise
             'currency' => 'INR',
             'receipt' => 'rcpt_' . $order->id,
         ];

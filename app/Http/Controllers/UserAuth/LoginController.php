@@ -36,6 +36,11 @@ class LoginController extends Controller
         return view('frontend.user.register');
     }
 
+    public function createMail()
+    {
+        return view('frontend.user.register-mail');
+    }
+
     public function login(Request $request)
     {
         $this->validate($request, [
@@ -125,6 +130,48 @@ class LoginController extends Controller
         return redirect()->route('user.otp');
     }
 
+    public function registerPhone(Request $request)
+    {
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'mobile' => 'required|digits:10|unique:txn_users,mobile',
+            ],
+            [
+                'mobile.required' => 'Please Enter Mobile Number',
+                'mobile.digits' => 'Please Enter 10 digits Mobile Number',
+                'mobile.unique' => 'Mobile Number Already Registered with us',
+            ]
+        );
+
+        if ($validator->fails()) {
+            connectify('error', 'Register Failed', $validator->errors()->first());
+            return back()->withInput();
+        }
+
+        $rand_otp = rand(100000, 999999);
+
+        $user = [
+            'name' => 'Customer',
+            'mobile' => $request->mobile,
+            'email' => null,
+            'password' => bcrypt($request->mobile),
+            'status' => true,
+            'is_verified' => false,
+            'otp' => $rand_otp,
+            'url' => url()->previous(),
+        ];
+        session(['user' => $user]);
+
+        SMS::send(
+            $user['mobile'],
+            'Dear Customer, Thank You for login with RANAYAS. Your OTP for login is ' . $user['otp'] . '.',
+            config('services.sms.dlt_otp_template_id')
+        );
+
+        return redirect()->route('user.otp');
+    }
+
     public function otp(Request $request)
     {
         $user = $request->session()->get('user');
@@ -144,20 +191,22 @@ class LoginController extends Controller
                 config('services.sms.dlt_otp_template_id')
             );
 
-            try {
-                Mail::send(['html' => 'backend.mails.otp'], ['user' => $user], function ($message) use ($user) {
-                    $message->to($user['email'])->subject(config('app.name') . ', One Time Password(OTP)');
-                    $message->from(config('mail.from.address'), config('mail.from.name'));
-                });
-            } catch (\Exception $e) {
-                Log::error('Mail Error (Resend OTP): ' . $e->getMessage());
+            if (!empty($user['email'])) {
+                try {
+                    Mail::send(['html' => 'backend.mails.otp'], ['user' => $user], function ($message) use ($user) {
+                        $message->to($user['email'])->subject(config('app.name') . ', One Time Password(OTP)');
+                        $message->from(config('mail.from.address'), config('mail.from.name'));
+                    });
+                } catch (\Exception $e) {
+                    Log::error('Mail Error (Resend OTP): ' . $e->getMessage());
+                }
             }
-            connectify('success', 'Resend Otp', 'Otp has been resend on registed mobile and email');
+            connectify('success', 'Resend Otp', 'Otp has been resend on registered mobile');
 
             return redirect()->route('user.otp');
         }
 
-        connectify('error', 'Error', 'Whoops, Email Not Found !');
+        connectify('error', 'Error', 'Whoops, User Session Not Found !');
 
         return back();
 
@@ -198,14 +247,14 @@ class LoginController extends Controller
 
         if ($userData['otp'] == $request->otp) {
 
+            $matchKey = !empty($userData['email']) ? ['email' => $userData['email']] : ['mobile' => $userData['mobile']];
+
             $user = TxnUser::updateOrCreate(
-                [
-                    'email' => $userData['email'],
-                ],
+                $matchKey,
                 [
 
-                    'name' => $userData['name'],
-                    'email' => $userData['email'],
+                    'name' => $userData['name'] ?? 'Customer',
+                    'email' => $userData['email'] ?? null,
                     'mobile' => $userData['mobile'],
                     'password' => $userData['password'],
                     'status' => true,
@@ -216,15 +265,17 @@ class LoginController extends Controller
                 ]
             );
 
-            Subscriber::updateOrCreate(
-                [
-                    'email' => $userData['email'],
-                ],
-                [
-                    'email' => $userData['email'],
-                    'status' => true,
-                ]
-            );
+            if (!empty($userData['email'])) {
+                Subscriber::updateOrCreate(
+                    [
+                        'email' => $userData['email'],
+                    ],
+                    [
+                        'email' => $userData['email'],
+                        'status' => true,
+                    ]
+                );
+            }
 
             Auth::guard('user')->login($user, true);
 

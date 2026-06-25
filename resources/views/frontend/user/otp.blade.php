@@ -23,7 +23,7 @@
         <div class="title-area text-center">
             <h5 class="h3-lh-40">Enter 6 digit Otp Sent On
                 {{ str_pad(substr($user['mobile'], -2), strlen($user['mobile']), '*', STR_PAD_LEFT) }}
-                & Registered Email</h5>
+                @if(!empty($user['email'])) & Registered Email @endif</h5>
         </div> <!-- /.title-area -->
         <form id="login-form" action="{{ route('user.otp.verify') }}" method="POST" autocomplete="off" class="form">
             @csrf

@@ -52,24 +52,27 @@
                                                         <div class="col-md-12">
                                                             <div class="checkout-form form-row mb--5 mb-xs--10">
                                                                 <div class="form__group col-md-12 mb-sm--30 mb-xs--10">
-                                                                    <label for="name" style="padding-left: 0;font-size: 18px"
+                                                                    <label for="name"
+                                                                        style="padding-left: 0;font-size: 18px"
                                                                         class="form__label form__label--2">Please enter
                                                                         PIN code to check delivery
                                                                         <span class="required">*</span></label>
                                                                     <div class="input-group">
                                                                         <input type="text" placeholder="Enter pincode"
                                                                             class="pincode-code form-control form__input form__input--2"
-                                                                            value="{{ Session::get('pincode') }}" name="pincode"
-                                                                            id="pincode" required>
+                                                                            value="{{ Session::get('pincode') }}"
+                                                                            name="pincode" id="pincode" required>
                                                                         <div class="input-group-append">
-                                                                            <button class="btn check-availibility pincode_button"
+                                                                            <button
+                                                                                class="btn check-availibility pincode_button"
                                                                                 type="submit"><i class="fa fa-search"
                                                                                     aria-hidden="true"></i></button>
                                                                         </div>
                                                                     </div>
                                                                 </div>
                                                                 <div class="form__group col-md-12 pincd">
-                                                                    <label for="pincode" class="error pincode_error"></label>
+                                                                    <label for="pincode"
+                                                                        class="error pincode_error"></label>
                                                                     <p class="text-success pincode_success"></p>
                                                                     <p class="text-success estimated_date"></p>
                                                                     <!-- <p class="text-danger pincode_error"></p> -->
@@ -87,7 +90,8 @@
                                                                             {{ $add->name }}
 
                                                                             <input type="radio" checked="checked"
-                                                                                name="choose_address" value="{{ $add->id }}"
+                                                                                name="choose_address"
+                                                                                value="{{ $add->id }}"
                                                                                 data-pincode="{{ $add->pincode }}">
                                                                             <span class="checkmark"></span>
 
@@ -119,7 +123,8 @@
                                                                             data-obj-id="{{ $add->id }}"><i
                                                                                 class="fa fa-trash text-danger "></i>
                                                                             Remove</a>
-                                                                        <a href="javascript:void(0)" data-obj-id="{{ $add->id }}"
+                                                                        <a href="javascript:void(0)"
+                                                                            data-obj-id="{{ $add->id }}"
                                                                             class="card-link pull-right editAddress"><i
                                                                                 class="fa fa-pencil text-primary"></i>
                                                                             Edit</a>
@@ -132,7 +137,8 @@
                                                         <div class="col-md-6 add_address">
                                                             <label class="radio-cont">
                                                                 <div class="card">
-                                                                    <div class="card-body text-center delivery-address-height">
+                                                                    <div
+                                                                        class="card-body text-center delivery-address-height">
                                                                         <i class="fa fa-plus-circle fa-3x text-black"></i>
                                                                         <p class="text-black"> Add new delivery address</p>
                                                                     </div>
@@ -159,18 +165,22 @@
                                                                 @endphp
                                                                 <li>
                                                                     <div class="check-pro-img">
-                                                                        <a href="{{ route('product', $item->attributes->slug_url) }}">
+                                                                        <a
+                                                                            href="{{ route('product', $item->attributes->slug_url) }}">
                                                                             @if (!empty($item->attributes->color_image))
                                                                                 <img src="{!! asset('storage/images/multi-products/' . $item->attributes->color_image) !!}"
-                                                                                    class="img-fluid" alt="{{ $item->name }}">
+                                                                                    class="img-fluid"
+                                                                                    alt="{{ $item->name }}">
                                                                             @else
                                                                                 <img src="{!! asset('storage/images/products/' . $item->attributes->image_url) !!}"
-                                                                                    class="img-fluid" alt="{{ $item->name }}">
+                                                                                    class="img-fluid"
+                                                                                    alt="{{ $item->name }}">
                                                                             @endif
                                                                         </a>
                                                                     </div>
                                                                     <div class="check-content">
-                                                                        <a href="{{ route('product', $item->attributes->slug_url) }}">
+                                                                        <a
+                                                                            href="{{ route('product', $item->attributes->slug_url) }}">
                                                                             {{ $item->name }}
                                                                         </a>
                                                                         <span class="check-code-blod">
@@ -198,17 +208,19 @@
                                                     <ul class="order-history">
                                                         <li class="order-details">
                                                             <span>Total:</span>
-                                                            <span>₹<span id="cart-total-span">{{ Cart::getTotal() }}</span></span>
+                                                            <span>₹<span
+                                                                    id="cart-total-span">{{ Cart::getTotal() }}</span></span>
                                                         </li>
-                                                        @if(Cart::getTotal() < 1000)
-                                                        <li class="order-details shipping-row">
-                                                            <span class="text-danger">Shipping Charge:</span>
-                                                            <span class="text-danger">+ ₹60</span>
-                                                        </li>
+                                                        @if (Cart::getTotal() < 1000)
+                                                            <li class="order-details shipping-row">
+                                                                <span class="text-danger">Shipping Charge:</span>
+                                                                <span class="text-danger">+ ₹60</span>
+                                                            </li>
                                                         @endif
                                                         <li class="order-details discount-row" style="display: none;">
                                                             <span class="text-success">Discount:</span>
-                                                            <span class="text-success">- ₹<span id="discount_span">0</span></span>
+                                                            <span class="text-success">- ₹<span
+                                                                    id="discount_span">0</span></span>
                                                         </li>
                                                         <li class="order-details grand-total-row"
                                                             style="font-weight: bold; border-top: 1px solid #ddd; padding-top: 10px; margin-top: 10px; {{ Cart::getTotal() < 1000 ? '' : 'display: none;' }}">
@@ -221,11 +233,14 @@
 
                                                         <div class="promocode-checkout mb-4 mt-4"
                                                             style="padding: 20px 15px; border-top: 1px dashed #ccc; border-bottom: 1px dashed #ccc;">
-                                                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                                            <div
+                                                                class="d-flex justify-content-between align-items-center mb-3">
                                                                 <h6 class="font-weight-bold mb-0"
-                                                                    style="font-size: 15px; color: #333;">Have a Coupon?</h6>
+                                                                    style="font-size: 15px; color: #333;">Have a Coupon?
+                                                                </h6>
                                                                 <div class="text-right">
-                                                                    <span class="promo_success text-success font-weight-bold"
+                                                                    <span
+                                                                        class="promo_success text-success font-weight-bold"
                                                                         style="font-size: 14px; display: none;"></span>
                                                                     <span class="promo_error text-danger font-weight-bold"
                                                                         style="font-size: 14px; display: none;"></span>
@@ -234,7 +249,8 @@
                                                             <div class="position-relative">
                                                                 <div class="check">
                                                                     <div class="input-group" style="position: relative;">
-                                                                        <input type="text" name="discountcode" id="discountcode"
+                                                                        <input type="text" name="discountcode"
+                                                                            id="discountcode"
                                                                             class="form-control discountcode"
                                                                             placeholder="Enter Coupon Code"
                                                                             style="border: 1px solid #ccc; margin-bottom: 0; height: 45px; box-shadow: none; border-right: none; padding-left: 15px; padding-right: 35px; border-radius: 4px 0 0 4px; background: #fff;"
@@ -253,19 +269,23 @@
                                                                     </div>
                                                                 </div>
 
-                                                                @if(isset($coupons) && $coupons->count() > 0)
+                                                                @if (isset($coupons) && $coupons->count() > 0)
                                                                     <div class="available-coupons-dropdown list-group"
                                                                         style="display: none; position: absolute; z-index: 99999; width: 100%; background-color: #ffffff; box-shadow: 0 8px 24px rgba(0,0,0,0.15); max-height: 250px; overflow-y: auto; top: 100%; left: 0; border: 1px solid #ddd; border-radius: 4px; margin-top: 5px;">
-                                                                        @foreach($coupons as $coupon)
+                                                                        @foreach ($coupons as $coupon)
                                                                             <a href="javascript:void(0)"
                                                                                 class="list-group-item list-group-item-action coupon-item"
                                                                                 data-code="{{ $coupon->code }}"
                                                                                 style="padding: 12px 15px; border-radius: 0; border: none; border-bottom: 1px solid #eee; background-color: #ffffff;">
                                                                                 <div
                                                                                     class="d-flex w-100 justify-content-between align-items-center">
-                                                                                    <h6 class="mb-0 text-primary" style="font-size: 14px;">
-                                                                                        <i class="fa fa-tag"></i> {{ $coupon->code }}</h6>
-                                                                                    <small class="text-success font-weight-bold"
+                                                                                    <h6 class="mb-0 text-primary"
+                                                                                        style="font-size: 14px;">
+                                                                                        <i class="fa fa-tag"></i>
+                                                                                        {{ $coupon->code }}
+                                                                                    </h6>
+                                                                                    <small
+                                                                                        class="text-success font-weight-bold"
                                                                                         style="font-size: 13px;">{{ $coupon->type == 'percentage' ? $coupon->value . '%' : '₹' . $coupon->value }}
                                                                                         OFF</small>
                                                                                 </div>
@@ -282,7 +302,9 @@
                                                                 <div class="payment-radio">
                                                                     <label for="cod" class="cb-container">
                                                                         CASH ON DELIVERY
-                                                                        <input type="radio" value="cod" name="payment_mode" id="cod" {{ $isCodAvailable ? 'checked' : '' }}>
+                                                                        <input type="radio" value="cod"
+                                                                            name="payment_mode" id="cod"
+                                                                            {{ $isCodAvailable ? 'checked' : '' }}>
                                                                         <span class="rb-checkmark"></span>
                                                                     </label>
                                                                 </div>
@@ -292,8 +314,9 @@
                                                         <div class="payment-group pymt-btn mb--10">
                                                             <div class="payment-radio">
                                                                 <label for="paytm" class="cb-container">
-                                                                    DEBIT/CREDIT/NETBANKING/PAYTM
-                                                                    <input type="radio" value="paytm" name="payment_mode" id="paytm"
+                                                                    NETBANKING/PAYTM
+                                                                    <input type="radio" value="paytm"
+                                                                        name="payment_mode" id="paytm"
                                                                         {{ !$isCodAvailable ? 'checked' : '' }}>
                                                                     <span class="rb-checkmark"></span>
                                                                 </label>
@@ -330,11 +353,12 @@
                                             <div class="input-group">
                                                 <input type="text" placeholder="Enter pincode"
                                                     class="pincode-code form-control form__input form__input--2"
-                                                    value="{{ Session::get('pincode') }}" name="pincode_add" id="pincode_add"
-                                                    required>
+                                                    value="{{ Session::get('pincode') }}" name="pincode_add"
+                                                    id="pincode_add" required>
                                                 <div class="input-group-append">
-                                                    <button class="btn check-availibility pincode_button" type="submit"><i
-                                                            class="fa fa-search" aria-hidden="true"></i></button>
+                                                    <button class="btn check-availibility pincode_button"
+                                                        type="submit"><i class="fa fa-search"
+                                                            aria-hidden="true"></i></button>
                                                 </div>
                                             </div>
                                         </div>
@@ -354,8 +378,9 @@
                                                 <div class="form__group col-md-12">
                                                     <label for="name" class="form__label form__label--2">Name
                                                         <span class="required">*</span></label>
-                                                    <input type="text" name="name" id="name" class="form__input form__input--2"
-                                                        required placeholder="Name" value="{{ old('name') }}">
+                                                    <input type="text" name="name" id="name"
+                                                        class="form__input form__input--2" required placeholder="Name"
+                                                        value="{{ old('name') }}">
                                                 </div>
                                             </div>
 
@@ -363,8 +388,9 @@
                                                 <div class="form__group col-12">
                                                     <label for="mobile" class="form__label form__label--2">Mobile <span
                                                             class="required">*</span></label>
-                                                    <input type="text" name="mobile" id="mobile" class="form__input form__input--2"
-                                                        placeholder="Mobile Number" value="{{ old('mobile') }}" required>
+                                                    <input type="text" name="mobile" id="mobile"
+                                                        class="form__input form__input--2" placeholder="Mobile Number"
+                                                        value="{{ old('mobile') }}" required>
                                                 </div>
                                             </div>
 
@@ -372,8 +398,9 @@
                                                 <div class="form__group col-12">
                                                     <label for="email" class="form__label form__label--2">Email Address
                                                         <span class="required">*</span></label>
-                                                    <input type="email" name="email" id="email" class="form__input form__input--2"
-                                                        value="" placeholder="Email Address" value="{{ old('email') }}" required>
+                                                    <input type="email" name="email" id="email"
+                                                        class="form__input form__input--2" value=""
+                                                        placeholder="Email Address" value="{{ old('email') }}" required>
                                                 </div>
                                             </div>
 
@@ -402,7 +429,8 @@
 
                                             <div class="form-row mb--5">
                                                 <div class="form__group col-12">
-                                                    <label for="landmark" class="form__label form__label--2">Landmark</label>
+                                                    <label for="landmark"
+                                                        class="form__label form__label--2">Landmark</label>
                                                     <input type="text" name="landmark" id="landmark"
                                                         class="form__input form__input--2" placeholder="Landmark"
                                                         value="{{ old('landmark') }}">
@@ -413,8 +441,9 @@
                                                 <div class="form__group col-12">
                                                     <label for="city" class="form__label form__label--2">Town / City
                                                         <span class="required">*</span></label>
-                                                    <input type="text" name="city" id="city" class="form__input form__input--2"
-                                                        required placeholder="Town/City" value="{{ old('city') }}">
+                                                    <input type="text" name="city" id="city"
+                                                        class="form__input form__input--2" required
+                                                        placeholder="Town/City" value="{{ old('city') }}">
                                                 </div>
                                             </div>
 
@@ -435,11 +464,13 @@
                                                         Type of
                                                         Address
                                                         <span class="required">*</span></label>
-                                                    <input id="home" class="toggle toggle-left" name="type_of_address" type="radio"
-                                                        value="0" {{ old('type_of_address') == 0 ? 'checked' : 'checked' }}>
+                                                    <input id="home" class="toggle toggle-left"
+                                                        name="type_of_address" type="radio" value="0"
+                                                        {{ old('type_of_address') == 0 ? 'checked' : 'checked' }}>
                                                     <label for="home" class="btnn1">Home</label>
-                                                    <input id="corporate" class="toggle toggle-right" name="type_of_address"
-                                                        type="radio" value="1" {{ old('type_of_address') == 1 ? 'checked' : '' }}>
+                                                    <input id="corporate" class="toggle toggle-right"
+                                                        name="type_of_address" type="radio" value="1"
+                                                        {{ old('type_of_address') == 1 ? 'checked' : '' }}>
                                                     <label for="corporate" class="btnn1">Office/Commercial</label>
                                                 </div>
                                             </div>
@@ -448,7 +479,8 @@
 
                                         <div class="form-row">
                                             <div class="col-md-12 text-center">
-                                                <button type="submit" class="btn btn-block btn-secondary btnSubmit text-black">SAVE
+                                                <button type="submit"
+                                                    class="btn btn-block btn-secondary btnSubmit text-black">SAVE
                                                     DELIVERY
                                                     ADDRESS</button>
                                             </div>
@@ -489,7 +521,8 @@
                                                                         id="checkout-otp-request-error"></span>
                                                                 </div>
                                                             </div>
-                                                            <button type="submit" class="line-button-one button-rose mt-1 w-100"
+                                                            <button type="submit"
+                                                                class="line-button-one button-rose mt-1 w-100"
                                                                 id="checkout-btn-request-otp">
                                                                 Next
                                                             </button>
@@ -502,8 +535,8 @@
                                                             <div class="row">
                                                                 <div class="col-12">
                                                                     <div class="input-group mb-0">
-                                                                        <input type="number" name="otp" id="checkout-otp-input"
-                                                                            required />
+                                                                        <input type="number" name="otp"
+                                                                            id="checkout-otp-input" required />
                                                                         <label>Enter OTP <span
                                                                                 style="color:red">*</span></label>
                                                                     </div>
@@ -512,7 +545,8 @@
                                                                         id="checkout-otp-verify-error"></span>
                                                                 </div>
                                                             </div>
-                                                            <button type="submit" class="line-button-one button-rose mt-1 w-100"
+                                                            <button type="submit"
+                                                                class="line-button-one button-rose mt-1 w-100"
                                                                 id="checkout-btn-verify-otp">
                                                                 Verify & Login
                                                             </button>
@@ -526,7 +560,8 @@
                                                             <a href="{{ route('user.login') }}"
                                                                 class="line-button-one button-rose mt-1 w-100 login-with-email-btn"
                                                                 style="display: block; text-align: center;"><i
-                                                                    class="fa fa-envelope" aria-hidden="true"></i> Login with
+                                                                    class="fa fa-envelope" aria-hidden="true"></i> Login
+                                                                with
                                                                 Email</a>
                                                         </div>
                                                     </div>
@@ -534,9 +569,11 @@
                                                     <ul class="social-icon-wrapper row m-0 mt-4 mb-4 p-0">
                                                         <li class="col-12 p-0">
                                                             <a href="{{ route('user.auth.socialite', 'google') }}"
-                                                                class="gmail w-100" style="width: 100%; display: block;"><i
+                                                                class="gmail w-100"
+                                                                style="width: 100%; display: block;"><i
                                                                     class="fa fa-google" aria-hidden="true"
-                                                                    style="font-size: 14px; margin-right: 6px;"></i> Login with
+                                                                    style="font-size: 14px; margin-right: 6px;"></i> Login
+                                                                with
                                                                 Google</a>
                                                         </li>
                                                     </ul>
@@ -549,48 +586,42 @@
                                                 <h3>OR</h3>
                                             </div>
                                             <div class="signUp-page signUp-minimal">
-                                                <div class="signin-form-wrapper">
+                                                <div class="signin-form-wrapper" id="checkout-register-phone-section">
                                                     <div class="title-area text-center">
                                                         <h3>Register</h3>
                                                     </div> <!-- /.title-area -->
-                                                    <form action="{{ route('user.register') }}" method="POST" autocomplete="off"
-                                                        class="register needs-validation" id="formRegister">
+                                                    <form action="{{ route('user.register.phone') }}" method="POST"
+                                                        autocomplete="off" class="register needs-validation"
+                                                        id="formRegisterPhoneCheckout">
                                                         @csrf
                                                         <div class="row">
                                                             <div class="col-12">
                                                                 <div class="input-group">
-                                                                    <input type="text" name="name" value="{{ old('name') }}"
-                                                                        required>
-                                                                    <label>Name *</label>
-                                                                </div> <!-- /.input-group -->
-                                                            </div> <!-- /.col- -->
-                                                            <div class="col-12">
-                                                                <div class="input-group">
-                                                                    <input type="text" name="mobile" value="{{ old('mobile') }}"
-                                                                        required>
-                                                                    <label>Mobile Number *</label>
-                                                                </div> <!-- /.input-group -->
-                                                            </div> <!-- /.col- -->
-                                                            <div class="col-12">
-                                                                <div class="input-group">
-                                                                    <input type="text" name="email" value="{{ old('email') }}"
-                                                                        required>
-                                                                    <label>Email *</label>
-                                                                </div> <!-- /.input-group -->
-                                                            </div> <!-- /.col- -->
-                                                            <div class="col-12">
-                                                                <div class="input-group">
-                                                                    <input type="password" name="password" required>
-                                                                    <label>Password *</label>
+                                                                    <input type="number" name="mobile"
+                                                                        value="{{ old('mobile') }}" minlength="10"
+                                                                        maxlength="10" required>
+                                                                    <label>Enter 10 digit Mobile Number *</label>
                                                                 </div> <!-- /.input-group -->
                                                             </div> <!-- /.col- -->
                                                         </div> <!-- /.row -->
                                                         <button type="submit"
-                                                            class="line-button-one button-rose button_update_register">
+                                                            class="line-button-one button-rose button_update_register w-100"
+                                                            style="width: 100%;">
                                                             Register
                                                         </button>
                                                     </form>
 
+                                                    <p class="or-text mt-4 mb-4"><span>or</span></p>
+
+                                                    <div class="row m-0 p-0">
+                                                        <div class="col-12 p-0">
+                                                            <a href="{{ route('user.register.mail') }}"
+                                                                class="line-button-one button-rose mt-1 w-100 login-with-email-btn"
+                                                                style="display: block; text-align: center;"><i
+                                                                    class="fa fa-envelope" aria-hidden="true"></i>
+                                                                Register with Email</a>
+                                                        </div>
+                                                    </div>
                                                 </div> <!-- /.sign-up-form-wrapper -->
                                             </div> <!-- /.signUp-page -->
                                         </div>
@@ -628,8 +659,8 @@
                                 <div class="form__group col-md-12">
                                     <label for="name" class="form__label form__label--2">Name
                                         <span class="required">*</span></label>
-                                    <input type="text" name="name" id="name" class="form__input form__input--2" required
-                                        placeholder="Name" value="">
+                                    <input type="text" name="name" id="name"
+                                        class="form__input form__input--2" required placeholder="Name" value="">
                                 </div>
                             </div>
 
@@ -637,8 +668,8 @@
                                 <div class="form__group col-12">
                                     <label for="mobile" class="form__label form__label--2">Mobile <span
                                             class="required">*</span></label>
-                                    <input type="text" name="mobile" id="mobile" class="form__input form__input--2"
-                                        placeholder="Mobile Number" required>
+                                    <input type="text" name="mobile" id="mobile"
+                                        class="form__input form__input--2" placeholder="Mobile Number" required>
                                 </div>
                             </div>
 
@@ -646,8 +677,9 @@
                                 <div class="form__group col-12">
                                     <label for="email" class="form__label form__label--2">Email Address
                                         <span class="required">*</span></label>
-                                    <input type="email" name="email" id="email" class="form__input form__input--2" value=""
-                                        placeholder="Email Address" required>
+                                    <input type="email" name="email" id="email"
+                                        class="form__input form__input--2" value="" placeholder="Email Address"
+                                        required>
                                 </div>
                             </div>
 
@@ -666,8 +698,8 @@
                                 <div class="form__group col-12">
                                     <label for="pincode_modal" class="form__label form__label--2">Pincode
                                         <span class="required">*</span></label>
-                                    <input type="text" name="pincode" id="pincode_modal" class="form__input form__input--2"
-                                        placeholder="Pincode" required>
+                                    <input type="text" name="pincode" id="pincode_modal"
+                                        class="form__input form__input--2" placeholder="Pincode" required>
                                 </div>
                             </div>
                             <div class="form-row mb--5">
@@ -675,7 +707,8 @@
                                     <label for="address" class="form__label form__label--2">Street Address <span
                                             class="required">*</span></label>
 
-                                    <input type="text" name="address" id="address" class="form__input form__input--2 mb--5"
+                                    <input type="text" name="address" id="address"
+                                        class="form__input form__input--2 mb--5"
                                         placeholder="House number and street name" required value="">
                                 </div>
                             </div>
@@ -683,8 +716,8 @@
                             <div class="form-row mb--5">
                                 <div class="form__group col-12">
                                     <label for="landmark" class="form__label form__label--2">Landmark</label>
-                                    <input type="text" name="landmark" id="landmark" class="form__input form__input--2"
-                                        placeholder="Landmark" value="">
+                                    <input type="text" name="landmark" id="landmark"
+                                        class="form__input form__input--2" placeholder="Landmark" value="">
                                 </div>
                             </div>
 
@@ -692,8 +725,9 @@
                                 <div class="form__group col-12">
                                     <label for="city" class="form__label form__label--2">Town / City
                                         <span class="required">*</span></label>
-                                    <input type="text" name="city" id="city" class="form__input form__input--2" required
-                                        placeholder="Town/City" value="">
+                                    <input type="text" name="city" id="city"
+                                        class="form__input form__input--2" required placeholder="Town/City"
+                                        value="">
                                 </div>
                             </div>
 
@@ -701,8 +735,8 @@
                                 <div class="form__group col-12">
                                     <label for="territory" class="form__label form__label--2">State
                                         <span class="required">*</span></label>
-                                    <input type="text" name="territory" id="territory" class="form__input form__input--2"
-                                        required placeholder="State" value="">
+                                    <input type="text" name="territory" id="territory"
+                                        class="form__input form__input--2" required placeholder="State" value="">
                                 </div>
                             </div>
 
@@ -711,8 +745,8 @@
                                 <div class="form__group type-of-address col-12">
                                     <label for="type_of_address" class="form__label form__label--2">Choose Type of Address
                                         <span class="required">*</span></label>
-                                    <input id="home-new" class="toggle toggle-left" name="type_of_address" type="radio"
-                                        value="0" checked>
+                                    <input id="home-new" class="toggle toggle-left" name="type_of_address"
+                                        type="radio" value="0" checked>
                                     <label for="home-new" class="btnn1">Home</label>
                                     <input id="corporate-new" class="toggle toggle-right" name="type_of_address"
                                         type="radio" value="1">
@@ -875,7 +909,15 @@
 @section('extrajs')
 
     <script>
-        $(document).ready(function () {
+        $(window).on('pageshow', function() {
+            $('.order_place').text('Place order');
+            var pincode = $("input[name='choose_address']:checked").attr('data-pincode');
+            if (pincode) {
+                chkPindode(pincode);
+            }
+        });
+
+        $(document).ready(function() {
             var seconds = 5;
 
             $('.order_place').attr('disabled', 'disabled');
@@ -888,7 +930,7 @@
                 chkPindode(pincode);
             }
 
-            $('.radio-cont').change(function () {
+            $('.radio-cont').change(function() {
                 var pincode = $("input[name='choose_address']:checked").attr('data-pincode');
 
                 $('#pincode').val(pincode);
@@ -897,7 +939,7 @@
             });
 
             // Sync pincode input with hidden field for Add Address form
-            $(document).on('keyup change', '.pincode-code', function () {
+            $(document).on('keyup change', '.pincode-code', function() {
                 var val = $(this).val();
                 if ($(this).attr('id') == 'pincode_add' || $(this).closest('.new-delivery-address')
                     .length || $(this).closest('.modal').length) {
@@ -905,7 +947,7 @@
                 }
             });
 
-            $('.pincode_button').click(function (e) {
+            $('.pincode_button').click(function(e) {
                 e.preventDefault();
                 var container = $(this).closest('.checkout-form');
                 var input = container.find('.pincode-code');
@@ -927,11 +969,11 @@
                 }
             });
 
-            $('.delivery-address-height').click(function () {
+            $('.delivery-address-height').click(function() {
                 $('#new-address').modal('show');
             });
 
-            $('.remove-address').click(function () {
+            $('.remove-address').click(function() {
 
                 if (window.confirm('Are you sure want to delete ? ')) {
 
@@ -944,7 +986,7 @@
 
             });
 
-            $('.editAddress').click(function () {
+            $('.editAddress').click(function() {
 
                 var address_id = $(this).attr('data-obj-id');
 
@@ -965,7 +1007,7 @@
                         data: {
                             address_id: address_id,
                         },
-                        success: function (result) {
+                        success: function(result) {
                             if (result.data) {
 
                                 var data = result.data;
@@ -1090,7 +1132,7 @@
                     },
 
                 },
-                submitHandler: function (form) {
+                submitHandler: function(form) {
                     $('.order_place').attr('disabled', 'disabled');
                     $(".order_place").html('<span class="fa fa-spinner fa-spin"></span> Loading...');
                     form.submit();
@@ -1170,7 +1212,7 @@
                         maxlength: "Pincode should be of 6 digits",
                     },
                 },
-                submitHandler: function (form) {
+                submitHandler: function(form) {
                     var pincodeInput = $(form).find('input[name="pincode"]');
                     var pincodeVal = pincodeInput.val();
 
@@ -1274,7 +1316,7 @@
                     },
 
                 },
-                submitHandler: function (form) {
+                submitHandler: function(form) {
                     $('.btnSubmit').attr('disabled', 'disabled');
                     $(".btnSubmit").html('<span class="fa fa-spinner fa-spin"></span> Loading...');
                     form.submit();
@@ -1306,7 +1348,7 @@
                     },
 
                 },
-                submitHandler: function (form) {
+                submitHandler: function(form) {
                     $('.button_update_login').attr('disabled', 'disabled');
                     $(".button_update_login").html(
                         '<span class="fa fa-spinner fa-spin"></span> Loading...');
@@ -1357,7 +1399,7 @@
                     },
 
                 },
-                submitHandler: function (form) {
+                submitHandler: function(form) {
                     $('.button_update_register').attr('disabled', 'disabled');
                     $(".button_update_register").html(
                         '<span class="fa fa-spinner fa-spin"></span> Loading...');
@@ -1366,17 +1408,17 @@
             });
 
             // Coupon Dropdown logic
-            $('#discountcode').on('focus', function () {
+            $('#discountcode').on('focus', function() {
                 $('.available-coupons-dropdown').slideDown('fast');
             });
 
-            $(document).on('click', function (e) {
+            $(document).on('click', function(e) {
                 if (!$(e.target).closest('.promocode-checkout').length) {
                     $('.available-coupons-dropdown').slideUp('fast');
                 }
             });
 
-            $('.coupon-item').click(function (e) {
+            $('.coupon-item').click(function(e) {
                 e.preventDefault();
                 var code = $(this).data('code');
                 $('#discountcode').val(code);
@@ -1385,7 +1427,7 @@
                 $('.verify_promo').click();
             });
 
-            $('.verify_promo').click(function (e) {
+            $('.verify_promo').click(function(e) {
 
                 e.preventDefault();
 
@@ -1412,7 +1454,7 @@
                         data: {
                             discountcode: $('#discountcode').val(),
                         },
-                        success: function (result) {
+                        success: function(result) {
                             if (result.success) {
                                 $('.promo_success').html(result.success);
                                 $('.verify_promo').html('Applied');
@@ -1421,7 +1463,7 @@
                                 $('#remove_promo').show();
                                 $('.promo_error').hide();
                                 $('.promo_success').show();
-                                setTimeout(function () {
+                                setTimeout(function() {
                                     $('.promo_success').fadeOut();
                                 }, 4000);
                                 $('#discount_span').html(result.discount_amount);
@@ -1441,7 +1483,7 @@
 
             });
 
-            $('#remove_promo').click(function (e) {
+            $('#remove_promo').click(function(e) {
                 e.preventDefault();
                 $.ajaxSetup({
                     headers: {
@@ -1452,7 +1494,7 @@
                 $.ajax({
                     url: "{{ route('remove.promocode') }}",
                     method: 'POST',
-                    success: function (result) {
+                    success: function(result) {
                         if (result.success) {
                             $('#discountcode').val('');
                             $('#discountcode').removeAttr('readonly');
@@ -1499,7 +1541,7 @@
                     data: {
                         pincode: val,
                     },
-                    success: function (result) {
+                    success: function(result) {
                         if (result.error) {
                             container.find('.pincode_error').html(result.error);
                             container.find('.pincode_success').css('display', 'none');
@@ -1532,8 +1574,8 @@
             }
         }
 
-        $(document).ready(function () {
-            $('#checkout-otp-request-form').on('submit', function (e) {
+        $(document).ready(function() {
+            $('#checkout-otp-request-form').on('submit', function(e) {
                 e.preventDefault();
                 var $form = $(this);
                 var $btn = $('#checkout-btn-request-otp');
@@ -1551,25 +1593,29 @@
                     url: $form.attr('action'),
                     type: 'POST',
                     data: $form.serialize(),
-                    headers: { 'X-Requested-With': 'XMLHttpRequest' },
-                    success: function (response) {
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    success: function(response) {
                         if (response.success) {
                             $form.addClass('d-none');
                             $('#checkout-otp-verify-form').removeClass('d-none');
                         } else {
-                            $('#checkout-otp-request-error').text(response.message || 'Something went wrong.');
+                            $('#checkout-otp-request-error').text(response.message ||
+                                'Something went wrong.');
                         }
                     },
-                    error: function (xhr) {
-                        $('#checkout-otp-request-error').text('An error occurred. Please try again.');
+                    error: function(xhr) {
+                        $('#checkout-otp-request-error').text(
+                            'An error occurred. Please try again.');
                     },
-                    complete: function () {
+                    complete: function() {
                         $btn.prop('disabled', false).text('Next');
                     }
                 });
             });
 
-            $('#checkout-otp-verify-form').on('submit', function (e) {
+            $('#checkout-otp-verify-form').on('submit', function(e) {
                 e.preventDefault();
                 var $form = $(this);
                 var $btn = $('#checkout-btn-verify-otp');
@@ -1581,24 +1627,29 @@
                     return;
                 }
 
-                $btn.prop('disabled', true).html('<span class="fa fa-spinner fa-spin"></span> Verifying...');
+                $btn.prop('disabled', true).html(
+                '<span class="fa fa-spinner fa-spin"></span> Verifying...');
 
                 $.ajax({
                     url: $form.attr('action'),
                     type: 'POST',
                     data: $form.serialize(),
-                    headers: { 'X-Requested-With': 'XMLHttpRequest' },
-                    success: function (response) {
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    success: function(response) {
                         if (response.success) {
                             window.location.href = response.redirect;
                         } else {
-                            $('#checkout-otp-verify-error').text(response.message || 'Invalid OTP.');
+                            $('#checkout-otp-verify-error').text(response.message ||
+                                'Invalid OTP.');
                         }
                     },
-                    error: function (xhr) {
-                        $('#checkout-otp-verify-error').text('An error occurred. Please try again.');
+                    error: function(xhr) {
+                        $('#checkout-otp-verify-error').text(
+                            'An error occurred. Please try again.');
                     },
-                    complete: function () {
+                    complete: function() {
                         $btn.prop('disabled', false).text('Verify & Login');
                     }
                 });
