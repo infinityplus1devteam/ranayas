@@ -48,13 +48,13 @@ class SocialiteManageController extends Controller
     {
         $authUser = TxnUser::where('email', $user->email)->first();
 
-        Subscriber::updateOrCreate(
+        /* Subscriber::updateOrCreate(
             ['email' => $user->email],
             [
                 'email' => $user->email,
                 'status' => true,
             ]
-        );
+        ); */
 
         if ($authUser) {
 

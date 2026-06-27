@@ -287,10 +287,10 @@
                                     data-feather="message-square"></i><span>FAQ's</span></a>
                         </li>
 
-                        <li class="dropdown">
+                        {{-- <li class="dropdown">
                             <a href="{{ route('admin.subscribers.all') }}" class="nav-link"><i
                                     data-feather="users"></i><span>Subscribers</span></a>
-                        </li>
+                        </li> --}}
 
 
                         <li class="dropdown">

@@ -115,8 +115,12 @@
 
                                             <span class="wishlist-text">{{ $wishlist->product->category->name }}</span>
 
-                                            <span class="all-size">Volume: <span class="pro-size">
-                                                    {{ $wishlist->size->title }} {{ $wishlist->product->unit ?
+                                            @php
+                                                $wishlistSizeName = strtolower($wishlist->size->title ?? '');
+                                                $wishlistSizeClass = ($wishlistSizeName == '' || $wishlistSizeName == 'null') ? 'size-null' : 'size-' . $wishlistSizeName;
+                                            @endphp
+                                            <span class="all-size {{ $wishlistSizeClass }}">Size: <span class="pro-size">
+                                                    {{ $wishlist->size->title ?? '' }} {{ $wishlist->product->unit ?
                                                     $wishlist->product->unit->unit : '' }}</span>
                                             </span>
                                             <span class="all-size">Color: <span class="pro-size">

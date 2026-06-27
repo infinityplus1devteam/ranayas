@@ -232,7 +232,11 @@
                                                                                 <p class="title"><a href="/product/{{ $detail->product->slug_url }}">{{
                                         $detail->product->title }}</a></p>
                                                                                 <p>
-                                                                                    {{ $detail->size ? 'Volume: ' . $detail->size->title : '' }}{{-- {{
+                                                                                    @php
+                                                                                        $viewOrderSizeName = strtolower($detail->size->title ?? '');
+                                                                                        $viewOrderSizeClass = ($viewOrderSizeName == '' || $viewOrderSizeName == 'null') ? 'size-null' : 'size-' . $viewOrderSizeName;
+                                                                                    @endphp
+                                                                                    <span class="{{ $viewOrderSizeClass }}">{{ $detail->size ? 'Size: ' . $detail->size->title : '' }}</span>{{-- {{
                                                                                     $detail->product->unit ? $detail->product->unit->unit :
                                                                                     'GM' }} --}}
                                                                                     <br>
@@ -325,7 +329,8 @@
                                                             foreach($order->details as $detail) {
                                                                 $itemSubtotal += $detail->mrp * $detail->quantity;
                                                             }
-                                                            $shipping = $itemSubtotal < 1000 ? 60 : 0;
+                                                            // Shipping feature removed
+                                                            // $shipping = $itemSubtotal < 1000 ? 60 : 0;
                                                         @endphp
                                                         <th>Subtotal</th>
                                                         <td><strong>&#8377; {{ $itemSubtotal }}</strong></td>
@@ -347,10 +352,10 @@
                                                             <td> &#8377; {{ $order->discount }} </td>
                                                         </tr>
                                                     @endif
-                                                    <tr>
+                                                    {{-- <tr>
                                                         <td> + Shipping Charges </td>
                                                         <td> &#8377; {{ $shipping }} </td>
-                                                    </tr>
+                                                    </tr> --}}
                                                     <tr>
                                                         <th> <strong>Grand Total</strong> </th>
                                                         <td> <strong>&#8377; {{ round($order->total, 2) }}</strong> </td>

@@ -3566,3 +3566,7 @@ a.scroll:hover span {
 .caption-9 {
     padding: 15px 15px 0px 15px !important;
 }
+
+.size-null {
+    display: none !important;
+}

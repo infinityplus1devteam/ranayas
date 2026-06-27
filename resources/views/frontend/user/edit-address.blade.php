@@ -100,8 +100,8 @@
         }
         .form-control {
             font-size: 14px;
-            padding-left: 15px;
-            height: 16px;
+            padding: 10px 15px !important;
+            height: auto;
         }
         textarea {
             padding: 10px 15px !important;

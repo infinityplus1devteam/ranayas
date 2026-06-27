@@ -327,7 +327,13 @@ class MainController extends Controller
             array_push($prodLists, $prod->id);
         }
 
-        $brands = \App\Model\TxnBrand::where('status', true)->get();
+        $brandIds = DB::table('txn_products')
+            ->whereIn('id', $prodLists)
+            ->where('status', true)
+            ->whereNotNull('brand_id')
+            ->pluck('brand_id')
+            ->unique();
+        $brands = \App\Model\TxnBrand::whereIn('id', $brandIds)->where('status', true)->get();
 
         $conditions = \App\Model\TxnCondition::where('status', true)->get();
 
@@ -397,7 +403,13 @@ class MainController extends Controller
             array_push($prodLists, $prod->id);
         }
 
-        $brands = \App\Model\TxnBrand::where('status', true)->get();
+        $brandIds = DB::table('txn_products')
+            ->whereIn('id', $prodLists)
+            ->where('status', true)
+            ->whereNotNull('brand_id')
+            ->pluck('brand_id')
+            ->unique();
+        $brands = \App\Model\TxnBrand::whereIn('id', $brandIds)->where('status', true)->get();
 
         $conditions = \App\Model\TxnCondition::where('status', true)->get();
 
@@ -450,7 +462,13 @@ class MainController extends Controller
             ->where('p.status', '=', true)
             ->whereIN('p.category_id', $cateLists);
 
-        $brands = \App\Model\TxnBrand::where('status', true)->get();
+        $brandIds = DB::table('txn_products')
+            ->whereIn('category_id', $cateLists)
+            ->where('status', true)
+            ->whereNotNull('brand_id')
+            ->pluck('brand_id')
+            ->unique();
+        $brands = \App\Model\TxnBrand::whereIn('id', $brandIds)->where('status', true)->get();
 
         $conditions = TxnCondition::where('status', true)->get();
         
@@ -566,7 +584,13 @@ class MainController extends Controller
                 ->where('p.status', true)
                 ->max('map.mrp') ?? 5000;
 
-            $brands = \App\Model\TxnBrand::where('status', true)->get();
+            $brandIds = DB::table('txn_products')
+                ->whereIn('category_id', $cateLists)
+                ->where('status', true)
+                ->whereNotNull('brand_id')
+                ->pluck('brand_id')
+                ->unique();
+            $brands = \App\Model\TxnBrand::whereIn('id', $brandIds)->where('status', true)->get();
 
             $conditions = \App\Model\TxnCondition::where('status', true)->get();
 
@@ -637,9 +661,9 @@ class MainController extends Controller
         $request->session()->forget('promocode');
         $cartTotal = \Cart::getTotal();
         $newTotal = $cartTotal;
-        if ($cartTotal < 1000) {
-            $newTotal += 60; // adding shipping charge
-        }
+        // if ($cartTotal < 1000) {
+        //     $newTotal += 60; // adding shipping charge
+        // }
         return response()->json(['success' => 'Coupon Removed !', 'status' => 200, 'new_total' => $newTotal], 200);
     }
 
@@ -669,9 +693,9 @@ class MainController extends Controller
                 }
 
                 $newTotal = $cartTotal - $discountAmount;
-                if ($cartTotal < 1000) {
-                    $newTotal += 60; // adding shipping charge
-                }
+                // if ($cartTotal < 1000) {
+                //     $newTotal += 60; // adding shipping charge
+                // }
 
                 return response()->json(['success' => 'Coupon Applied Successfully !', 'status' => 200, 'discount_amount' => $discountAmount, 'new_total' => $newTotal], 200);
             }
@@ -688,9 +712,9 @@ class MainController extends Controller
             session(['promocode' => $promo]);
             $discountAmount = round($cartTotal * 0.10, 2);
             $newTotal = $cartTotal - $discountAmount;
-            if ($cartTotal < 1000) {
-                $newTotal += 60; // adding shipping charge
-            }
+            // if ($cartTotal < 1000) {
+            //     $newTotal += 60; // adding shipping charge
+            // }
             return response()->json(['success' => 'Coupon Applied Successfully !', 'status' => 200, 'discount_amount' => $discountAmount, 'new_total' => $newTotal], 200);
         }
 

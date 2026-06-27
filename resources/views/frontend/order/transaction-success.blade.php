@@ -79,7 +79,11 @@
                                                                     {{ $detail->product->title }}
                                                                 </p>
                                                                 <p>
-                                                                    {{ $detail->size ? 'Volume: ' . $detail->size->title : '' }} {{
+                                                                    @php
+                                                                        $txnSizeName = strtolower($detail->size->title ?? '');
+                                                                        $txnSizeClass = ($txnSizeName == '' || $txnSizeName == 'null') ? 'size-null' : 'size-' . $txnSizeName;
+                                                                    @endphp
+                                                                    <span class="{{ $txnSizeClass }}">{{ $detail->size ? 'Size: ' . $detail->size->title : '' }}</span> {{
                                 $detail->product->unit ? $detail->product->unit->unit :
                                 'GM' }} <br>
                                                                     {{ $detail->color ? 'Color: ' . $detail->color->title : '' }}
@@ -143,7 +147,8 @@
                                                     foreach($order->details as $detail) {
                                                         $itemSubtotal += $detail->mrp * $detail->quantity;
                                                     }
-                                                    $shipping = $itemSubtotal < 1000 ? 60 : 0;
+                                                    // Shipping feature removed
+                                                    // $shipping = $itemSubtotal < 1000 ? 60 : 0;
                                                 @endphp
                                                 <th>Subtotal</th>
                                                 <td><strong>&#8377; {{ $itemSubtotal }}</strong></td>
@@ -165,10 +170,10 @@
                                                     <td> &#8377; {{ $order->discount }} </td>
                                                 </tr>
                                             @endif
-                                            <tr>
+                                            {{-- <tr>
                                                 <th> + Shipping Charges </th>
                                                 <td> &#8377; {{ $shipping }} </td>
-                                            </tr>
+                                            </tr> --}}
                                             <tr>
                                                 <th> <strong>Grand Total</strong> </th>
                                                 <td> <strong>&#8377; {{ $order->total }}</strong> </td>

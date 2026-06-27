@@ -57,18 +57,10 @@
                                                                         class="form__label form__label--2">Please enter
                                                                         PIN code to check delivery
                                                                         <span class="required">*</span></label>
-                                                                    <div class="input-group">
                                                                         <input type="text" placeholder="Enter pincode"
                                                                             class="pincode-code form-control form__input form__input--2"
                                                                             value="{{ Session::get('pincode') }}"
                                                                             name="pincode" id="pincode" required>
-                                                                        <div class="input-group-append">
-                                                                            <button
-                                                                                class="btn check-availibility pincode_button"
-                                                                                type="submit"><i class="fa fa-search"
-                                                                                    aria-hidden="true"></i></button>
-                                                                        </div>
-                                                                    </div>
                                                                 </div>
                                                                 <div class="form__group col-md-12 pincd">
                                                                     <label for="pincode"
@@ -183,9 +175,13 @@
                                                                             href="{{ route('product', $item->attributes->slug_url) }}">
                                                                             {{ $item->name }}
                                                                         </a>
-                                                                        <span class="check-code-blod">
-                                                                            Volume:
-                                                                            <span>{{ $item->attributes->size_name }}{{-- . ' ' .
+                                                                        @php
+                                                                            $checkoutSizeName = strtolower($item->attributes->size_name ?? '');
+                                                                            $checkoutSizeClass = ($checkoutSizeName == '' || $checkoutSizeName == 'null') ? 'size-null' : 'size-' . $checkoutSizeName;
+                                                                        @endphp
+                                                                        <span class="check-code-blod {{ $checkoutSizeClass }}">
+                                                                            Size:
+                                                                            <span>{{ $item->attributes->size_name ?? '' }}{{-- . ' ' .
                                                                                 $item->attributes->unit --}}</span>
                                                                         </span>
                                                                         <span class="check-code-blod">
@@ -211,22 +207,23 @@
                                                             <span>₹<span
                                                                     id="cart-total-span">{{ Cart::getTotal() }}</span></span>
                                                         </li>
-                                                        @if (Cart::getTotal() < 1000)
+                                                        {{-- @if (Cart::getTotal() < 1000)
                                                             <li class="order-details shipping-row">
                                                                 <span class="text-danger">Shipping Charge:</span>
                                                                 <span class="text-danger">+ ₹60</span>
                                                             </li>
-                                                        @endif
+                                                        @endif --}}
                                                         <li class="order-details discount-row" style="display: none;">
                                                             <span class="text-success">Discount:</span>
                                                             <span class="text-success">- ₹<span
                                                                     id="discount_span">0</span></span>
                                                         </li>
+                                                        {{-- Grand total row now only shows if there's a discount, so we start hidden like discount-row --}}
                                                         <li class="order-details grand-total-row"
-                                                            style="font-weight: bold; border-top: 1px solid #ddd; padding-top: 10px; margin-top: 10px; {{ Cart::getTotal() < 1000 ? '' : 'display: none;' }}">
+                                                            style="font-weight: bold; border-top: 1px solid #ddd; padding-top: 10px; margin-top: 10px; display: none;">
                                                             <span>Grand Total:</span>
                                                             <span>₹<span
-                                                                    class="order-total-ammount">{{ Cart::getTotal() < 1000 ? Cart::getTotal() + 60 : Cart::getTotal() }}</span></span>
+                                                                    class="order-total-ammount">{{ Cart::getTotal() }}</span></span>
                                                         </li>
                                                     </ul>
                                                     <div class="checkout-payment">
@@ -350,17 +347,10 @@
                                                 class="form__label form__label--2">Please enter
                                                 PIN code to check delivery
                                                 <span class="required">*</span></label>
-                                            <div class="input-group">
                                                 <input type="text" placeholder="Enter pincode"
                                                     class="pincode-code form-control form__input form__input--2"
                                                     value="{{ Session::get('pincode') }}" name="pincode_add"
                                                     id="pincode_add" required>
-                                                <div class="input-group-append">
-                                                    <button class="btn check-availibility pincode_button"
-                                                        type="submit"><i class="fa fa-search"
-                                                            aria-hidden="true"></i></button>
-                                                </div>
-                                            </div>
                                         </div>
                                         <div class="form__group col-md-12 pincd">
                                             <label for="pincode" class="error pincode_error"></label>
@@ -947,11 +937,13 @@
                 }
             });
 
-            $('.pincode_button').click(function(e) {
-                e.preventDefault();
-                var container = $(this).closest('.checkout-form');
-                var input = container.find('.pincode-code');
+            $('.pincode-code').on('keyup', function(e) {
+                var input = $(this);
                 var val = input.val();
+                
+                if (val.length !== 6) return; // Only check when 6 digits are entered
+                
+                var container = $(this).closest('.checkout-form');
 
                 if (val == '') {
                     input.focus();
@@ -1524,16 +1516,16 @@
             if (val == '' || val === undefined || val === null) {
                 container.find('.pincode-code').focus();
                 container.find('.pincode_error').html('Please Enter Pincode');
-                container.find('.pincode_button').html('<i class="fa fa-search" aria-hidden="true"></i>');
-                container.find('.pincode_button').removeAttr('disabled');
+                // container.find('.pincode_button').html('<i class="fa fa-search" aria-hidden="true"></i>');
+                // container.find('.pincode_button').removeAttr('disabled');
             } else if (val.length == 6) {
                 $.ajaxSetup({
                     headers: {
                         'X-CSRF-TOKEN': $('input[name="_token"]').val()
                     }
                 });
-                container.find('.pincode_button').html('<span class="fa fa-spinner fa-spin"></span>');
-                container.find('.pincode_button').attr('disabled', 'disabled');
+                // container.find('.pincode_button').html('<span class="fa fa-spinner fa-spin"></span>');
+                // container.find('.pincode_button').attr('disabled', 'disabled');
                 $('.add_address').hide();
                 $.ajax({
                     url: "{{ route('verify.pincode') }}",
@@ -1546,9 +1538,9 @@
                             container.find('.pincode_error').html(result.error);
                             container.find('.pincode_success').css('display', 'none');
                             container.find('.pincode_error').css('display', 'block');
-                            container.find('.pincode_button').html(
-                                '<i class="fa fa-search" aria-hidden="true"></i>');
-                            container.find('.pincode_button').removeAttr('disabled');
+                            // container.find('.pincode_button').html(
+                            //     '<i class="fa fa-search" aria-hidden="true"></i>');
+                            // container.find('.pincode_button').removeAttr('disabled');
                             $('.order_place').attr('disabled', 'disabled');
                             $('.order_place').addClass('disabled');
                             container.find('.estimated_date').hide();
@@ -1556,9 +1548,9 @@
                             container.find('.pincode_success').html(result.success);
                             container.find('.pincode_error').css('display', 'none');
                             container.find('.pincode_success').css('display', 'block');
-                            container.find('.pincode_button').html(
-                                '<i class="fa fa-search" aria-hidden="true"></i>');
-                            container.find('.pincode_button').removeAttr('disabled');
+                            // container.find('.pincode_button').html(
+                            //     '<i class="fa fa-search" aria-hidden="true"></i>');
+                            // container.find('.pincode_button').removeAttr('disabled');
                             $('.order_place').removeAttr('disabled');
                             $('.order_place').removeClass('disabled');
                             $('.add_address').show();

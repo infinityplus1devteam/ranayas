@@ -64,7 +64,7 @@ class LoginController extends Controller
         Auth::guard('user')->logout();
         connectify('success', 'Logged Out', 'You have logged out successfully !');
 
-        return back();
+        return redirect()->route('index');
     }
 
     public function store(Request $request)
@@ -265,7 +265,7 @@ class LoginController extends Controller
                 ]
             );
 
-            if (!empty($userData['email'])) {
+            /* if (!empty($userData['email'])) {
                 Subscriber::updateOrCreate(
                     [
                         'email' => $userData['email'],
@@ -275,7 +275,7 @@ class LoginController extends Controller
                         'status' => true,
                     ]
                 );
-            }
+            } */
 
             Auth::guard('user')->login($user, true);
 

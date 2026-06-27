@@ -332,7 +332,8 @@
                             foreach($invoice->details as $detail) {
                                 $itemSubtotal += $detail->mrp * $detail->quantity;
                             }
-                            $shipping = $itemSubtotal < 1000 ? 60 : 0;
+                            // Shipping feature removed
+                            // $shipping = $itemSubtotal < 1000 ? 60 : 0;
                         @endphp
                         <th colspan="3">
                             Subtotal
@@ -360,7 +361,7 @@
                         </tr>
                     @endif
 
-                    <tr>
+                    {{-- <tr>
                         <th colspan="3">
                             + Shipping
                         </th>
@@ -368,7 +369,7 @@
                             Rs.
                             {{ $shipping }}
                         </td>
-                    </tr>
+                    </tr> --}}
                     <tr>
                         <th colspan="3">
                             - Discount

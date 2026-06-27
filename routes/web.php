@@ -307,11 +307,11 @@ Route::namespace('App\Http\Controllers')->group(function () {
                 Route::POST('/edit/{id}', 'Admin\ReturnticketController@update');
             });
 
-            Route::prefix('/manage-subscribers')->group(function () {
+            /* Route::prefix('/manage-subscribers')->group(function () {
                 Route::GET('/', 'Admin\SubscriberController@index')->name('admin.subscribers.all');
                 Route::POST('/view', 'Admin\SubscriberController@show')->name('admin.subscribers.show');
                 Route::POST('/send', 'Admin\SubscriberController@send')->name('admin.subscribers.send');
-            });
+            }); */
 
             Route::prefix('/manage-orders')->group(function () {
                 Route::GET('/', 'Admin\OrderController@index')->name('admin.orders.all');

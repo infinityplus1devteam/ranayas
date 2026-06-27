@@ -174,31 +174,25 @@
                             </div>
 
                             @if (count($product->sizes) > 0)
-                                <div class="pro-items">
+                                @php
+                                    $firstSize = strtolower($product->sizes[0]->size->title ?? $product->sizes[0]->title ?? '');
+                                @endphp
+                                <style>
+                                    .size-null { display: none !important; }
+                                </style>
+                                <div class="pro-items size-{{ $firstSize }}">
                                     <span class="pro-size">Size:</span>
                                     <ul class="pro-wight">
                                         @foreach ($product->sizes as $key => $item)
-                                            {{-- @if (!empty($product->unit)) --}}
-                                            <li>
+                                            <li class="size-{{ strtolower($item->size->title ?? $item->title) }}">
                                                 <a href="javascript:void(0)"
                                                     class="size_btn {{ $key == 0 ? 'active' : '' }}" data-toggle="tooltip"
-                                                    data-placement="top" title="{{ $item->size->title ?? $item->title }}{{-- . ' ' . $product->unit->unit --}}"
+                                                    data-placement="top" title="{{ $item->size->title ?? $item->title }}"
                                                     data-size-id="{{ $item->size_id }}"
                                                     data-prod-id="{{ $product->id }}">
                                                     {{ $item->size->title ?? $item->title }}
                                                 </a>
                                             </li>
-                                            {{-- @else
-                                            <li>
-                                                <a href="javascript:void(0)"
-                                                    class="size_btn {{ $key == 0 ? 'active' : '' }}" data-toggle="tooltip"
-                                                    data-placement="top" title="{{ $item->title . ' GM' }}"
-                                                    data-size-id="{{ $item->size_id }}"
-                                                    data-prod-id="{{ $product->id }}">
-                                                    {{ $item->title . ' GM' }}
-                                                </a>
-                                            </li>
-                                        @endif --}}
                                         @endforeach
                                     </ul>
                                 </div>

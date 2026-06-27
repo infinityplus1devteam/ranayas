@@ -17,14 +17,17 @@ class CartController extends Controller
     }
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'qty' => 'required|min:1',
-        ],
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'qty' => 'required|min:1',
+            ],
             [
                 'qty.required' => 'Please Select Atleast One Quantity',
                 'qty.min' => 'Please Select Atleast One Quantity',
                 'qty.max' => 'Only 4 Quantity of product is allowed at a time',
-            ]);
+            ]
+        );
 
         if ($validator->fails()) {
             connectify('error', 'Checkout Error', $validator->errors()->first());
@@ -115,14 +118,17 @@ class CartController extends Controller
 
         $size = MapColorSize::where('product_id', $product->id)->where('size_id', $cart->attributes->size_id)->where('color_id', $cart->attributes->color_id)->first();
 
-        $validator = Validator::make($request->all(), [
-            'quantity' => 'required|numeric|min:1|max:' . $size->stock,
-        ],
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'quantity' => 'required|numeric|min:1|max:' . $size->stock,
+            ],
             [
                 'quantity.required' => 'Please enter quantity',
                 'quantity.min' => 'Quantity must be greater than 1',
                 'quantity.max' => 'Only ' . $size->stock . ' Quantity left in stock',
-            ]);
+            ]
+        );
 
         if ($validator->fails()) {
             connectify('error', 'Cart Error', $validator->errors()->first());

@@ -248,8 +248,12 @@
 
                                                                     </p>
                                                                     <p>
-                                                                        {{ $detail->size ? 'Volume: ' .
-                                                                        $detail->size->title : '' }}{{--
+                                                                        @php
+                                                                            $orderSizeName = strtolower($detail->size->title ?? '');
+                                                                            $orderSizeClass = ($orderSizeName == '' || $orderSizeName == 'null') ? 'size-null' : 'size-' . $orderSizeName;
+                                                                        @endphp
+                                                                        <span class="{{ $orderSizeClass }}">{{ $detail->size ? 'Size: ' .
+                                                                        $detail->size->title : '' }}</span>{{--
                                                                         {{ $detail->product->unit ?
                                                                         $detail->product->unit->unit :
                                                                         'GM' }} --}} <br>

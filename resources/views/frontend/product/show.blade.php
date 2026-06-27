@@ -146,16 +146,21 @@
                 </div>
                 @endif --}}
                 @if (count($product->sizes) > 0)
-                    <div class="product-size-variations">
-                        <p class="swatch-label">Selected Volume <strong class="swatch-label size size_lable"></strong>
+                    @php
+                        $firstSize = strtolower($product->sizes[0]->title ?? '');
+                    @endphp
+                    <style>
+                        .size-null { display: none !important; }
+                    </style>
+                    <div class="product-size-variations size-{{ $firstSize }}">
+                        <p class="swatch-label">Selected Size <strong class="swatch-label size size_lable"></strong>
 
                         </p>
                         <div class="product-size-swatch variation-wrapper size-block">
                             @foreach ($product->sizes as $item)
-                                <div class="swatch-wrapper">
+                                <div class="swatch-wrapper size-{{ strtolower($item->title) }}">
                                     <a class="product-size-swatch-btn variation-btn size_btn" data-toggle="tooltip"
-                                        data-placement="top" title="{{ $item->title }}{{-- . ' '.
-                                                $product->unit->unit --}}"
+                                        data-placement="top" title="{{ $item->title }}"
                                         data-size-id="{{ $item->size_id }}">
                                         <span class="product-size-swatch-label">{{ $item->title }} </span>
                                     </a>

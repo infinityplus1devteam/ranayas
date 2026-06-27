@@ -153,8 +153,8 @@
 
         .form-control {
             font-size: 14px;
-            padding-left: 15px;
-            height: 16px;
+            padding: 10px 15px !important;
+            height: auto;
         }
 
         textarea {
@@ -164,6 +164,13 @@
 
         .error {
             color: #fc544b !important;
+        }
+
+        .profile-form input {
+            padding: 10px 15px !important;
+            border: 1px solid #e2e2e2;
+            width: 100%;
+            border-radius: 4px;
         }
 
         .profile-form .btn-style1 {

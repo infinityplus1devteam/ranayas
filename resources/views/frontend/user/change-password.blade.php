@@ -53,7 +53,7 @@
                                     </a>
                                 </li>
                                 <li class="profile-li">
-                                    <a href="javascript:void(0)">
+                                    <a href="{{ route('user.profile') }}">
                                         Profile
                                     </a>
                                 </li>
@@ -130,8 +130,8 @@
 
     .form-control {
         font-size: 14px;
-        padding-left: 15px;
-        height: 16px;
+        padding: 10px 15px !important;
+        height: auto;
     }
 
     textarea {
@@ -141,6 +141,13 @@
 
     .error {
         color: #fc544b !important;
+    }
+
+    .profile-form input {
+        padding: 10px 15px !important;
+        border: 1px solid #e2e2e2;
+        width: 100%;
+        border-radius: 4px;
     }
 
     #password-error {

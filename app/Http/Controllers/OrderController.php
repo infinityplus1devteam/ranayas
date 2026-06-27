@@ -142,10 +142,11 @@ class OrderController extends Controller
 
             $balance = $total - $request->discount;
 
-            if ($total < 1000) {
-                $request['shipingcharge'] = 60;
-                $balance = $balance + $request->shipingcharge;
-            }
+            // Shipping charge feature removed
+            // if ($total < 1000) {
+            //     $request['shipingcharge'] = 60;
+            //     $balance = $balance + $request->shipingcharge;
+            // }
 
             $balance = round($balance);
 

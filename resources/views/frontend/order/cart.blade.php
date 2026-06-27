@@ -56,6 +56,7 @@
                                                                         <div class="cart-pro-image">
                                                                             <a href="{{ route('product', $item->attributes->slug_url) }}">
                                                                                 @if(!empty($item->attributes->color_image))
+                                                                                    {{  dd(asset('storage/images/multi-products/' . $item->attributes->color_image)) }}
                                                                                     <img src="{!! asset('storage/images/multi-products/' . $item->attributes->color_image) !!}"
                                                                                         class="img-fluid" alt="{{ $item->name }}" width="100">
                                                                                 @else
@@ -70,9 +71,13 @@
                                                                                     {{ $item->name }}
                                                                                 </a>
                                                                             </h4>
-                                                                            <span class="cart-pro-price">
-                                                                                <span class="size"> Volume:</span>
-                                                                                {{ $item->attributes->size_name }}{{-- . ' ' .
+                                                                            @php
+                                                                                $cartSizeName = strtolower($item->attributes->size_name ?? '');
+                                                                                $cartSizeClass = ($cartSizeName == '' || $cartSizeName == 'null') ? 'size-null' : 'size-' . $cartSizeName;
+                                                                            @endphp
+                                                                            <span class="cart-pro-price {{ $cartSizeClass }}">
+                                                                                <span class="size"> Size:</span>
+                                                                                {{ $item->attributes->size_name ?? '' }}{{-- . ' ' .
                                                                                 $item->attributes->unit --}}
                                                                             </span>
                                                                             <span class="cart-pro-price">
@@ -93,15 +98,13 @@
                                                                         <div class="center">
                                                                             <div class="plus-minus">
                                                                                 <span>
-                                                                                    <a href="javascript:void(0)"
-                                                                                        class="text-black quantity-input"
+                                                                                    <a href="javascript:void(0)" class="text-black quantity-input"
                                                                                         data-index="{{ $item->id }}"
                                                                                         data-stock="{{ $item->attributes->stock }}"
                                                                                         onclick="updateCartItem(this, -1)">-</a>
                                                                                     <input type="number" id="qty_{{ $item->id }}" name="qty"
                                                                                         class="qty" value="{{ $item->quantity }}" min="1" disabled>
-                                                                                    <a href="javascript:void(0)"
-                                                                                        class="text-black quantity-input"
+                                                                                    <a href="javascript:void(0)" class="text-black quantity-input"
                                                                                         data-index="{{ $item->id }}"
                                                                                         data-stock="{{ $item->attributes->stock }}"
                                                                                         onclick="updateCartItem(this, 1)">+</a>
@@ -202,42 +205,42 @@
                 var itemid = btn.attr('data-index');
                 var input = btn.closest('div').find('.qty');
                 var stock = parseInt(btn.attr('data-stock'));
-                
+
                 var currentVal = parseInt(input.val());
                 if (isNaN(currentVal)) {
                     currentVal = 1;
                 }
-                
+
                 var newQty = currentVal + delta;
-                
+
                 if (newQty < 1) {
                     return;
                 }
-                
+
                 if (newQty > stock) {
                     if (typeof swal !== 'undefined') {
                         swal('Out Of Stock', 'Product is Currently Out of Stock, Stay Tuned !', 'error');
                     } else {
                         alert('Product is Currently Out of Stock, Stay Tuned !');
                     }
-                    
+
                     // Revert to original input value so it doesn't look like it changed
                     input.val(currentVal);
                     return;
                 }
-                
+
                 // Update input visually immediately
                 input.val(newQty);
-                
+
                 $.ajaxSetup({
                     headers: {
                         'X-CSRF-TOKEN': "{{ csrf_token() }}"
                     }
                 });
-                
+
                 $('.qty').attr('readonly', 'readonly');
                 $('.quantity-input').attr('disabled', 'disabled');
-                
+
                 $.ajax({
                     url: "{{ route('cart.update') }}",
                     type: 'POST',
@@ -252,7 +255,7 @@
                         window.location.reload(true);
                     }
                 });
-            } catch(e) {
+            } catch (e) {
                 console.error("Cart update error: ", e);
                 alert("Error updating cart: " + e.message);
             }

@@ -65,8 +65,8 @@
                                 </ul>
                             </div>
                             {{-- <div class="vendor-filter">
-                                <h4 class="filter-title">Volumes</h4>
-                                <a href="#size" data-bs-toggle="collapse" class="filter-link"><span>Volumes
+                                <h4 class="filter-title">Sizes</h4>
+                                <a href="#size" data-bs-toggle="collapse" class="filter-link"><span>Sizes
                                     </span><i class="fa fa-angle-down"></i></a>
                                 <ul class="all-vendor collapse" id="size">
                                     @foreach ($sizes as $size)
