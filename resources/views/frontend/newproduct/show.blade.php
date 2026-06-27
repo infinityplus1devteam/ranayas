@@ -177,9 +177,7 @@
                                 @php
                                     $firstSize = strtolower($product->sizes[0]->size->title ?? $product->sizes[0]->title ?? '');
                                 @endphp
-                                <style>
-                                    .size-null { display: none !important; }
-                                </style>
+                           
                                 <div class="pro-items size-{{ $firstSize }}">
                                     <span class="pro-size">Size:</span>
                                     <ul class="pro-wight">

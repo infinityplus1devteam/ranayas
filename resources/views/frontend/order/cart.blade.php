@@ -55,8 +55,11 @@
                                                                     <div class="cart-pro">
                                                                         <div class="cart-pro-image">
                                                                             <a href="{{ route('product', $item->attributes->slug_url) }}">
-                                                                                @if(!empty($item->attributes->color_image))
-                                                                                    {{  dd(asset('storage/images/multi-products/' . $item->attributes->color_image)) }}
+                                                                                @php
+                                                                                    $variantCount = \App\Model\MapColorSize::where('product_id', $item->attributes->product_id)->count();
+                                                                                    // dd($variantCount);
+                                                                                @endphp
+                                                                                @if($variantCount > 1 && $item->attributes->color_image)
                                                                                     <img src="{!! asset('storage/images/multi-products/' . $item->attributes->color_image) !!}"
                                                                                         class="img-fluid" alt="{{ $item->name }}" width="100">
                                                                                 @else

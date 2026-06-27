@@ -149,9 +149,7 @@
                     @php
                         $firstSize = strtolower($product->sizes[0]->title ?? '');
                     @endphp
-                    <style>
-                        .size-null { display: none !important; }
-                    </style>
+                   
                     <div class="product-size-variations size-{{ $firstSize }}">
                         <p class="swatch-label">Selected Size <strong class="swatch-label size size_lable"></strong>
 
