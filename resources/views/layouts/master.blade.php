@@ -452,7 +452,18 @@
                 <li class="cart-item">
                     <div class="cart-img">
                         <a href="{{ route('product', $item->attributes->slug_url) }}">
-                            <img src="{!! asset('storage/images/products/' . $item->attributes->image_url) !!}" alt="cart-image" class="img-fluid">
+                            <!-- <img src="{!! asset('storage/images/products/' . $item->attributes->image_url) !!}" alt="cart-image" class="img-fluid"> -->
+                             @php
+                                $variantCount = \App\Model\MapColorSize::where('product_id', $item->attributes->product_id)->count();
+                                // dd($variantCount);
+                            @endphp
+                            @if($variantCount > 1 && $item->attributes->color_image)
+                                <img src="{!! asset('storage/images/multi-products/' . $item->attributes->color_image) !!}"
+                                    class="img-fluid" alt="{{ $item->name }}" width="100">
+                            @else
+                                <img src="{!! asset('storage/images/products/' . $item->attributes->image_url) !!}"
+                                    class="img-fluid" alt="{{ $item->name }}" width="100">
+                            @endif
                         </a>
                     </div>
                     <div class="cart-title">
