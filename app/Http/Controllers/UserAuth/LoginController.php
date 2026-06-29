@@ -49,6 +49,7 @@ class LoginController extends Controller
         ]);
 
         if (Auth::guard('user')->attempt(['email' => $request->email, 'password' => $request->password, 'status' => true], $request->remeber)) {
+            $this->mergeGuestCartIntoUserCart();
             connectify('success', 'Logged in', 'You are successfully Logged In');
 
             return redirect()->intended(url()->previous());
@@ -118,13 +119,15 @@ class LoginController extends Controller
         );
         // dd('i m here');
 
-        try {
-            Mail::send(['html' => 'backend.mails.otp'], ['user' => $user], function ($message) use ($user) {
-                $message->to($user['email'])->subject(config('app.name') . ', One Time Password(OTP)');
-                $message->from(config('mail.from.address'), config('mail.from.name'));
-            });
-        } catch (\Exception $e) {
-            Log::error('Mail Error (Register): ' . $e->getMessage());
+        if (!empty($user['email'])) {
+            try {
+                Mail::send(['html' => 'backend.mails.otp'], ['user' => $user], function ($message) use ($user) {
+                    $message->to($user['email'])->subject(config('app.name') . ', One Time Password(OTP)');
+                    $message->from(config('mail.from.address'), config('mail.from.name'));
+                });
+            } catch (\Exception $e) {
+                Log::error('Mail Error (Register): ' . $e->getMessage());
+            }
         }
 
         return redirect()->route('user.otp');
@@ -279,6 +282,8 @@ class LoginController extends Controller
 
             Auth::guard('user')->login($user, true);
 
+            $this->mergeGuestCartIntoUserCart();
+
             // Cleanup registration session data
             $request->session()->forget('user');
 
@@ -312,12 +317,11 @@ class LoginController extends Controller
         $validator = Validator::make(
             $request->all(),
             [
-                'mobile' => 'required|digits:10|exists:txn_users,mobile',
+                'mobile' => 'required|digits:10',
             ],
             [
                 'mobile.required' => 'Please Enter Mobile Number',
                 'mobile.digits' => 'Please Enter 10 digits Mobile Number',
-                'mobile.exists' => 'Mobile Number does Not exists in our records !',
             ]
         );
 
@@ -332,15 +336,15 @@ class LoginController extends Controller
 
         try {
 
-            $user = TxnUser::where('mobile', $request->mobile)->firstOrFail();
+            $userModel = TxnUser::where('mobile', $request->mobile)->first();
 
             $rand_otp = rand(100000, 999999);
 
             $user = [
-                'name' => $user->name,
-                'mobile' => $user->mobile,
-                'email' => $user->email,
-                'password' => $user->password,
+                'name' => $userModel ? $userModel->name : 'Customer',
+                'mobile' => $request->mobile,
+                'email' => $userModel ? $userModel->email : null,
+                'password' => $userModel ? $userModel->password : bcrypt(rand(100000, 999999)),
                 'otp' => $rand_otp,
                 'url' => url()->previous(),
             ];
@@ -353,13 +357,15 @@ class LoginController extends Controller
                 config('services.sms.dlt_otp_template_id')
             );
 
-            try {
-                Mail::send(['html' => 'backend.mails.otp'], ['user' => $user], function ($message) use ($user) {
-                    $message->to($user['email'])->subject(config('app.name') . ', One Time Password(OTP)');
-                    $message->from(config('mail.from.address'), config('mail.from.name'));
-                });
-            } catch (\Exception $e) {
-                Log::error('Mail Error (OTP Login): ' . $e->getMessage());
+            if (!empty($user['email'])) {
+                try {
+                    Mail::send(['html' => 'backend.mails.otp'], ['user' => $user], function ($message) use ($user) {
+                        $message->to($user['email'])->subject(config('app.name') . ', One Time Password(OTP)');
+                        $message->from(config('mail.from.address'), config('mail.from.name'));
+                    });
+                } catch (\Exception $e) {
+                    Log::error('Mail Error (OTP Login): ' . $e->getMessage());
+                }
             }
 
             if ($request->ajax()) {
@@ -370,15 +376,6 @@ class LoginController extends Controller
             return redirect()->route('user.otp');
 
         } catch (\Exception $ex) {
-            if ($ex instanceof ModelNotFoundException) {
-
-                if ($request->ajax()) {
-                    return response()->json(['success' => false, 'message' => 'Mobile number not found, try again later !']);
-                }
-                connectify('error', 'Error', 'Email id not found, try again later !');
-
-                return redirect(route('user.login.otp'));
-            }
 
             if ($request->ajax()) {
                 return response()->json(['success' => false, 'message' => 'Something Went Wrong !']);
@@ -386,6 +383,40 @@ class LoginController extends Controller
             connectify('error', 'Error', 'Something Went Wrong !');
 
             return redirect(route('user.login.otp'));
+        }
+    }
+
+    private function mergeGuestCartIntoUserCart()
+    {
+        foreach (session()->all() as $key => $value) {
+            if (str_ends_with($key, '_cart_items') || str_ends_with($key, '_cart_conditions')) {
+                if (str_ends_with($key, '_cart_items')) {
+                    $dbRow = \Illuminate\Support\Facades\DB::table('txn_user_carts')
+                        ->where('user_id', auth('user')->id())
+                        ->where('storage_key', $key)
+                        ->first();
+                    $dbItems = $dbRow ? unserialize($dbRow->storage_value) : [];
+                    
+                    foreach ($value as $itemId => $item) {
+                        if (isset($dbItems[$itemId])) {
+                            $dbItems[$itemId]['quantity'] += $item['quantity'];
+                        } else {
+                            $dbItems[$itemId] = $item;
+                        }
+                    }
+                    
+                    \Illuminate\Support\Facades\DB::table('txn_user_carts')->updateOrInsert(
+                        ['user_id' => auth('user')->id(), 'storage_key' => $key],
+                        ['storage_value' => serialize($dbItems), 'updated_at' => now()]
+                    );
+                } else if (str_ends_with($key, '_cart_conditions')) {
+                    \Illuminate\Support\Facades\DB::table('txn_user_carts')->updateOrInsert(
+                        ['user_id' => auth('user')->id(), 'storage_key' => $key],
+                        ['storage_value' => serialize($value), 'updated_at' => now()]
+                    );
+                }
+                session()->forget($key);
+            }
         }
     }
 }

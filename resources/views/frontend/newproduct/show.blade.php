@@ -245,7 +245,7 @@
                                     @if ($product->wishlist && $product->wishlist->product_id == $product->id)
                                         <a href="javascript:void(0)" class="w-c-q-icn btn-style1 wishlist-remove"
                                             data-w-id="{{ $product->wishlist->id }}" title="Remove from Wishlist"><i
-                                                class="fa fa-heart"></i></a>
+                                                class="fa fa-heart" style="color: var(--theme-color) !important;"></i></a>
                                     @else
                                         <a href="javascript:void(0)" class="w-c-q-icn btn-style1 wishlist"
                                             title="Add to Wishlist"><i class="fa fa-heart-o"></i></a>
@@ -627,7 +627,7 @@
                                             @if (auth()->user()->id == $product->w_u_id && $product->w_product_id == $product->id)
                                                 <a href="javascript:void(0)" class="w-c-q-icn wishlist-remove"
                                                     data-w-id="{{ $product->w_id }}" title="Remove from Wishlist"><i
-                                                        class="fa fa-heart"></i></a>
+                                                        class="fa fa-heart" style="color: var(--theme-color) !important;"></i></a>
                                             @else
                                                 <a href="javascript:void(0)" class="w-c-q-icn wishlist"
                                                     data-p-id="{{ $product->product_id }}"

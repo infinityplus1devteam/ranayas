@@ -294,7 +294,7 @@
                                                         @if ($wishlistItem)
                                                             <a href="javascript:void(0)" class="w-c-q-icn wishlist-remove"
                                                                 data-w-id="{{ $wishlistItem->id }}"
-                                                                title="Remove from Wishlist"><i class="fa fa-heart"></i></a>
+                                                                title="Remove from Wishlist"><i class="fa fa-heart" style="color: var(--theme-color) !important;"></i></a>
                                                         @else
                                                             <a href="javascript:void(0)" class="w-c-q-icn wishlist"
                                                                 data-p-id="{{ $product->id }}"

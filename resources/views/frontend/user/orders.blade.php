@@ -327,13 +327,6 @@
                                                             </a>
                                                         </div>
                                                         @endif
-                                                        <div class="col">
-                                                            <a href="javascript:void(0)" class="need-help-btn"
-                                                                data-obj-id="{{ $order->id }}">
-                                                                <i class="fa fa-question-circle" aria-hidden="true"></i>
-                                                                Need Help
-                                                            </a>
-                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>

@@ -278,11 +278,6 @@
                         </li>
 
                         <li class="dropdown">
-                            <a href="{{ route('admin.bulks.all') }}" class="nav-link"><i
-                                    data-feather="mail"></i><span>Bulk Order</span></a>
-                        </li>
-
-                        <li class="dropdown">
                             <a href="{{ route('admin.faqs.all') }}" class="nav-link"><i
                                     data-feather="message-square"></i><span>FAQ's</span></a>
                         </li>

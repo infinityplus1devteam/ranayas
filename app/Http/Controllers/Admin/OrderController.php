@@ -158,17 +158,35 @@ class OrderController extends Controller
             ]);
 
             // SMS::send($order->user->mobile, 'Ranayas - Your Order ID : ' . $order->id . ', has been ' . $order->status . ',  Login for more detail on ' . route('user.login'));
-            
-            // Using the OTP template for now as requested
-            $rand_otp = rand(100000, 999999);
-            if ($order->user) {
-                SMS::send(
-                    $order->user->mobile,
-                    'Dear Customer, Thank You for login with RANAYAS. Your OTP for login is '.$rand_otp.'.',
-                    config('services.sms.dlt_otp_template_id')
-                );
-            }
 
+            // Using the OTP template for now as requested
+            // $rand_otp = rand(100000, 999999);
+            // if ($order->user) {
+            //     SMS::send(
+            //         $order->user->mobile,
+            //         'Dear Customer, Thank You for login with RANAYAS. Your OTP for login is ' . $rand_otp . '.',
+            //         config('services.sms.dlt_otp_template_id')
+            //     );
+            // }
+
+            // Order Shipped SMS
+            if ($request->filled('status') && $request->status == 'Shipped') {
+                // dd($order->user->mobile);
+                // $mobile = $request->query('mobile');
+                // $mobile = "7045882487";
+                $courier = "Delhivery";
+                $awbNo = "123456789";
+                // $templateid = $request->query('templateid', '');
+                // $templateid = "";
+                $result =
+                    SMS::send(
+                        $order->user->mobile,
+                        'Hi, Thanks for your purchase from Ranayas. Your order has been dispatched through ' . $courier . ' courier. Your AWB No. is ' . $awbNo . '.',
+                        config('services.sms.dlt_shipped_template_id')
+                    );
+
+                // return response()->json($result);
+            }
             if ($request->filled('status') && $request->status == 'delivered') {
 
                 $total = floor($order->total / 50);
@@ -242,7 +260,7 @@ class OrderController extends Controller
             ]);
 
             SMS::send(
-                $order->user->mobile, 
+                $order->user->mobile,
                 'Dear Customer, Thank You for login with RANAYAS. Your OTP for login is ' . substr($order->id, 0, 6) . '.',
                 config('services.sms.dlt_return_template_id')
             );

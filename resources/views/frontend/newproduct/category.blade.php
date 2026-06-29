@@ -37,16 +37,16 @@
                                 </a>
                                 <ul class="all-option collapse" id="category-filter">
                                     @foreach ($categories as $cate)
-                                        <li class="grid-list-option f-price">
-                                            <input type="checkbox" class="filter cb_category" name="category[]"
-                                                id="category_{{ $cate->id }}" value="{{ $cate->id }}">
-                        <label for="category_{{ $cate->id }}" style="margin-left: 9px">
-                            {{ $cate->category_name }}
-                        </label>
-                        </li>
-                        @endforeach
-                        </ul>
-                </div> --}}
+                                    <li class="grid-list-option f-price">
+                                        <input type="checkbox" class="filter cb_category" name="category[]"
+                                            id="category_{{ $cate->id }}" value="{{ $cate->id }}">
+                                        <label for="category_{{ $cate->id }}" style="margin-left: 9px">
+                                            {{ $cate->category_name }}
+                                        </label>
+                                    </li>
+                                    @endforeach
+                                </ul>
+                            </div> --}}
                             <div class="vendor-filter">
                                 <h4 class="filter-title">Colors</h4>
                                 <a href="#color" data-bs-toggle="collapse" class="filter-link"><span>Colors
@@ -70,16 +70,16 @@
                                     </span><i class="fa fa-angle-down"></i></a>
                                 <ul class="all-vendor collapse" id="size">
                                     @foreach ($sizes as $size)
-                                        <li class="f-vendor">
-                                            <input type="checkbox" class="filter cb_sizes" name="sizes[]"
-                                                id="size_{{ $size->id }}" value="{{ $size->id }}">
-                <label for="size_{{ $size->id }}" style="margin-left: 9px">
-                    {{ $size->title }}
-                </label>
-                </li>
-                @endforeach
-                </ul>
-            </div> --}}
+                                    <li class="f-vendor">
+                                        <input type="checkbox" class="filter cb_sizes" name="sizes[]"
+                                            id="size_{{ $size->id }}" value="{{ $size->id }}">
+                                        <label for="size_{{ $size->id }}" style="margin-left: 9px">
+                                            {{ $size->title }}
+                                        </label>
+                                    </li>
+                                    @endforeach
+                                </ul>
+                            </div> --}}
                             <div class="price-filter">
                                 <h4 class="filter-title">Price</h4>
                                 <a href="#price-filter" data-bs-toggle="collapse" class="filter-link"><span>Price
@@ -87,7 +87,8 @@
                                 <ul class="all-price collapse" id="price-filter">
 
                                     <div class="price-range-display mb-3 mt-3">
-                                        <span id="price-range-label" style="font-weight: 600; color: #333;">Price: ₹0 - ₹{{ $max_price }}</span>
+                                        <span id="price-range-label" style="font-weight: 600; color: #333;">Price: ₹0 -
+                                            ₹{{ $max_price }}</span>
                                         <input type="hidden" id="amount" name="amount" />
                                     </div>
 
@@ -137,12 +138,11 @@
                                                 @if (auth('user')->check())
                                                     @if (auth('user')->user()->id == $product->w_u_id && $product->w_product_id == $product->id)
                                                         <a href="javascript:void(0)" class="w-c-q-icn wishlist-remove"
-                                                            data-w-id="{{ $product->w_id }}"
-                                                            title="Remove from Wishlist"><i class="fa fa-heart"></i></a>
+                                                            data-w-id="{{ $product->w_id }}" title="Remove from Wishlist"><i
+                                                                class="fa fa-heart" style="color: var(--theme-color) !important;"></i></a>
                                                     @else
                                                         <a href="javascript:void(0)" class="w-c-q-icn wishlist"
-                                                            data-p-id="{{ $product->id }}"
-                                                            data-c-id="{{ $product->c_id }}"
+                                                            data-p-id="{{ $product->id }}" data-c-id="{{ $product->c_id }}"
                                                             data-s-id="{{ $product->s_id }}" title="Add to Wishlist"><i
                                                                 class="fa fa-heart-o"></i></a>
                                                     @endif
@@ -152,8 +152,7 @@
                                                 @endif
                                                 <a href="javascript:void(0)"
                                                     onclick="addToCart('{{ $product->id }}', '{{ $product->stock }}', '{{ $product->c_id }}', '{{ $product->s_id }}')"
-                                                    class="w-c-q-icn" title="Add to Cart"><i
-                                                        class="fa fa-shopping-bag"></i></a>
+                                                    class="w-c-q-icn" title="Add to Cart"><i class="fa fa-shopping-bag"></i></a>
                                                 <a href="{{ route('product', $product->slug_url) }}" class="w-c-q-icn"><i
                                                         class="fa fa-eye"></i></a>
                                             </div>
@@ -260,10 +259,10 @@
 @section('extrajs')
     <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             console.log("Slider script initializing...");
-            
-            $('.filter').click(function() {
+
+            $('.filter').click(function () {
                 submitFilterForm();
             });
 
@@ -289,12 +288,12 @@
             }
 
             // Wait a bit to ensure jQuery UI is fully ready
-            setTimeout(function() {
+            setTimeout(function () {
                 if (typeof $.fn.slider === 'undefined') {
                     console.error("jQuery UI Slider is not loaded!");
                     return;
                 }
-                
+
                 var max_price = {{ $max_price ?? 5000 }};
                 var current_min = 0;
                 var current_max = max_price;
@@ -317,18 +316,18 @@
                     min: 0,
                     max: max_price,
                     values: [current_min, current_max],
-                    slide: function(event, ui) {
+                    slide: function (event, ui) {
                         $("#amount").val('₹' + ui.values[0] + " - ₹" + ui.values[1]);
                         $("#price-range-label").text('Price: ₹' + ui.values[0] + " - ₹" + ui.values[1]);
                     },
-                    stop: function(event, ui) {
+                    stop: function (event, ui) {
                         submitFilterForm();
                     }
                 });
 
                 $("#amount").val('₹' + $("#slider-range").slider("values", 0) + " - ₹" + $("#slider-range").slider("values", 1));
                 $("#price-range-label").text('Price: ₹' + $("#slider-range").slider("values", 0) + " - ₹" + $("#slider-range").slider("values", 1));
-                
+
                 console.log("Slider initialized successfully.");
             }, 500);
         });

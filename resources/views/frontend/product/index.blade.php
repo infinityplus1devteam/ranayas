@@ -57,7 +57,7 @@
                                             <label for="color_{{ $color->id }}" style="margin-left: 9px">
                                                 <span class="color_div"
                                                     style="background-color: {{ $color->color_code }}"></span> {{ $color->title
-                                                        }}
+                                                                }}
                                             </label>
                                         </li>
                                     @endforeach
@@ -149,7 +149,7 @@
                                                                             @if ($wishlistItem)
                                                                                 <a href="javascript:void(0)" class="w-c-q-icn wishlist-remove"
                                                                                     data-w-id="{{ $wishlistItem->id }}" title="Remove from Wishlist"><i
-                                                                                        class="fa fa-heart"></i></a>
+                                                                                        class="fa fa-heart" style="color: var(--theme-color) !important;"></i></a>
                                                                             @else
                                                                                 <a href="javascript:void(0)" class="w-c-q-icn wishlist"
                                                                                     data-p-id="{{ $product->id }}" data-c-id="{{ $product->c_id }}"
@@ -193,7 +193,7 @@
                                                                             <span class="new-price"><i class="fa fa-inr"></i> {{ $product->mrp }}</span>
                                                                             <span class="old-price"><del><i class="fa fa-inr"></i> {{
                                         $product->starting_price
-                                                                                                                    }}</del></span>
+                                                                                                                                                    }}</del></span>
                                                                         </div>
                                                                         @if($product->review_status)
                                                                             <div class="rating pull-right">

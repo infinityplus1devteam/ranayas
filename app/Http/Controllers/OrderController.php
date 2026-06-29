@@ -12,6 +12,7 @@ use App\Model\TxnMasterGst;
 use App\Model\TxnOrder;
 use App\Model\TxnOrderDetail;
 use App\Model\TxnUser;
+use App\Model\SMS;
 use App\Services\LogisticService;
 use Cart;
 use Illuminate\Http\Request;

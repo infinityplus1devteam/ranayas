@@ -77,6 +77,7 @@ class SMS implements ShouldQueue
 
     public static function send($mobile, $text, $templateid = '')
     {
+        // dd($mobile, $text, $templateid);
         $val = Validator::make(['mobile' => $mobile, 'text' => $text], [
             'mobile' => 'required|min:10|max:12',
             'text' => 'required|string|max:250',
@@ -94,7 +95,7 @@ class SMS implements ShouldQueue
             $senderId = config('services.sms.sender_id');
             // Optional: You could pass DLT template ID if the API requires it as a parameter, 
             // but standard v2 uses SenderId and Message match for DLT approval.
-            $dltTemplateId = config('services.sms.dlt_template_id');
+            // $dltTemplateId = config('services.sms.dlt_template_id');
 
             // Ensure the mobile number has the 91 country code prefix for Indian telecom routing
             $formattedMobile = $mobile;
@@ -123,7 +124,7 @@ class SMS implements ShouldQueue
             ]);
 
             $res = $client->get($baseUrl);
-            
+
             Log::info('SMS API Response Headers: ' . json_encode($res->getHeaders()));
             $body = (string) $res->getBody();
             Log::info('SMS API Response Body: ' . $body);
@@ -131,9 +132,9 @@ class SMS implements ShouldQueue
             $parsed = json_decode($body, true);
 
             return [
-                'success' => $res->getStatusCode() >= 200 && $res->getStatusCode() < 300, 
-                'status' => $res->getStatusCode(), 
-                'body' => $body, 
+                'success' => $res->getStatusCode() >= 200 && $res->getStatusCode() < 300,
+                'status' => $res->getStatusCode(),
+                'body' => $body,
                 'parsed' => $parsed
             ];
 

@@ -160,9 +160,13 @@ class CartController extends Controller
     public function destroy(Request $request)
     {
         $cart = Cart::get($request->item_id);
-        Cart::remove($request->item_id);
-
-        connectify('success', 'Item Removed', $cart->name . ' has been removed from your cart !');
+        
+        if ($cart) {
+            Cart::remove($request->item_id);
+            connectify('success', 'Item Removed', $cart->name . ' has been removed from your cart !');
+        } else {
+            connectify('error', 'Error', 'Item not found in cart.');
+        }
 
         return back();
     }

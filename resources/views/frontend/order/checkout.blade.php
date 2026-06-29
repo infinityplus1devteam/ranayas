@@ -295,16 +295,19 @@
                                                             </div>
                                                         @endif
 
-                                                        <div class="payment-group pymt-btn mb--10">
-                                                            <div class="payment-radio">
-                                                                <label for="paytm" class="cb-container">
-                                                                    NETBANKING/PAYTM
-                                                                    <input type="radio" value="paytm" name="payment_mode" id="paytm"
-                                                                        {{ !$isCodAvailable ? 'checked' : '' }}>
-                                                                    <span class="rb-checkmark"></span>
-                                                                </label>
+                                                        @if ($isCodAvailable)
+                                                            <div class="payment-group pymt-btn mb--10">
+                                                                <div class="payment-radio">
+                                                                    <label for="paytm" class="cb-container">
+                                                                        NETBANKING/PAYTM
+                                                                        <input type="radio" value="paytm" name="payment_mode" id="paytm">
+                                                                        <span class="rb-checkmark"></span>
+                                                                    </label>
+                                                                </div>
                                                             </div>
-                                                        </div>
+                                                        @else
+                                                            <input type="hidden" value="paytm" name="payment_mode" id="paytm">
+                                                        @endif
 
                                                         <div class="checkout-btn">
                                                             <button type="submit" class="btn-style1 order_place">Place
@@ -321,135 +324,136 @@
 
                         @if (!count($addresses))
                             <div class="col-md-6">
-                                <div class="new-delivery-address">
-                                    <div class="form-row">
-                                        <div class="form__group col-md-12 title">
-                                            <h4>Add New Delivery Address</h4>
-                                        </div>
+                                <div class="new-delivery-address profile-form" style="background: #fff; padding: 25px; border-radius: 5px; border: 1px solid #e2e2e2; margin-bottom: 30px;">
+                                    <div class="title-area mb-4">
+                                        <h4 style="font-weight: 600; font-size: 18px; margin-bottom: 20px;">Add New Delivery Address</h4>
                                     </div>
-                                    <div class="checkout-form form-row ">
-                                        <div class="form__group col-md-12 mb-sm--30 mb-xs--10">
-                                            <label for="name" style="padding-left: 0;font-size: 18px"
-                                                class="form__label form__label--2">Please enter
-                                                PIN code to check delivery
-                                                <span class="required">*</span></label>
+                                    
+                                    <div class="checkout-form row mb-3">
+                                        <div class="col-12">
+                                            <label style="padding: 10px 0px; display: block; font-weight: 500;">Please enter PIN code to check delivery <span class="required" style="color:red">*</span></label>
                                             <input type="text" placeholder="Enter pincode"
                                                 class="pincode-code form-control form__input form__input--2"
+                                                style="padding: 10px 15px !important; border: 1px solid #e2e2e2; width: 100%; border-radius: 4px;"
                                                 value="{{ Session::get('pincode') }}" name="pincode_add" id="pincode_add" required>
                                         </div>
-                                        <div class="form__group col-md-12 pincd">
+                                        <div class="col-12 pincd mt-2">
                                             <label for="pincode" class="error pincode_error"></label>
-                                            <p class="text-success pincode_success"></p>
-                                            <p class="text-success estimated_date"></p>
-                                            <!-- <p class="text-danger pincode_error"></p> -->
+                                            <p class="text-success pincode_success m-0"></p>
+                                            <p class="text-success estimated_date m-0"></p>
                                         </div>
                                     </div>
-                                    <form action="{{ route('user.addresses.add') }}" method="post" id="formAddAddress">
+
+                                    <form action="{{ route('user.addresses.add') }}" method="post" id="formAddAddress" class="form">
                                         @csrf
-                                        <div class="form">
-                                            <input type="hidden" id="txtPincode" name="pincode">
-
-                                            <div class="form-row mb--5">
-                                                <div class="form__group col-md-12">
-                                                    <label for="name" class="form__label form__label--2">Name
-                                                        <span class="required">*</span></label>
-                                                    <input type="text" name="name" id="name" class="form__input form__input--2"
-                                                        required placeholder="Name" value="{{ old('name') }}">
-                                                </div>
+                                        <input type="hidden" id="txtPincode" name="pincode">
+                                        
+                                        <div class="row mb-3">
+                                            <div class="col-12">
+                                                <label style="padding: 10px 0px; display: block; font-weight: 500;">Name <span class="required" style="color:red">*</span></label>
+                                                <input type="text" name="name" id="name" required placeholder="Name*" value="{{ old('name') }}" style="padding: 10px 15px !important; border: 1px solid #e2e2e2; width: 100%; border-radius: 4px;">
                                             </div>
+                                        </div>
 
-                                            <div class="form-row mb--5">
-                                                <div class="form__group col-12">
-                                                    <label for="mobile" class="form__label form__label--2">Mobile <span
-                                                            class="required">*</span></label>
-                                                    <input type="text" name="mobile" id="mobile" class="form__input form__input--2"
-                                                        placeholder="Mobile Number" value="{{ old('mobile') }}" required>
-                                                </div>
+                                        <div class="row mb-3">
+                                            <div class="col-md-6 mb-3 mb-md-0">
+                                                <label style="padding: 10px 0px; display: block; font-weight: 500;">Mobile <span class="required" style="color:red">*</span></label>
+                                                <input type="text" name="mobile" id="mobile" placeholder="Mobile Number*" value="{{ old('mobile') }}" required style="padding: 10px 15px !important; border: 1px solid #e2e2e2; width: 100%; border-radius: 4px;">
                                             </div>
-
-                                            <div class="form-row mb--5">
-                                                <div class="form__group col-12">
-                                                    <label for="email" class="form__label form__label--2">Email Address
-                                                        <span class="required">*</span></label>
-                                                    <input type="email" name="email" id="email" class="form__input form__input--2"
-                                                        value="" placeholder="Email Address" value="{{ old('email') }}" required>
-                                                </div>
+                                            <div class="col-md-6">
+                                                <label style="padding: 10px 0px; display: block; font-weight: 500;">Email Address <span class="required" style="color:red">*</span></label>
+                                                <input type="email" name="email" id="email" placeholder="Email Address*" value="{{ old('email') }}" required style="padding: 10px 15px !important; border: 1px solid #e2e2e2; width: 100%; border-radius: 4px;">
                                             </div>
-
-                                            <div class="form-row mb--5">
-                                                <div class="form__group col-12">
-                                                    <label for="country" class="form__label form__label--2">Country
-                                                        <span class="required">*</span></label>
-                                                    <select id="country" name="country"
-                                                        class="form__input form__input--2 nice-select" required>
-                                                        <option value="">Select a country…</option>
-                                                        <option value="India" selected>India</option>
-                                                    </select>
-                                                </div>
+                                        </div>
+                                        
+                                        <div class="row mb-3">
+                                            <div class="col-md-6 mb-3 mb-md-0">
+                                                <label style="padding: 10px 0px; display: block; font-weight: 500;">Country <span class="required" style="color:red">*</span></label>
+                                                <select id="country" name="country" required style="padding: 10px 15px !important; border: 1px solid #e2e2e2; width: 100%; border-radius: 4px; height: 44px; background: transparent; -webkit-appearance: auto;">
+                                                    <option value="">Select a country…</option>
+                                                    <option value="India" selected>India</option>
+                                                </select>
                                             </div>
-                                            <div class="form-row mb--5">
-                                                <div class="form__group col-12">
-                                                    <label for="address" class="form__label form__label--2">Street
-                                                        Address <span class="required">*</span></label>
-
-                                                    <input type="text" name="address" id="address"
-                                                        class="form__input form__input--2 mb--5"
-                                                        placeholder="House number and street name" required
-                                                        value="{{ old('address') }}">
-                                                </div>
+                                            <div class="col-md-6">
+                                                <label style="padding: 10px 0px; display: block; font-weight: 500;">State <span class="required" style="color:red">*</span></label>
+                                                <select id="territory" name="territory" required style="padding: 10px 15px !important; border: 1px solid #e2e2e2; width: 100%; border-radius: 4px; height: 44px; background: transparent; -webkit-appearance: auto;">
+                                                    <option value="">Select a state…</option>
+                                                    <option value="Andhra Pradesh">Andhra Pradesh</option>
+                                                    <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+                                                    <option value="Assam">Assam</option>
+                                                    <option value="Bihar">Bihar</option>
+                                                    <option value="Chhattisgarh">Chhattisgarh</option>
+                                                    <option value="Goa">Goa</option>
+                                                    <option value="Gujarat">Gujarat</option>
+                                                    <option value="Haryana">Haryana</option>
+                                                    <option value="Himachal Pradesh">Himachal Pradesh</option>
+                                                    <option value="Jharkhand">Jharkhand</option>
+                                                    <option value="Karnataka">Karnataka</option>
+                                                    <option value="Kerala">Kerala</option>
+                                                    <option value="Madhya Pradesh">Madhya Pradesh</option>
+                                                    <option value="Maharashtra">Maharashtra</option>
+                                                    <option value="Manipur">Manipur</option>
+                                                    <option value="Meghalaya">Meghalaya</option>
+                                                    <option value="Mizoram">Mizoram</option>
+                                                    <option value="Nagaland">Nagaland</option>
+                                                    <option value="Odisha">Odisha</option>
+                                                    <option value="Punjab">Punjab</option>
+                                                    <option value="Rajasthan">Rajasthan</option>
+                                                    <option value="Sikkim">Sikkim</option>
+                                                    <option value="Tamil Nadu">Tamil Nadu</option>
+                                                    <option value="Telangana">Telangana</option>
+                                                    <option value="Tripura">Tripura</option>
+                                                    <option value="Uttar Pradesh">Uttar Pradesh</option>
+                                                    <option value="Uttarakhand">Uttarakhand</option>
+                                                    <option value="West Bengal">West Bengal</option>
+                                                    <option value="Andaman and Nicobar Islands">Andaman and Nicobar Islands</option>
+                                                    <option value="Chandigarh">Chandigarh</option>
+                                                    <option value="Dadra and Nagar Haveli and Daman and Diu">Dadra and Nagar Haveli and Daman and Diu</option>
+                                                    <option value="Delhi">Delhi</option>
+                                                    <option value="Jammu and Kashmir">Jammu and Kashmir</option>
+                                                    <option value="Ladakh">Ladakh</option>
+                                                    <option value="Lakshadweep">Lakshadweep</option>
+                                                    <option value="Puducherry">Puducherry</option>
+                                                </select>
                                             </div>
+                                        </div>
 
-                                            <div class="form-row mb--5">
-                                                <div class="form__group col-12">
-                                                    <label for="landmark" class="form__label form__label--2">Landmark</label>
-                                                    <input type="text" name="landmark" id="landmark"
-                                                        class="form__input form__input--2" placeholder="Landmark"
-                                                        value="{{ old('landmark') }}">
-                                                </div>
+                                        <div class="row mb-3">
+                                            <div class="col-12">
+                                                <label style="padding: 10px 0px; display: block; font-weight: 500;">Town / City <span class="required" style="color:red">*</span></label>
+                                                <input type="text" name="city" id="city" required placeholder="Town/City*" value="{{ old('city') }}" style="padding: 10px 15px !important; border: 1px solid #e2e2e2; width: 100%; border-radius: 4px;">
                                             </div>
-
-                                            <div class="form-row mb--5">
-                                                <div class="form__group col-12">
-                                                    <label for="city" class="form__label form__label--2">Town / City
-                                                        <span class="required">*</span></label>
-                                                    <input type="text" name="city" id="city" class="form__input form__input--2"
-                                                        required placeholder="Town/City" value="{{ old('city') }}">
-                                                </div>
+                                        </div>
+                                        
+                                        <div class="row mb-3">
+                                            <div class="col-12">
+                                                <label style="padding: 10px 0px; display: block; font-weight: 500;">House number and street name <span class="required" style="color:red">*</span></label>
+                                                <input type="text" name="address" id="address" required placeholder="Address*" value="{{ old('address') }}" style="padding: 10px 15px !important; border: 1px solid #e2e2e2; width: 100%; border-radius: 4px;">
                                             </div>
+                                        </div>
 
-                                            <div class="form-row mb--5">
-                                                <div class="form__group col-12">
-                                                    <label for="territory" class="form__label form__label--2">State
-                                                        <span class="required">*</span></label>
-                                                    <input type="text" name="territory" id="territory"
-                                                        class="form__input form__input--2" required placeholder="State"
-                                                        value="{{ old('territory') }}">
-                                                </div>
+                                        <div class="row mb-3">
+                                            <div class="col-12">
+                                                <label style="padding: 10px 0px; display: block; font-weight: 500;">Landmark</label>
+                                                <input type="text" name="landmark" id="landmark" placeholder="Landmark" value="{{ old('landmark') }}" style="padding: 10px 15px !important; border: 1px solid #e2e2e2; width: 100%; border-radius: 4px;">
                                             </div>
+                                        </div>
 
-
-                                            <div class="form-row mb--5">
-                                                <div class="form__group type-of-address col-12">
-                                                    <label for="type_of_address" class="form__label form__label--2">Choose
-                                                        Type of
-                                                        Address
-                                                        <span class="required">*</span></label>
-                                                    <input id="home" class="toggle toggle-left" name="type_of_address" type="radio"
-                                                        value="0" {{ old('type_of_address') == 0 ? 'checked' : 'checked' }}>
+                                        <div class="row mb-3 mt-4">
+                                            <div class="col-12">
+                                                <label style="padding: 10px 0px; display: block; margin-bottom: 10px; font-weight: 500;">Choose Type of Address <span class="required" style="color:red">*</span></label>
+                                                <div class="type-of-address">
+                                                    <input id="home" class="toggle toggle-left" name="type_of_address" type="radio" value="0" {{ old('type_of_address') == 0 ? 'checked' : 'checked' }}>
                                                     <label for="home" class="btnn1">Home</label>
-                                                    <input id="corporate" class="toggle toggle-right" name="type_of_address"
-                                                        type="radio" value="1" {{ old('type_of_address') == 1 ? 'checked' : '' }}>
+                                                    <input id="corporate" class="toggle toggle-right" name="type_of_address" type="radio" value="1" {{ old('type_of_address') == 1 ? 'checked' : '' }}>
                                                     <label for="corporate" class="btnn1">Office/Commercial</label>
                                                 </div>
                                             </div>
-
                                         </div>
 
-                                        <div class="form-row">
-                                            <div class="col-md-12 text-center">
-                                                <button type="submit" class="btn btn-block btn-secondary btnSubmit text-black">SAVE
-                                                    DELIVERY
-                                                    ADDRESS</button>
+                                        <div class="row mt-4">
+                                            <div class="col-12">
+                                                <button type="submit" class="btn btn-style1 btnSubmit" style="color: #fff !important; background-color: var(--theme-color) !important; border: 2px solid transparent !important; padding: 12px 30px; font-weight: 600; text-transform: uppercase; width: 100%; border-radius: 4px; transition: all 0.3s ease;">SAVE DELIVERY ADDRESS</button>
                                             </div>
                                         </div>
                                     </form>
@@ -616,102 +620,113 @@
                 <!-- Modal body -->
                 <form action="{{ route('user.addresses.add') }}" method="post" id="formAddAddress">
                     @csrf
-                    <div class="modal-body" style="height: 400px; overflow: auto">
-                        <div class="form">
+                    <div class="modal-body" style="height: 450px; overflow: auto; padding: 25px;">
+                        <div class="form profile-form">
 
-                            <div class="form-row mb--5">
-                                <div class="form__group col-md-12">
-                                    <label for="name" class="form__label form__label--2">Name
-                                        <span class="required">*</span></label>
-                                    <input type="text" name="name" id="name" class="form__input form__input--2" required
-                                        placeholder="Name" value="">
+                            <div class="row mb-3">
+                                <div class="col-12">
+                                    <label style="padding: 10px 0px; display: block; font-weight: 500;">Name <span class="required" style="color:red">*</span></label>
+                                    <input type="text" name="name" id="name" required placeholder="Name*" value="" style="padding: 10px 15px !important; border: 1px solid #e2e2e2; width: 100%; border-radius: 4px;">
                                 </div>
                             </div>
 
-                            <div class="form-row mb--5">
-                                <div class="form__group col-12">
-                                    <label for="mobile" class="form__label form__label--2">Mobile <span
-                                            class="required">*</span></label>
-                                    <input type="text" name="mobile" id="mobile" class="form__input form__input--2"
-                                        placeholder="Mobile Number" required>
+                            <div class="row mb-3">
+                                <div class="col-md-6 mb-3 mb-md-0">
+                                    <label style="padding: 10px 0px; display: block; font-weight: 500;">Mobile <span class="required" style="color:red">*</span></label>
+                                    <input type="text" name="mobile" id="mobile" placeholder="Mobile Number*" required style="padding: 10px 15px !important; border: 1px solid #e2e2e2; width: 100%; border-radius: 4px;">
+                                </div>
+                                <div class="col-md-6">
+                                    <label style="padding: 10px 0px; display: block; font-weight: 500;">Email Address <span class="required" style="color:red">*</span></label>
+                                    <input type="email" name="email" id="email" placeholder="Email Address*" required style="padding: 10px 15px !important; border: 1px solid #e2e2e2; width: 100%; border-radius: 4px;">
                                 </div>
                             </div>
-
-                            <div class="form-row mb--5">
-                                <div class="form__group col-12">
-                                    <label for="email" class="form__label form__label--2">Email Address
-                                        <span class="required">*</span></label>
-                                    <input type="email" name="email" id="email" class="form__input form__input--2" value=""
-                                        placeholder="Email Address" required>
-                                </div>
-                            </div>
-
-                            <div class="form-row mb--5">
-                                <div class="form__group col-12">
-                                    <label for="country" class="form__label form__label--2">Country
-                                        <span class="required">*</span></label>
-                                    <select id="country" name="country" class="form__input form__input--2 nice-select"
-                                        required>
+                            
+                            <div class="row mb-3">
+                                <div class="col-md-6 mb-3 mb-md-0">
+                                    <label style="padding: 10px 0px; display: block; font-weight: 500;">Country <span class="required" style="color:red">*</span></label>
+                                    <select id="country" name="country" required style="padding: 10px 15px !important; border: 1px solid #e2e2e2; width: 100%; border-radius: 4px; height: 44px; background: transparent; -webkit-appearance: auto;">
                                         <option value="">Select a country…</option>
                                         <option value="India" selected>India</option>
                                     </select>
                                 </div>
-                            </div>
-                            <div class="form-row mb--5">
-                                <div class="form__group col-12">
-                                    <label for="pincode_modal" class="form__label form__label--2">Pincode
-                                        <span class="required">*</span></label>
-                                    <input type="text" name="pincode" id="pincode_modal" class="form__input form__input--2"
-                                        placeholder="Pincode" required>
+                                <div class="col-md-6">
+                                    <label style="padding: 10px 0px; display: block; font-weight: 500;">Pincode <span class="required" style="color:red">*</span></label>
+                                    <input type="text" name="pincode" id="pincode_modal" placeholder="Pincode*" required style="padding: 10px 15px !important; border: 1px solid #e2e2e2; width: 100%; border-radius: 4px;">
                                 </div>
                             </div>
-                            <div class="form-row mb--5">
-                                <div class="form__group col-12">
-                                    <label for="address" class="form__label form__label--2">Street Address <span
-                                            class="required">*</span></label>
-
-                                    <input type="text" name="address" id="address" class="form__input form__input--2 mb--5"
-                                        placeholder="House number and street name" required value="">
+                            
+                            <div class="row mb-3">
+                                <div class="col-12">
+                                    <label style="padding: 10px 0px; display: block; font-weight: 500;">House number and street name <span class="required" style="color:red">*</span></label>
+                                    <input type="text" name="address" id="address" required placeholder="Address*" value="" style="padding: 10px 15px !important; border: 1px solid #e2e2e2; width: 100%; border-radius: 4px;">
                                 </div>
                             </div>
-
-                            <div class="form-row mb--5">
-                                <div class="form__group col-12">
-                                    <label for="landmark" class="form__label form__label--2">Landmark</label>
-                                    <input type="text" name="landmark" id="landmark" class="form__input form__input--2"
-                                        placeholder="Landmark" value="">
+                            
+                            <div class="row mb-3">
+                                <div class="col-12">
+                                    <label style="padding: 10px 0px; display: block; font-weight: 500;">Landmark</label>
+                                    <input type="text" name="landmark" id="landmark" placeholder="Landmark" value="" style="padding: 10px 15px !important; border: 1px solid #e2e2e2; width: 100%; border-radius: 4px;">
                                 </div>
                             </div>
 
-                            <div class="form-row mb--5">
-                                <div class="form__group col-12">
-                                    <label for="city" class="form__label form__label--2">Town / City
-                                        <span class="required">*</span></label>
-                                    <input type="text" name="city" id="city" class="form__input form__input--2" required
-                                        placeholder="Town/City" value="">
+                            <div class="row mb-3">
+                                <div class="col-md-6 mb-3 mb-md-0">
+                                    <label style="padding: 10px 0px; display: block; font-weight: 500;">Town / City <span class="required" style="color:red">*</span></label>
+                                    <input type="text" name="city" id="city" required placeholder="Town/City*" value="" style="padding: 10px 15px !important; border: 1px solid #e2e2e2; width: 100%; border-radius: 4px;">
+                                </div>
+                                <div class="col-md-6">
+                                    <label style="padding: 10px 0px; display: block; font-weight: 500;">State <span class="required" style="color:red">*</span></label>
+                                    <select id="territory" name="territory" required style="padding: 10px 15px !important; border: 1px solid #e2e2e2; width: 100%; border-radius: 4px; height: 44px; background: transparent; -webkit-appearance: auto;">
+                                        <option value="">Select a state…</option>
+                                        <option value="Andhra Pradesh">Andhra Pradesh</option>
+                                        <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+                                        <option value="Assam">Assam</option>
+                                        <option value="Bihar">Bihar</option>
+                                        <option value="Chhattisgarh">Chhattisgarh</option>
+                                        <option value="Goa">Goa</option>
+                                        <option value="Gujarat">Gujarat</option>
+                                        <option value="Haryana">Haryana</option>
+                                        <option value="Himachal Pradesh">Himachal Pradesh</option>
+                                        <option value="Jharkhand">Jharkhand</option>
+                                        <option value="Karnataka">Karnataka</option>
+                                        <option value="Kerala">Kerala</option>
+                                        <option value="Madhya Pradesh">Madhya Pradesh</option>
+                                        <option value="Maharashtra">Maharashtra</option>
+                                        <option value="Manipur">Manipur</option>
+                                        <option value="Meghalaya">Meghalaya</option>
+                                        <option value="Mizoram">Mizoram</option>
+                                        <option value="Nagaland">Nagaland</option>
+                                        <option value="Odisha">Odisha</option>
+                                        <option value="Punjab">Punjab</option>
+                                        <option value="Rajasthan">Rajasthan</option>
+                                        <option value="Sikkim">Sikkim</option>
+                                        <option value="Tamil Nadu">Tamil Nadu</option>
+                                        <option value="Telangana">Telangana</option>
+                                        <option value="Tripura">Tripura</option>
+                                        <option value="Uttar Pradesh">Uttar Pradesh</option>
+                                        <option value="Uttarakhand">Uttarakhand</option>
+                                        <option value="West Bengal">West Bengal</option>
+                                        <option value="Andaman and Nicobar Islands">Andaman and Nicobar Islands</option>
+                                        <option value="Chandigarh">Chandigarh</option>
+                                        <option value="Dadra and Nagar Haveli and Daman and Diu">Dadra and Nagar Haveli and Daman and Diu</option>
+                                        <option value="Delhi">Delhi</option>
+                                        <option value="Jammu and Kashmir">Jammu and Kashmir</option>
+                                        <option value="Ladakh">Ladakh</option>
+                                        <option value="Lakshadweep">Lakshadweep</option>
+                                        <option value="Puducherry">Puducherry</option>
+                                    </select>
                                 </div>
                             </div>
 
-                            <div class="form-row mb--5">
-                                <div class="form__group col-12">
-                                    <label for="territory" class="form__label form__label--2">State
-                                        <span class="required">*</span></label>
-                                    <input type="text" name="territory" id="territory" class="form__input form__input--2"
-                                        required placeholder="State" value="">
-                                </div>
-                            </div>
-
-
-                            <div class="form-row mb--5">
-                                <div class="form__group type-of-address col-12">
-                                    <label for="type_of_address" class="form__label form__label--2">Choose Type of Address
-                                        <span class="required">*</span></label>
-                                    <input id="home-new" class="toggle toggle-left" name="type_of_address" type="radio"
-                                        value="0" checked>
-                                    <label for="home-new" class="btnn1">Home</label>
-                                    <input id="corporate-new" class="toggle toggle-right" name="type_of_address"
-                                        type="radio" value="1">
-                                    <label for="corporate-new" class="btnn1">Office/Commercial</label>
+                            <div class="row mb-3 mt-4">
+                                <div class="col-12">
+                                    <label style="padding: 10px 0px; display: block; margin-bottom: 10px; font-weight: 500;">Choose Type of Address <span class="required" style="color:red">*</span></label>
+                                    <div class="type-of-address">
+                                        <input id="home-new" class="toggle toggle-left" name="type_of_address" type="radio" value="0" checked>
+                                        <label for="home-new" class="btnn1">Home</label>
+                                        <input id="corporate-new" class="toggle toggle-right" name="type_of_address" type="radio" value="1">
+                                        <label for="corporate-new" class="btnn1">Office/Commercial</label>
+                                    </div>
                                 </div>
                             </div>
 
@@ -976,80 +991,102 @@
                                 var data = result.data;
 
                                 var html =
-                                    `<div class="form-row mb--5">
-                                            <div class="form__group col-md-12">
-                                                <label for="name" class="form__label form__label--2">Name
-                                                    <span class="required">*</span></label>
-                                                <input type="text" name="name" id="name" class="form__input form__input--2" required
-                                                    placeholder="Name" value="${data.name}">
+                                    `<div class="form profile-form">
+
+                                        <div class="row mb-3">
+                                            <div class="col-12">
+                                                <label style="padding: 10px 0px; display: block; font-weight: 500;">Name <span class="required" style="color:red">*</span></label>
+                                                <input type="text" name="name" id="name" required placeholder="Name*" value="${data.name}" style="padding: 10px 15px !important; border: 1px solid #e2e2e2; width: 100%; border-radius: 4px;">
                                             </div>
                                         </div>
 
-                                        <div class="form-row mb--5">
-                                            <div class="form__group col-md-12">
-                                                <label for="mobile" class="form__label form__label--2">Mobile
-                                                    <span class="required">*</span></label>
-                                                <input type="number" name="mobile" id="mobile" class="form__input form__input--2" required
-                                                    placeholder="Mobile" value="${data.mobile}">
+                                        <div class="row mb-3">
+                                            <div class="col-md-6 mb-3 mb-md-0">
+                                                <label style="padding: 10px 0px; display: block; font-weight: 500;">Mobile <span class="required" style="color:red">*</span></label>
+                                                <input type="number" name="mobile" id="mobile" placeholder="Mobile Number*" value="${data.mobile}" required style="padding: 10px 15px !important; border: 1px solid #e2e2e2; width: 100%; border-radius: 4px;">
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label style="padding: 10px 0px; display: block; font-weight: 500;">Pincode <span class="required" style="color:red">*</span></label>
+                                                <input type="text" name="pincode" id="pincode" placeholder="Pincode*" value="${data.pincode}" required style="padding: 10px 15px !important; border: 1px solid #e2e2e2; width: 100%; border-radius: 4px;">
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="row mb-3">
+                                            <div class="col-12">
+                                                <label style="padding: 10px 0px; display: block; font-weight: 500;">House number and street name <span class="required" style="color:red">*</span></label>
+                                                <input type="text" name="address" id="address" required placeholder="Address*" value="${data.address}" style="padding: 10px 15px !important; border: 1px solid #e2e2e2; width: 100%; border-radius: 4px;">
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="row mb-3">
+                                            <div class="col-12">
+                                                <label style="padding: 10px 0px; display: block; font-weight: 500;">Landmark</label>
+                                                <input type="text" name="landmark" id="landmark" placeholder="Landmark" value="${data.landmark ? data.landmark : ''}" style="padding: 10px 15px !important; border: 1px solid #e2e2e2; width: 100%; border-radius: 4px;">
                                             </div>
                                         </div>
 
-                                        <div class="form-row mb--5">
-                                            <div class="form__group col-12">
-                                                <label for="address" class="form__label form__label--2">Street
-                                                    Address <span class="required">*</span></label>
-
-                                                <input type="text" name="address" id="address" class="form__input form__input--2 mb--5"
-                                                    placeholder="House number and street name" required value="${data.address}" required>
+                                        <div class="row mb-3">
+                                            <div class="col-md-6 mb-3 mb-md-0">
+                                                <label style="padding: 10px 0px; display: block; font-weight: 500;">Town / City <span class="required" style="color:red">*</span></label>
+                                                <input type="text" name="city" id="city" required placeholder="Town/City*" value="${data.city}" style="padding: 10px 15px !important; border: 1px solid #e2e2e2; width: 100%; border-radius: 4px;">
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label style="padding: 10px 0px; display: block; font-weight: 500;">State <span class="required" style="color:red">*</span></label>
+                                                <select id="territory" name="territory" required style="padding: 10px 15px !important; border: 1px solid #e2e2e2; width: 100%; border-radius: 4px; height: 44px; background: transparent; -webkit-appearance: auto;">
+                                                    <option value="">Select a state…</option>
+                                                    <option value="Andhra Pradesh" ${data.territory == 'Andhra Pradesh' ? 'selected' : ''}>Andhra Pradesh</option>
+                                                    <option value="Arunachal Pradesh" ${data.territory == 'Arunachal Pradesh' ? 'selected' : ''}>Arunachal Pradesh</option>
+                                                    <option value="Assam" ${data.territory == 'Assam' ? 'selected' : ''}>Assam</option>
+                                                    <option value="Bihar" ${data.territory == 'Bihar' ? 'selected' : ''}>Bihar</option>
+                                                    <option value="Chhattisgarh" ${data.territory == 'Chhattisgarh' ? 'selected' : ''}>Chhattisgarh</option>
+                                                    <option value="Goa" ${data.territory == 'Goa' ? 'selected' : ''}>Goa</option>
+                                                    <option value="Gujarat" ${data.territory == 'Gujarat' ? 'selected' : ''}>Gujarat</option>
+                                                    <option value="Haryana" ${data.territory == 'Haryana' ? 'selected' : ''}>Haryana</option>
+                                                    <option value="Himachal Pradesh" ${data.territory == 'Himachal Pradesh' ? 'selected' : ''}>Himachal Pradesh</option>
+                                                    <option value="Jharkhand" ${data.territory == 'Jharkhand' ? 'selected' : ''}>Jharkhand</option>
+                                                    <option value="Karnataka" ${data.territory == 'Karnataka' ? 'selected' : ''}>Karnataka</option>
+                                                    <option value="Kerala" ${data.territory == 'Kerala' ? 'selected' : ''}>Kerala</option>
+                                                    <option value="Madhya Pradesh" ${data.territory == 'Madhya Pradesh' ? 'selected' : ''}>Madhya Pradesh</option>
+                                                    <option value="Maharashtra" ${data.territory == 'Maharashtra' ? 'selected' : ''}>Maharashtra</option>
+                                                    <option value="Manipur" ${data.territory == 'Manipur' ? 'selected' : ''}>Manipur</option>
+                                                    <option value="Meghalaya" ${data.territory == 'Meghalaya' ? 'selected' : ''}>Meghalaya</option>
+                                                    <option value="Mizoram" ${data.territory == 'Mizoram' ? 'selected' : ''}>Mizoram</option>
+                                                    <option value="Nagaland" ${data.territory == 'Nagaland' ? 'selected' : ''}>Nagaland</option>
+                                                    <option value="Odisha" ${data.territory == 'Odisha' ? 'selected' : ''}>Odisha</option>
+                                                    <option value="Punjab" ${data.territory == 'Punjab' ? 'selected' : ''}>Punjab</option>
+                                                    <option value="Rajasthan" ${data.territory == 'Rajasthan' ? 'selected' : ''}>Rajasthan</option>
+                                                    <option value="Sikkim" ${data.territory == 'Sikkim' ? 'selected' : ''}>Sikkim</option>
+                                                    <option value="Tamil Nadu" ${data.territory == 'Tamil Nadu' ? 'selected' : ''}>Tamil Nadu</option>
+                                                    <option value="Telangana" ${data.territory == 'Telangana' ? 'selected' : ''}>Telangana</option>
+                                                    <option value="Tripura" ${data.territory == 'Tripura' ? 'selected' : ''}>Tripura</option>
+                                                    <option value="Uttar Pradesh" ${data.territory == 'Uttar Pradesh' ? 'selected' : ''}>Uttar Pradesh</option>
+                                                    <option value="Uttarakhand" ${data.territory == 'Uttarakhand' ? 'selected' : ''}>Uttarakhand</option>
+                                                    <option value="West Bengal" ${data.territory == 'West Bengal' ? 'selected' : ''}>West Bengal</option>
+                                                    <option value="Andaman and Nicobar Islands" ${data.territory == 'Andaman and Nicobar Islands' ? 'selected' : ''}>Andaman and Nicobar Islands</option>
+                                                    <option value="Chandigarh" ${data.territory == 'Chandigarh' ? 'selected' : ''}>Chandigarh</option>
+                                                    <option value="Dadra and Nagar Haveli and Daman and Diu" ${data.territory == 'Dadra and Nagar Haveli and Daman and Diu' ? 'selected' : ''}>Dadra and Nagar Haveli and Daman and Diu</option>
+                                                    <option value="Delhi" ${data.territory == 'Delhi' ? 'selected' : ''}>Delhi</option>
+                                                    <option value="Jammu and Kashmir" ${data.territory == 'Jammu and Kashmir' ? 'selected' : ''}>Jammu and Kashmir</option>
+                                                    <option value="Ladakh" ${data.territory == 'Ladakh' ? 'selected' : ''}>Ladakh</option>
+                                                    <option value="Lakshadweep" ${data.territory == 'Lakshadweep' ? 'selected' : ''}>Lakshadweep</option>
+                                                    <option value="Puducherry" ${data.territory == 'Puducherry' ? 'selected' : ''}>Puducherry</option>
+                                                </select>
                                             </div>
                                         </div>
 
-                                        <div class="form-row mb--5">
-                                            <div class="form__group col-12">
-                                                <label for="landmark" class="form__label form__label--2">Landmark</label>
-                                                <input type="text" name="landmark" id="landmark" class="form__input form__input--2"
-                                                    placeholder="Landmark" value="${data.landmark ? data.landmark : ''}">
+                                        <div class="row mb-3 mt-4">
+                                            <div class="col-12">
+                                                <label style="padding: 10px 0px; display: block; margin-bottom: 10px; font-weight: 500;">Choose Type of Address <span class="required" style="color:red">*</span></label>
+                                                <div class="type-of-address">
+                                                    <input id="home-update" class="toggle toggle-left" name="type_of_address" type="radio" value="0" ${data.type_of_address == '0' ? 'checked' : ''}>
+                                                    <label for="home-update" class="btnn1">Home</label>
+                                                    <input id="corporate-update" class="toggle toggle-right" name="type_of_address" type="radio" value="1" ${data.type_of_address == '1' ? 'checked' : ''}>
+                                                    <label for="corporate-update" class="btnn1">Office/Commercial</label>
+                                                </div>
                                             </div>
                                         </div>
-
-                                        <div class="form-row mb--5">
-                                            <div class="form__group col-12">
-                                                <label for="city" class="form__label form__label--2">Town / City
-                                                    <span class="required">*</span></label>
-                                                <input type="text" name="city" id="city" class="form__input form__input--2" required
-                                                    placeholder="Town/City" value="${data.city}" required>
-                                            </div>
-                                        </div>
-
-                                        <div class="form-row mb--5">
-                                            <div class="form__group col-12">
-                                                <label for="territory" class="form__label form__label--2">State
-                                                    <span class="required">*</span></label>
-                                                <input type="text" name="territory" id="territory" class="form__input form__input--2"
-                                                    required placeholder="State" value="${data.territory}" required>
-                                            </div>
-                                        </div>
-
-                                        <div class="form-row mb--5">
-                                            <div class="form__group col-12">
-                                                <label for="pincode" class="form__label form__label--2">Pincode
-                                                    <span class="required">*</span></label>
-                                                <input type="text" name="pincode" id="pincode" class="form__input form__input--2"
-                                                    required placeholder="Pincode" value="${data.pincode}" required>
-                                            </div>
-                                        </div>
-
-                                        <div class="form-row mb--5">
-                                            <div class="form__group type-of-address col-12">
-                                                <label for="type_of_address" class="form__label form__label--2">Choose Type of Address
-                                                    <span class="required">*</span></label>
-                                                <input id="home-update" class="toggle toggle-left" name="type_of_address" type="radio" value="0" ${data.type_of_address == '0' ? 'checked' : ''}>
-                                                <label for="home-update" class="btnn1">Home</label>
-                                                <input id="corporate-update" class="toggle toggle-right" name="type_of_address" type="radio" value="1" ${data.type_of_address == '1' ? 'checked' : ''}>
-                                                <label for="corporate-update" class="btnn1">Office/Commercial</label>
-                                            </div>
-                                        </div>
-                                        <input type="hidden" name="address_id" value="${data.id}">`
+                                        <input type="hidden" name="address_id" value="${data.id}">
+                                    </div>`
 
                                 $('#formEdit').html(html);
                                 $('#edit-address').modal('show');

@@ -30,6 +30,7 @@
                             <th>Name</th>
                             <th>Mobile</th>
                             <th>Email</th>
+                            <th>Created At</th>
                             <th>Status</th>
                             <th>Action</th>
                         </tr>
@@ -51,6 +52,7 @@
                             <td>{{ $user->name }}</td>
                             <td>{{ $user->mobile }}</td>
                             <td>{{ $user->email }}</td>
+                            <td>{{ $user->created_at ? $user->created_at->format('d M Y, h:i A') : 'N/A' }}</td>
                             <td>
                                 {{ $user->status == true ? 'Active' : 'Blocked' }}
                             </td>
@@ -130,6 +132,7 @@
                             <th>Name</th>
                             <th>Mobile</th>
                             <th>Email</th>
+                            <th>Created At</th>
                             <th>Status</th>
                             <th>Action</th>
                         </tr>
