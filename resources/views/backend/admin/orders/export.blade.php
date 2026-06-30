@@ -35,7 +35,7 @@
         <tr></tr>
         @foreach($orders as $key => $order)
         <tr>
-            <td>{{ $order->id }}</td>
+            <td>{{ $order->order_number }}</td>
             <td>{{ $order->user->name }}</td>
             <td>{{ $order->user?->email ?? 'N/A' }}</td>
             <td>{{ $order->user?->mobile ?? 'N/A' }}</td>

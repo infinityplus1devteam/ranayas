@@ -89,7 +89,7 @@
                     <tbody>
                         @forelse ($user->orders as $order)
                         <tr>
-                            <td>{{ $order->id }}</td>
+                            <td>{{ $order->order_number }}</td>
                             <td>{{ $order->city }}</td>
                             <td>{{ $order->pincode }}</td>
                             <td>{{ $order->tbt }}</td>

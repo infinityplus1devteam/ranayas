@@ -171,7 +171,7 @@
                 <div class="alert alert-success">
 
                     <h4>
-                        Hi You have recieved New Order of Order ID {{ $order->id }}
+                        Hi You have recieved New Order of Order ID {{ $order->order_number }}
                     </h4>
                 </div>
                 <table border="1" class="table table-bordered table-responsive">
@@ -189,7 +189,7 @@
                             order ID :
                         </td>
                         <td>
-                            {{ $order->id }}
+                            {{ $order->order_number }}
                         </td>
                     </tr>
                     <tr>

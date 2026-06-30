@@ -336,7 +336,7 @@
                                 </div>
 
                                 <div class="col">
-                                    {{ $orders->links('vendor.pagination.default') }}
+                                    {{ $orders->links('pagination::bootstrap-4') }}
                                 </div>
                             </div>
                         </div>
@@ -375,6 +375,20 @@
     .review-submit-btn:hover {
         background-color: #8a2be2 !important;
         color: #ffffff !important;
+    }
+
+    .pagination .page-link {
+        color: #8a2be2;
+    }
+    .pagination .page-item.active .page-link {
+        background-color: #8a2be2;
+        border-color: #8a2be2;
+        color: #fff;
+    }
+    .pagination .page-link:hover {
+        color: #fff;
+        background-color: #8a2be2;
+        border-color: #8a2be2;
     }
 </style>
 @endsection

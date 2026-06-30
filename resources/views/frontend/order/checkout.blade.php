@@ -197,7 +197,7 @@
                                                         </ul>
                                                     </div>
                                                     <ul class="order-history">
-                                                        <li class="order-details">
+                                                        <li class="order-details" style="margin-top: 15px; padding-top: 5px;">
                                                             <span>Total:</span>
                                                             <span>₹<span id="cart-total-span">{{ Cart::getTotal() }}</span></span>
                                                         </li>
@@ -298,15 +298,15 @@
                                                         @if ($isCodAvailable)
                                                             <div class="payment-group pymt-btn mb--10">
                                                                 <div class="payment-radio">
-                                                                    <label for="paytm" class="cb-container">
-                                                                        NETBANKING/PAYTM
-                                                                        <input type="radio" value="paytm" name="payment_mode" id="paytm">
+                                                                    <label for="razorpay" class="cb-container">
+                                                                        NETBANKING/CARD/UPI
+                                                                        <input type="radio" value="razorpay" name="payment_mode" id="razorpay">
                                                                         <span class="rb-checkmark"></span>
                                                                     </label>
                                                                 </div>
                                                             </div>
                                                         @else
-                                                            <input type="hidden" value="paytm" name="payment_mode" id="paytm">
+                                                            <input type="hidden" value="razorpay" name="payment_mode" id="razorpay">
                                                         @endif
 
                                                         <div class="checkout-btn">

@@ -42,7 +42,7 @@
                             data-order_id="{{ $razorpay_order_id }}"
                             data-buttontext="Pay Now"
                             data-name="Ranayas"
-                            data-description="Order #{{ $order->id }}"
+                            data-description="Order #{{ $order->order_number }}"
                             data-prefill.name="{{ $order->user_name }}"
                             data-prefill.email="{{ $order->user->email }}"
                             data-prefill.contact="{{ $order->user->mobile }}"

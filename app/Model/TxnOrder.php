@@ -26,4 +26,9 @@ class TxnOrder extends Model
         return $this->belongsTo(Transaction::class, 'id', 'order_id');
     }
 
+    public function getOrderNumberAttribute()
+    {
+        return 1000000000 + $this->id;
+    }
+
 }

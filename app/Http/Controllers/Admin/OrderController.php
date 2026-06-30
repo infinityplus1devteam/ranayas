@@ -26,7 +26,8 @@ class OrderController extends Controller
         $orders = TxnOrder::whereNotIn('status', ['nc'])->orderBy('id', 'DESC');
 
         if ($request->filled('order_id')) {
-            $orders = $orders->where('id', $request->order_id);
+            $searchId = $request->order_id > 1000000000 ? $request->order_id - 1000000000 : $request->order_id;
+            $orders = $orders->where('id', $searchId);
         }
 
         if ($request->filled('city')) {
@@ -107,7 +108,7 @@ class OrderController extends Controller
             $result = json_decode($res, true);
             $pdf = PDF::loadView('backend.admin.orders.generate-label', ['label' => $label]);
 
-            return $pdf->download('order_no_' . $id . '.pdf');
+            return $pdf->download('order_no_' . $order->order_number . '.pdf');
 
         } catch (\Exception $ex) {
             if ($ex instanceof \Illuminate\Database\Eloquent\ModelNotFoundException) {
@@ -215,8 +216,8 @@ class OrderController extends Controller
                 Mail::send(['html' => 'backend.admin.invoices.empty'], ['invoice' => $order], function ($message) use ($order, $pdf) {
                     $message->from('order-confirmation@ranayas.com', 'Ranayas');
                     $message->to($order->user->email, $order->user->name);
-                    $message->subject('Invoice copy of Order No ' . $order->id . ' From Ranayas');
-                    $message->attachData($pdf->output(), 'invoice_no_' . $order->id . '.pdf');
+                    $message->subject('Invoice copy of Order No ' . $order->order_number . ' From Ranayas');
+                    $message->attachData($pdf->output(), 'invoice_no_' . $order->order_number . '.pdf');
                 });
 
             }

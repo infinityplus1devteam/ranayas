@@ -118,7 +118,7 @@
                     <tbody>
                         @forelse ($orders as $order)
                         <tr>
-                            <td>{{ $order->id }}</td>
+                            <td>{{ $order->order_number }}</td>
                             <td>{{ $order->user_name }}</td>
                             <td>&#8377;{{ $order->total }}</td>
                             <td class="text-capitalize">{{ $order->status }}</td>

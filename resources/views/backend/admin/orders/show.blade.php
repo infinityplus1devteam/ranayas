@@ -23,7 +23,7 @@
                     <tbody>
                         <tr>
                             <th>Order ID</th>
-                            <td>{{ $order->id }}</td>
+                            <td>{{ $order->order_number }}</td>
                         </tr>
                         <tr>
                             <th>Customer Name</th>

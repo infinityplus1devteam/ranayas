@@ -35,7 +35,7 @@
                             <h2 class="heading-secondary mb-4">Get in touch</h2>
                             <p class="mb-4 text-muted">Have a question or feedback? We would love to hear from you. Fill out the form below and we'll get back to you as soon as possible.</p>
                             
-                            <form action="{{ url('sendmail') }}" class="form custom-contact-form" method="POST">
+                            <form action="{{ url('contact') }}" class="form custom-contact-form" method="POST">
                                 @csrf
                                 <!-- Honeypot field -->
                                 <input type="text" name="website" style="display:none !important;" tabindex="-1" autocomplete="off">
@@ -44,8 +44,8 @@
                                     <div class="col-md-6 mb-4">
                                         <div class="form-floating">
                                             <input type="text" placeholder="Name *"
-                                                class="form-control" id="floatingInput" name="form_name"
-                                                required="required" value="{{ old('form_name') }}"
+                                                class="form-control" id="floatingInput" name="name"
+                                                required="required" value="{{ old('name') }}"
                                                 oninvalid="this.setCustomValidity('Please enter name')"
                                                 oninput="setCustomValidity('')">
                                             <label for="floatingInput">Name *</label>
@@ -55,8 +55,8 @@
                                     <div class="col-md-6 mb-4">
                                         <div class="form-floating">
                                             <input type="email" placeholder="E-mail *"
-                                                class="form-control" name="form_email" id="floatingEmail"
-                                                required="required" value="{{ old('form_email') }}"
+                                                class="form-control" name="email" id="floatingEmail"
+                                                required="required" value="{{ old('email') }}"
                                                 oninvalid="this.setCustomValidity('Please enter email')"
                                                 oninput="setCustomValidity('')">
                                             <label for="floatingEmail">Email *</label>
@@ -66,8 +66,8 @@
                                     <div class="col-md-6 mb-4">
                                         <div class="form-floating">
                                             <input type="text" placeholder="Phone"
-                                                class="form-control" id="floatingPhone" name="form_phone"
-                                                required="required" value="{{ old('form_phone') }}"
+                                                class="form-control" id="floatingPhone" name="mobile"
+                                                required="required" value="{{ old('mobile') }}"
                                                 oninvalid="this.setCustomValidity('Please enter mobile')"
                                                 oninput="setCustomValidity('')">
                                             <label for="floatingPhone">Phone *</label>
@@ -77,16 +77,16 @@
                                     <div class="col-md-6 mb-4">
                                         <div class="form-floating">
                                             <input type="text" placeholder="Subject"
-                                                class="form-control" id="floatingSubject" name="form_subject"
-                                                value="{{ old('form_subject') }}">
+                                                class="form-control" id="floatingSubject" name="subject"
+                                                value="{{ old('subject') }}">
                                             <label for="floatingSubject">Subject</label>
                                         </div>
                                     </div>
 
                                     <div class="col-md-12 mb-4">
                                         <div class="form-floating">
-                                            <textarea placeholder="Type Your Message" name="form_message" id="messageArea"
-                                                class="form-control" style="height: 150px">{{ old('form_message') }}</textarea>
+                                            <textarea placeholder="Type Your Message" name="message" id="messageArea"
+                                                class="form-control" style="height: 150px">{{ old('message') }}</textarea>
                                             <label for="messageArea">Message *</label>
                                         </div>
                                     </div>

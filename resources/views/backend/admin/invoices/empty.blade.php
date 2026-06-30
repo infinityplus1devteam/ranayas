@@ -178,7 +178,7 @@
             <div class="col-sm-12">
                 <div class="alert alert-success">
                     <h4>
-                        Hi {{ $invoice->user_name }}, find Invoice Copy of Order No {{ $invoice->id }} in below
+                        Hi {{ $invoice->user_name }}, find Invoice Copy of Order No {{ $invoice->order_number }} in below
                         attachments
                     </h4>
                 </div>

@@ -170,7 +170,7 @@
             <div class="col-sm-12">
                 <div class="alert alert-danger">
                     <h4>
-                        Hi Order has been Cancelled, Order ID {{ $order->id }}
+                        Hi Order has been Cancelled, Order ID {{ $order->order_number }}
                     </h4>
                 </div>
                 <table border="1" class="table table-bordered table-responsive">
@@ -190,7 +190,7 @@
                             order ID :
                         </td>
                         <td>
-                            {{ $order->id }}
+                            {{ $order->order_number }}
                         </td>
                     </tr>
 

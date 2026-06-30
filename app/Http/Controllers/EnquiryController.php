@@ -55,11 +55,15 @@ class EnquiryController extends Controller
             'message' => $request->message,
         ]);
 
-        Mail::send(['html' => 'backend.mails.enquiry'], ['data' => $data], function ($message) {
-            $message->from('contact@ranayas.com', 'Ranayas');
-            $message->to('contact@ranayas.com', 'Ranayas');
-            $message->subject('New Enquiry From Ranayas');
-        });
+        try {
+            Mail::send(['html' => 'backend.mails.enquiry'], ['data' => $data], function ($message) {
+                $message->from(env('MAIL_FROM_ADDRESS', 'info@ranayas.com'), 'Ranayas');
+                $message->to('info@ranayas.com', 'Ranayas Admin');
+                $message->subject('New Enquiry From Ranayas');
+            });
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Failed to send contact enquiry email: ' . $e->getMessage());
+        }
 
         connectify('success', 'Enquiry Success', 'Thank you for contacting us, we\'ll get back to you soon !');
 

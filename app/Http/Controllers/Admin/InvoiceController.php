@@ -21,7 +21,8 @@ class InvoiceController extends Controller
         $orders = TxnOrder::whereNotIn('status', ['nc'])->orderBy('id', 'DESC');
 
         if ($request->filled('order_id')) {
-            $orders = $orders->where('id', $request->order_id);
+            $searchId = $request->order_id > 1000000000 ? $request->order_id - 1000000000 : $request->order_id;
+            $orders = $orders->where('id', $searchId);
         }
 
         if ($request->filled('city')) {
@@ -134,7 +135,7 @@ class InvoiceController extends Controller
 
             // Storage::put('public/pdf/order_no_' . $id . '.pdf', $pdf->output());
 
-            return $pdf->download('order_no_' . $id . '.pdf');
+            return $pdf->download('order_no_' . $invoice->order_number . '.pdf');
 
         } catch (\Exception $ex) {
             if ($ex instanceof \Illuminate\Database\Eloquent\ModelNotFoundException) {
@@ -155,13 +156,14 @@ class InvoiceController extends Controller
     {
         try {
 
-            $invoice = TxnOrder::where('id', $request->order_id)->with('details', 'user', 'transaction')->firstOrFail();
+            $searchId = $request->order_id > 1000000000 ? $request->order_id - 1000000000 : $request->order_id;
+            $invoice = TxnOrder::where('id', $searchId)->with('details', 'user', 'transaction')->firstOrFail();
             $pdf = PDF::loadView('backend.admin.invoices.download', ['invoice' => $invoice]);
             Mail::send(['html' => 'backend.admin.invoices.empty'], ['invoice' => $invoice], function ($message) use ($invoice, $pdf) {
                 $message->from(env('MAIL_FROM_ADDRESS', 'info@ranayas.com'), env('MAIL_FROM_NAME', 'Ranayas'));
                 $message->to($invoice->user->email, $invoice->user->name);
-                $message->subject('Invoice copy of Order No ' . $invoice->id . ' From Ranayas');
-                $message->attachData($pdf->output(), 'order_no_' . $invoice->id . '.pdf');
+                $message->subject('Invoice copy of Order No ' . $invoice->order_number . ' From Ranayas');
+                $message->attachData($pdf->output(), 'order_no_' . $invoice->order_number . '.pdf');
             });
 
             connectify('success', 'invoice Sent', 'Invoice Sent Successfully !');

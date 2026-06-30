@@ -190,7 +190,7 @@
                             order ID :
                         </td>
                         <td>
-                            {{ $order->id }}
+                            {{ $order->order_number }}
                         </td>
                     </tr>
                     <tr>

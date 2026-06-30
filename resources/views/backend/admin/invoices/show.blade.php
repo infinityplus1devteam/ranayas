@@ -216,8 +216,7 @@
                         <td colspan="2">
                             <div class="text-center">
                                 <p class="company_title text-center"> Ranayas </p>
-                                <p class="company_address"> G1 sagar chamber saini enclave Vikas mark, New Delhi
-                                    110092.</p>
+                                <p class="company_address"> Kandivali West, Mumbai, Maharashtra, India</p>
                             </div>
                         </td>
                     </tr>
@@ -231,7 +230,7 @@
                     </tr>
                     <tr>
                         <td colspan="2">
-                            Contact: 9619614785
+                            Contact: 9820760951
                             <span class="invoice_span">Email id : info@ranayas.com</span>
                         </td>
                     </tr>
@@ -244,7 +243,7 @@
                     </tr>
                     <tr>
                         <td colspan="2">
-                            Invoice No : {{ $invoice->id }}
+                            Invoice No : {{ $invoice->order_number }}
                             <span class="invoice_span">Order Date :
                                 {{ date('d M Y', strtotime($invoice->created_at)) }}
                             </span>
@@ -253,7 +252,6 @@
                     <tr>
                         <td colspan="2">
                             Name : {{ $invoice->user_name }}
-                            <span class="invoice_span">Consumer ID : {{ $invoice->user?->id ?? 'N/A' }}</span>
                         </td>
                     </tr>
 

@@ -14,7 +14,7 @@
                             <a href="{{ route('user.showOrder') }}">Orders</a>
                         </li>
                         <li class="breadcrumb-url-li">
-                            <span>Order Tracking Of #{{ $order->id }}</span>
+                            <span>Order Tracking Of #{{ $order->order_number }}</span>
                         </li>
                     </ul>
                 </div>

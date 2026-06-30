@@ -91,7 +91,7 @@
                     <tbody>
                         @forelse ($orders as $order)
                         <tr>
-                            <td>{{ $order->id }}</td>
+                            <td>{{ $order->order_number }}</td>
                             <td>{{ $order->user_name }}</td>
                             <td>{{ $order->user?->email ?? 'N/A' }}</td>
                             <td>{{ $order->city }}</td>

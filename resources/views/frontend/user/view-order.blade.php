@@ -138,7 +138,7 @@
                                 <a href="{{ route('user.showOrder') }}">Orders</a>
                             </li>
                             <li class="breadcrumb-url-li">
-                                <span>Order id: {{ $order->id }}</span>
+                                <span>Order id: {{ $order->order_number }}</span>
                             </li>
                         </ul>
                     </div>

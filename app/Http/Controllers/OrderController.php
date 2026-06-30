@@ -216,20 +216,20 @@ class OrderController extends Controller
                         'shipment_order_id' => $OrderCreation['order_id'],
                     ]);
 
-                    // SMS::send($order->user->mobile, 'Ranayas  - Your Order has been placed successfully, Your Order No : ' . $order->id . ' Login for more detail on ' . url('/'));
+                    // SMS::send($order->user->mobile, 'Ranayas  - Your Order has been placed successfully, Your Order No : ' . $order->order_number . ' Login for more detail on ' . url('/'));
                     SMS::send(
                         $order->user->mobile,
-                        'Dear Customer, Thank You for login with RANAYAS. Your OTP for login is ' . substr($order->id, 0, 6) . '.',
+                        'Dear Customer, Thank You for login with RANAYAS. Your OTP for login is ' . substr($order->order_number, 0, 6) . '.',
                         config('services.sms.dlt_template_id')
                     );
 
                     Mail::send(['html' => 'backend.mails.received'], ['order' => $order], function ($message) use ($order) {
-                        $message->to($order->user->email)->subject('Your order has been placed successfully ! [order no : ' . $order->id . ']');
+                        $message->to($order->user->email)->subject('Your order has been placed successfully ! [order no : ' . $order->order_number . ']');
                         $message->from(config('mail.from.address'), config('app.name'));
                     });
 
                     Mail::send(['html' => 'backend.mails.admin'], ['order' => $order], function ($message) use ($order) {
-                        $message->to(config('mail.from.address'))->subject('You have a new order ! [order id : ' . $order->id . ']');
+                        $message->to(config('mail.from.address'))->subject('You have a new order ! [order id : ' . $order->order_number . ']');
                         $message->from(config('mail.from.address'), config('app.name'));
                     });
                 }
@@ -239,7 +239,7 @@ class OrderController extends Controller
                 connectify('success', 'Order Placed', 'Your Order has been placed Successfully !');
 
                 return redirect()->route('order.success', encrypt($order->id));
-            } elseif ($request->payment_mode == 'paytm') {
+            } elseif ($request->payment_mode == 'razorpay') {
                 return redirect()->route('razorpay.index', encrypt($order->id));
             }
         }
@@ -272,15 +272,15 @@ class OrderController extends Controller
 
             if ($order->status == 'nc') {
 
-                if ($order->payment_mode == 'paytm') {
+                if ($order->payment_mode == 'razorpay') {
                     $OrderCreation = $logistic->OrderCreation($order, $order->user, "Prepaid");
                 }
 
                 $order->update([
                     'status' => 'Booked',
                     'payment_status' => 'Paid',
-                    // 'shipment_id' => $order->payment_mode == 'paytm' ? $OrderCreation['shipment_id'] : null,
-                    // 'shipment_order_id' => $order->payment_mode == 'paytm' ? $OrderCreation['order_id'] : null,
+                    // 'shipment_id' => $order->payment_mode == 'razorpay' ? $OrderCreation['shipment_id'] : null,
+                    // 'shipment_order_id' => $order->payment_mode == 'razorpay' ? $OrderCreation['order_id'] : null,
                 ]);
 
                 // $transaction = Transaction::create([
@@ -309,19 +309,19 @@ class OrderController extends Controller
 
                 SMS::send(
                     $order->user->mobile,
-                    'Dear Customer, Thank You for login with RANAYAS. Your OTP for login is ' . substr($order->id, 0, 6) . '.',
+                    'Dear Customer, Thank You for login with RANAYAS. Your OTP for login is ' . substr($order->order_number, 0, 6) . '.',
                     config('services.sms.dlt_template_id')
                 );
 
-                // SMS::send('9223324655', 'Ranayas - New Order Placed with Order No : ' . $order->id);
+                // SMS::send('9223324655', 'Ranayas - New Order Placed with Order No : ' . $order->order_number);
 
                 Mail::send(['html' => 'backend.mails.received'], ['order' => $order], function ($message) use ($order) {
-                    $message->to($order->user->email)->subject('Your order has been placed successfully ! [order no : ' . $order->id . ']');
+                    $message->to($order->user->email)->subject('Your order has been placed successfully ! [order no : ' . $order->order_number . ']');
                     $message->from(config('mail.from.address'), config('app.name'));
                 });
 
                 Mail::send(['html' => 'backend.mails.admin'], ['order' => $order], function ($message) use ($order) {
-                    $message->to(config('mail.from.address'))->subject('You have a new order ! [order id : ' . $order->id . ']');
+                    $message->to(config('mail.from.address'))->subject('You have a new order ! [order id : ' . $order->order_number . ']');
                     $message->from(config('mail.from.address'), config('app.name'));
                 });
 
@@ -475,12 +475,32 @@ class OrderController extends Controller
             // Payment verified successfully!
             if ($order->status == 'nc') {
 
+                // Fetch exact payment method from Razorpay API
+                $keyId = env('RAZORPAY_KEY_ID');
+                $ch = curl_init();
+                curl_setopt($ch, CURLOPT_URL, 'https://api.razorpay.com/v1/payments/' . $razorpay_payment_id);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($ch, CURLOPT_USERPWD, $keyId . ':' . $keySecret);
+                $response = curl_exec($ch);
+                curl_close($ch);
+                
+                $paymentData = json_decode($response);
+                $paymentMethod = isset($paymentData->method) ? $paymentData->method : 'razorpay';
+                if (strtolower($paymentMethod) === 'upi') {
+                    $paymentMethod = 'UPI';
+                } elseif (strtolower($paymentMethod) === 'emi') {
+                    $paymentMethod = 'EMI';
+                } else {
+                    $paymentMethod = ucwords(str_replace('_', ' ', $paymentMethod));
+                }
+
                 // Create shipment order via logistics
                 $OrderCreation = $logistic->OrderCreation($order, $order->user, "Prepaid");
 
                 $order->update([
                     'status' => 'Booked',
                     'payment_status' => 'Paid',
+                    'payment_mode' => $paymentMethod,
                     'shipment_id' => isset($OrderCreation['shipment_id']) ? $OrderCreation['shipment_id'] : null,
                     'shipment_order_id' => isset($OrderCreation['order_id']) ? $OrderCreation['order_id'] : null,
                 ]);
@@ -507,12 +527,12 @@ class OrderController extends Controller
                 // Send success notifications
                 try {
                     Mail::send(['html' => 'backend.mails.received'], ['order' => $order], function ($message) use ($order) {
-                        $message->to($order->user->email)->subject('Your order has been placed successfully! [order no: ' . $order->id . ']');
+                        $message->to($order->user->email)->subject('Your order has been placed successfully! [order no: ' . $order->order_number . ']');
                         $message->from(config('mail.from.address'), config('app.name'));
                     });
 
                     Mail::send(['html' => 'backend.mails.admin'], ['order' => $order], function ($message) use ($order) {
-                        $message->to(config('mail.from.address'))->subject('You have a new Razorpay order! [order id: ' . $order->id . ']');
+                        $message->to(config('mail.from.address'))->subject('You have a new Razorpay order! [order id: ' . $order->order_number . ']');
                         $message->from(config('mail.from.address'), config('app.name'));
                     });
                 } catch (\Exception $e) {

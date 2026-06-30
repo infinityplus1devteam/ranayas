@@ -45,7 +45,7 @@
                             <tbody>
                                 @forelse ($orders as $order)
                                 <tr>
-                                    <td>{{ $order->id }}</td>
+                                    <td>{{ $order->order_number }}</td>
                                     <td>Rs.{{ $order->tbt }}</td>
                                     <td>Rs.{{ round($order->tbt * 0.1,0) }}</td>
                                     <td>{{ date('d-m-Y h:i A' , strtotime($order->created_at)) }}</td>

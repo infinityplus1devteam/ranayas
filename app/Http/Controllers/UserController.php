@@ -540,7 +540,7 @@ class UserController extends Controller
 
             $pdf = PDF::loadView('backend.admin.invoices.download', ['invoice' => $invoice]);
 
-            return $pdf->download('order_no_' . $id . '.pdf');
+            return $pdf->download('order_no_' . $invoice->order_number . '.pdf');
 
         } catch (\Exception $ex) {
             if ($ex instanceof \Illuminate\Database\Eloquent\ModelNotFoundException) {
