@@ -249,7 +249,7 @@
                                                                                         $viewOrderSizeName = strtolower($detail->size->title ?? '');
                                                                                         $viewOrderSizeClass = ($viewOrderSizeName == '' || $viewOrderSizeName == 'null') ? 'size-null' : 'size-' . $viewOrderSizeName;
                                                                                     @endphp
-                                                                                    <span class="{{ $viewOrderSizeClass }}">{{ $detail->size ? 'Size: ' . $detail->size->title : '' }}</span>{{-- {{
+                                                                                    <span class="{{ $viewOrderSizeClass }}">{{ ($detail->size && strtolower($detail->size->title) !== 'null') ? 'Size: ' . $detail->size->title : '' }}</span>{{-- {{
                                                                                     $detail->product->unit ? $detail->product->unit->unit :
                                                                                     'GM' }} --}}
                                                                                     <br>

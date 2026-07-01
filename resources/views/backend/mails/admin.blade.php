@@ -260,7 +260,7 @@
                     @foreach ($order->details as $detail)
                         <tr>
                             <td>{{ $detail->product->title }}</td>
-                            <td>{{ $detail->size ? 'Size: ' . $detail->size->title : '' }} <br>
+                            <td>{{ ($detail->size && strtolower($detail->size->title) !== 'null') ? 'Size: ' . $detail->size->title : '' }} <br>
                                 {{ $detail->color ? 'Color: ' . $detail->color->title : '' }} </td>
                             <td>{{ $detail->mrp }}</td>
                             <td>{{ $detail->quantity }}</td>

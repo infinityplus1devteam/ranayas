@@ -83,7 +83,7 @@
                                                                         $txnSizeName = strtolower($detail->size->title ?? '');
                                                                         $txnSizeClass = ($txnSizeName == '' || $txnSizeName == 'null') ? 'size-null' : 'size-' . $txnSizeName;
                                                                     @endphp
-                                                                    <span class="{{ $txnSizeClass }}">{{ $detail->size ? 'Size: ' . $detail->size->title : '' }}</span> {{
+                                                                    <span class="{{ $txnSizeClass }}">{{ ($detail->size && strtolower($detail->size->title) !== 'null') ? 'Size: ' . $detail->size->title : '' }}</span> {{
                                 $detail->product->unit ? $detail->product->unit->unit :
                                 'GM' }} <br>
                                                                     {{ $detail->color ? 'Color: ' . $detail->color->title : '' }}

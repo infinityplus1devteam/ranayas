@@ -78,11 +78,13 @@
                                                                                 $cartSizeName = strtolower($item->attributes->size_name ?? '');
                                                                                 $cartSizeClass = ($cartSizeName == '' || $cartSizeName == 'null') ? 'size-null' : 'size-' . $cartSizeName;
                                                                             @endphp
+                                                                            @if(strtolower($item->attributes->size_name ?? '') !== 'null')
                                                                             <span class="cart-pro-price {{ $cartSizeClass }}">
                                                                                 <span class="size"> Size:</span>
                                                                                 {{ $item->attributes->size_name ?? '' }}{{-- . ' ' .
                                                                                 $item->attributes->unit --}}
                                                                             </span>
+                                                                            @endif
                                                                             <span class="cart-pro-price">
                                                                                 <span class="size"> Color:</span>
                                                                                 {{ $item->attributes->color_name }}

@@ -252,8 +252,7 @@
                                                                             $orderSizeName = strtolower($detail->size->title ?? '');
                                                                             $orderSizeClass = ($orderSizeName == '' || $orderSizeName == 'null') ? 'size-null' : 'size-' . $orderSizeName;
                                                                         @endphp
-                                                                        <span class="{{ $orderSizeClass }}">{{ $detail->size ? 'Size: ' .
-                                                                        $detail->size->title : '' }}</span>{{--
+                                                                        <span class="{{ $orderSizeClass }}">{{ ($detail->size && strtolower($detail->size->title) !== 'null') ? 'Size: ' . $detail->size->title : '' }}</span>{{--
                                                                         {{ $detail->product->unit ?
                                                                         $detail->product->unit->unit :
                                                                         'GM' }} --}} <br>

@@ -298,7 +298,7 @@
                         <tr>
                             <td>
                                 {{ $detail->product->title }} <br>
-                                {{ $detail->size ? 'Size: ' . $detail->size->title : '' }} <br>
+                                {{ ($detail->size && strtolower($detail->size->title) !== 'null') ? 'Size: ' . $detail->size->title : '' }} <br>
                                 {{ $detail->color ? 'Color: ' . $detail->color->title : '' }} <br>
                             </td>
                             <td>{{ $detail->mrp }}</td>

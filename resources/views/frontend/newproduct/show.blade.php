@@ -219,7 +219,8 @@
                             <div class="product-color">
                                 <span class="color-label">Colors:</span>
                                 <span class="color" id="colorDiv">
-                                    @foreach ($product->colors as $key => $item)
+                                    @php $uniqueColors = $product->colors->unique('color_id')->values(); @endphp
+                                    @foreach ($uniqueColors as $key => $item)
                                         <a href="javascript:void(0)" class="color_btn {{ $key == 0 ? 'active' : '' }}"
                                             data-toggle="tooltip" data-placement="top" title="{{ $item->color->title }}"
                                             data-color-id="{{ $item->color_id }}" data-prod-id="{{ $product->id }}">
@@ -763,10 +764,15 @@
                 $(this).addClass('active');
             });
 
-            $('.color_btn').click(function() {
+            $(document).on('click', '.color_btn', function() {
+                var param = {
+                    color_id: $(this).data('color-id'),
+                    product_id: $(this).data('prod-id'),
+                    size_id: $('#cart_size_id').val(),
+                    source: 'color'
+                };
 
-                attachClickListener('.color_btn');
-
+                getProduct(param);
             });
 
 
@@ -790,32 +796,7 @@
 
         });
 
-        function attachClickListener(elementName) {
-            const elements = $(elementName);
 
-            elements.each((index, element) => {
-
-                element.addEventListener('click', function() {
-
-                    var param = {};
-                    param = {
-                        color_id: $(element).data('color-id'),
-                        product_id: $(element).data('prod-id'),
-                        size_id: $('#cart_size_id').val(),
-                        source: 'color'
-                    };
-
-                    getProduct(param);
-
-                    var ac = $(elementName).hasClass('active');
-                    if (ac == true) {
-                        $(elementName).removeClass('active');
-                    }
-                    $(element).addClass('active');
-
-                });
-            });
-        }
 
         function getProduct(param) {
 
@@ -854,8 +835,31 @@
                         $('.wishlist').attr('data-s-id', data.size_id);
                         setImages(result.images);
 
-                        if (result.source == "size") {
-                            setColor(result.available_colors);
+                        // Update active states for size and color buttons
+                        $('.size_btn').removeClass('active');
+                        $('.size_btn[data-size-id="'+data.size_id+'"]').addClass('active');
+                        
+                        $('.color_btn').removeClass('active');
+                        $('.color_btn[data-color-id="'+data.color_id+'"]').addClass('active');
+
+                        // Hide sizes not available for this color
+                        $('.size_btn').parent('li').hide();
+                        var anyVisibleSize = false;
+                        if (result.available_sizes && result.available_sizes.length > 0) {
+                            result.available_sizes.forEach(function(item) {
+                                var li = $('.size_btn[data-size-id="'+item.size_id+'"]').parent('li');
+                                li.show();
+                                if (li.css('display') !== 'none') {
+                                    anyVisibleSize = true;
+                                }
+                            });
+                        }
+
+                        // Hide the Size section if no sizes are visible (e.g., if the only size is size-null)
+                        if (anyVisibleSize) {
+                            $('.pro-items').show();
+                        } else {
+                            $('.pro-items').hide();
                         }
                         checkStock(data.stock);
                     }
@@ -933,33 +937,7 @@
         }
 
 
-        function setColor(available_colors) {
 
-            if (available_colors.length > 0) {
-                var color_html = '';
-                var currentColorId = $('#cart_color_id').val();
-                var colorExists = available_colors.some(item => item.color_id == currentColorId);
-                
-                available_colors.forEach((item, index) => {
-                    var activeClass = '';
-                    if (colorExists) {
-                        activeClass = (item.color_id == currentColorId) ? 'active' : '';
-                    } else {
-                        activeClass = (index == 0) ? 'active' : '';
-                    }
-                    
-                    color_html += `<a href="javascript:void(0)" class="color_btn ${activeClass}"
-                    data-toggle="tooltip" data-placement="top" title="${item.color.title}"
-                    data-color-id="${item.color_id}" data-prod-id="${item.product_id}">
-                    <span style="background-color: ${item.color.color_code}"></span>
-                </a>`;
-                })
-
-                $('#colorDiv').html(color_html);
-
-                attachClickListener('.color_btn');
-            }
-        }
 
         function zoom(e) {
             var zoomer = e.currentTarget;

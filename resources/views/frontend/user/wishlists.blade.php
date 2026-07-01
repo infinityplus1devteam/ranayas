@@ -119,10 +119,11 @@
                                                 $wishlistSizeName = strtolower($wishlist->size->title ?? '');
                                                 $wishlistSizeClass = ($wishlistSizeName == '' || $wishlistSizeName == 'null') ? 'size-null' : 'size-' . $wishlistSizeName;
                                             @endphp
+                                            @if(strtolower($wishlist->size->title ?? '') !== 'null')
                                             <span class="all-size {{ $wishlistSizeClass }}">Size: <span class="pro-size">
                                                     {{ $wishlist->size->title ?? '' }} {{ $wishlist->product->unit ?
-                                                    $wishlist->product->unit->unit : '' }}</span>
-                                            </span>
+                                                    $wishlist->product->unit->unit : '' }}</span></span>
+                                            @endif
                                             <span class="all-size">Color: <span class="pro-size">
                                                     {{ $wishlist->color->title }} </span>
                                             </span>

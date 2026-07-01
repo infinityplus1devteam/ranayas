@@ -20,29 +20,46 @@ class ReportController extends Controller
     public function index(Request $request)
     {
         $orders = TxnOrder::orderBy('id', 'DESC')->whereNotIn('status', ['nc']);
+        
+        if ($request->filled('from_date') && $request->filled('to_date')) {
+            $from = date('Y-m-d 00:00:00', strtotime($request->from_date));
+            $to = date('Y-m-d 23:59:59', strtotime($request->to_date));
+            $orders = $orders->whereBetween('created_at', [$from, $to]);
+        } elseif ($request->filled('from_date')) {
+            $from = date('Y-m-d 00:00:00', strtotime($request->from_date));
+            $orders = $orders->where('created_at', '>=', $from);
+        } elseif ($request->filled('to_date')) {
+            $to = date('Y-m-d 23:59:59', strtotime($request->to_date));
+            $orders = $orders->where('created_at', '<=', $to);
+        }
+
+        if ($request->filled('status')) {
+            $orders = $orders->where('status', 'like', '%' . $request->status . '%');
+        }
+
         if ($request->filled('filter')) {
             switch ($request->filter) {
                 case 'day':
-                    $orders = $orders->whereDay('created_at', Carbon::today());
+                    $orders = $orders->whereDate('created_at', Carbon::today());
                     break;
 
                 case 'week':
-                    $orders = $orders->whereBetween('created_at', [Carbon::today()->format('Y-m-d'), date('Y-m-d', strtotime('+7 days', strtotime(Carbon::today())))]);
+                    $orders = $orders->whereBetween('created_at', [Carbon::today()->subDays(7), Carbon::now()]);
                     break;
 
                 case 'month':
-                    $orders = $orders->whereMonth('created_at', Carbon::today());
+                    $orders = $orders->whereBetween('created_at', [Carbon::today()->subDays(30), Carbon::now()]);
                     break;
 
                 case 'year':
-                    $orders = $orders->whereYear('created_at', Carbon::today());
+                    $orders = $orders->whereBetween('created_at', [Carbon::today()->subDays(365), Carbon::now()]);
                     break;
             }
         }
 
         $orders = $orders->paginate(50);
 
-        return view('backend.admin.reports.index', compact('orders'))->with('dates', ['from_date' => null, 'to_date' => null, 'filter' => $request->filter]);
+        return view('backend.admin.reports.index', compact('orders'))->with('dates', ['from_date' => $request->from_date, 'to_date' => $request->to_date, 'status' => $request->status, 'filter' => $request->filter]);
     }
 
     /**
@@ -127,12 +144,16 @@ class ReportController extends Controller
 
         $orders = TxnOrder::with('details')->orderBy('id', 'ASC')->whereNotIn('status', ['nc']);
 
-        if ($request->filled('from_date')) {
-            $orders = $orders->whereBetween('created_at', [date('Y-m-d', strtotime($request->from_date)), now()]);
-        }
-
-        if ($request->filled('to_date')) {
-            $orders = $orders->whereBetween('created_at', [date('Y-m-d', strtotime($request->from_date)), date('Y-m-d', strtotime($request->to_date))]);
+        if ($request->filled('from_date') && $request->filled('to_date')) {
+            $from = date('Y-m-d 00:00:00', strtotime($request->from_date));
+            $to = date('Y-m-d 23:59:59', strtotime($request->to_date));
+            $orders = $orders->whereBetween('created_at', [$from, $to]);
+        } elseif ($request->filled('from_date')) {
+            $from = date('Y-m-d 00:00:00', strtotime($request->from_date));
+            $orders = $orders->where('created_at', '>=', $from);
+        } elseif ($request->filled('to_date')) {
+            $to = date('Y-m-d 23:59:59', strtotime($request->to_date));
+            $orders = $orders->where('created_at', '<=', $to);
         }
 
         if ($request->filled('status')) {
@@ -142,19 +163,19 @@ class ReportController extends Controller
         if ($request->filled('filter')) {
             switch ($request->filter) {
                 case 'day':
-                    $orders = $orders->whereDay('created_at', Carbon::today());
+                    $orders = $orders->whereDate('created_at', Carbon::today());
                     break;
 
                 case 'week':
-                    $orders = $orders->whereBetween('created_at', [Carbon::today()->format('Y-m-d'), date('Y-m-d', strtotime('+7 days', strtotime(Carbon::today())))]);
+                    $orders = $orders->whereBetween('created_at', [Carbon::today()->subDays(7), Carbon::now()]);
                     break;
 
                 case 'month':
-                    $orders = $orders->whereMonth('created_at', Carbon::today());
+                    $orders = $orders->whereBetween('created_at', [Carbon::today()->subDays(30), Carbon::now()]);
                     break;
 
                 case 'year':
-                    $orders = $orders->whereYear('created_at', Carbon::today());
+                    $orders = $orders->whereBetween('created_at', [Carbon::today()->subDays(365), Carbon::now()]);
                     break;
             }
         }

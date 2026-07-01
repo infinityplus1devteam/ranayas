@@ -174,11 +174,13 @@
                                                                             $checkoutSizeName = strtolower($item->attributes->size_name ?? '');
                                                                             $checkoutSizeClass = ($checkoutSizeName == '' || $checkoutSizeName == 'null') ? 'size-null' : 'size-' . $checkoutSizeName;
                                                                         @endphp
+                                                                        @if(strtolower($item->attributes->size_name ?? '') !== 'null')
                                                                         <span class="check-code-blod {{ $checkoutSizeClass }}">
                                                                             Size:
                                                                             <span>{{ $item->attributes->size_name ?? '' }}{{-- . ' ' .
                                                                                 $item->attributes->unit --}}</span>
                                                                         </span>
+                                                                        @endif
                                                                         <span class="check-code-blod">
                                                                             Color:
                                                                             <span>{{ $item->attributes->color_name }}</span>
