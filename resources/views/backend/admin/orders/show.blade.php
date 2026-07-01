@@ -98,7 +98,7 @@
                         @if($order->status === 'Delivered' && $order->delivery_date)
                             <tr>
                                 <th>Delivered At</th>
-                                <td>{{ date('d-M-Y h:i A', strtotime($order->delivery_date)) }}</td>
+                                <td>{{ \Carbon\Carbon::parse($order->delivery_date)->format('d-M-Y') }}</td>
                             </tr>
                         @endif
 
@@ -256,10 +256,12 @@
                                     // $shipping = $itemSubtotal < 1000 ? 60 : 0;
                                 @endphp
                                 <p>Item Subtotal : &#8377; {{ $itemSubtotal }}</p>
+                                {{-- GST breakdown hidden (no GST number available)
                                 @if($order->tax > 0)
                                     <p style="font-weight: normal; color: #555;">(Includes CGST : &#8377; {{ round($order->tax / 2, 2) }})</p>
                                     <p style="font-weight: normal; color: #555;">(Includes SGST : &#8377; {{ round($order->tax / 2, 2) }})</p>
                                 @endif
+                                --}}
                                 <p>- Discount : &#8377; {{ $order->discount ? $order->discount : 0 }}</p>
                                 {{-- <p>+ Shipping : &#8377; {{ $shipping }}</p> --}}
                                 <p>Grand Total : &#8377; {{ $order->total }}</p>

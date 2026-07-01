@@ -231,11 +231,13 @@
                     <tr>
                         <td colspan="2" class="text-center fw-600">Tax Invoice</td>
                     </tr>
+                    {{-- GST number hidden (no GST number available)
                     <tr>
                         <td colspan="2">
                             GSTIN: 27AAUFK1614M1ZT
                         </td>
                     </tr>
+                    --}}
                     <tr>
                         <td colspan="2">
                             Contact: 9820760951
@@ -348,6 +350,7 @@
                             Rs. {{ $itemSubtotal }}
                         </td>
                     </tr>
+                    {{-- GST breakdown hidden (no GST number available)
                     @if($invoice->tax > 0)
                         <tr>
                             <th colspan="2" style="font-weight: normal; color: #555;">
@@ -366,6 +369,7 @@
                             </td>
                         </tr>
                     @endif
+                    --}}
 
                     {{-- <tr>
                         <th colspan="2">

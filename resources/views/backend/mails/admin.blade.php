@@ -279,10 +279,12 @@
                                 // $shipping = $itemSubtotal < 1000 ? 60 : 0;
                             @endphp
                             <p>Item Subtotal : &#8377; {{ $itemSubtotal }}</p>
+                            {{-- GST breakdown hidden (no GST number available)
                             @if($order->tax > 0)
                                 <p style="font-weight: normal; color: #555;">(Includes CGST : &#8377; {{ round($order->tax / 2, 2) }})</p>
                                 <p style="font-weight: normal; color: #555;">(Includes SGST : &#8377; {{ round($order->tax / 2, 2) }})</p>
                             @endif
+                            --}}
                             @if ($order->discount)
                                 <p>- Discount : &#8377; {{ $order->discount }}</p>
                             @endif

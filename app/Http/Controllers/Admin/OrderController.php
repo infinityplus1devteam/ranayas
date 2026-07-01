@@ -188,7 +188,7 @@ class OrderController extends Controller
 
                 // return response()->json($result);
             }
-            if ($request->filled('status') && $request->status == 'delivered') {
+            if ($request->filled('status') && $request->status == 'Delivered') {
 
                 $total = floor($order->total / 50);
 
@@ -211,14 +211,22 @@ class OrderController extends Controller
                     }
                 }
 
-                $pdf = PDF::loadView('backend.admin.invoices.download', ['invoice' => $order]);
+                // Send invoice email — wrapped separately so mail failures don't
+                // crash the status update (SMTP timeout, missing user email, etc.)
+                try {
+                    if ($order->user && $order->user->email) {
+                        $pdf = PDF::loadView('backend.admin.invoices.download', ['invoice' => $order]);
 
-                Mail::send(['html' => 'backend.admin.invoices.empty'], ['invoice' => $order], function ($message) use ($order, $pdf) {
-                    $message->from('order-confirmation@ranayas.com', 'Ranayas');
-                    $message->to($order->user->email, $order->user->name);
-                    $message->subject('Invoice copy of Order No ' . $order->order_number . ' From Ranayas');
-                    $message->attachData($pdf->output(), 'invoice_no_' . $order->order_number . '.pdf');
-                });
+                        Mail::send(['html' => 'backend.admin.invoices.empty'], ['invoice' => $order], function ($message) use ($order, $pdf) {
+                            $message->from('order-confirmation@ranayas.com', 'Ranayas');
+                            $message->to($order->user->email, $order->user->name);
+                            $message->subject('Invoice copy of Order No ' . $order->order_number . ' From Ranayas');
+                            $message->attachData($pdf->output(), 'invoice_no_' . $order->order_number . '.pdf');
+                        });
+                    }
+                } catch (\Exception $mailEx) {
+                    Log::error('Invoice mail failed for order ' . $order->order_number . ': ' . $mailEx->getMessage());
+                }
 
             }
 

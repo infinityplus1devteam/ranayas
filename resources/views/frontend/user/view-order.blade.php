@@ -200,10 +200,23 @@
                                         </a>
                                     @endif
 
-                                    @if($order->return_status === null && $order->status === 'Delivered')
-                                        <a href="javascript:void(0);" class="returnBtn"><i class="fa fa-refresh"
-                                                aria-hidden="true"></i>
-                                            Return</a>
+                                     @if($order->return_status === null && $order->status === 'Delivered')
+                                        @php
+                                            $deliveredAt = \Carbon\Carbon::parse($order->delivery_date ?? $order->updated_at);
+                                            $daysSinceDelivery = now()->diffInDays($deliveredAt);
+                                            $withinReturnWindow = $daysSinceDelivery <= 7;
+                                        @endphp
+                                        @if($withinReturnWindow)
+                                            <a href="javascript:void(0);" class="returnBtn"><i class="fa fa-refresh"
+                                                    aria-hidden="true"></i>
+                                                Return</a>
+                                        @else
+                                            <span class="return-expired-btn" title="Return window of 7 days has expired">
+                                                <i class="fa fa-times-circle" aria-hidden="true"></i>
+                                                Return Expired
+                                                <small class="return-expired-note">(Valid only within 7 days of delivery)</small>
+                                            </span>
+                                        @endif
                                     @endif
                                 </div>
                             </div>
@@ -584,6 +597,29 @@
 @endsection
 @section('extrajs')
 
+    <style>
+        .return-expired-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            color: #999;
+            font-size: 13px;
+            cursor: not-allowed;
+            opacity: 0.75;
+        }
+
+        .return-expired-btn i {
+            color: #cc0000;
+            font-size: 14px;
+        }
+
+        .return-expired-note {
+            display: block;
+            font-size: 11px;
+            color: #aaa;
+            margin-top: 2px;
+        }
+    </style>
     <script>
         $(document).ready(function () {
 
