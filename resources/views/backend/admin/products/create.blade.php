@@ -224,7 +224,7 @@
                                     <div class="form-group">
                                         <label for="size_id">Sizes</label>
                                         <select name="size_id" id="size_id" class="form-control select2">
-                                            <option value="1">--Select Sizes--</option>
+                                            <option value="8">--Select Sizes--</option>
                                             @foreach ($sizes as $size)
                                                 <option value="{{ $size->id }}"
                                                     {{ old('size_id') == $size->id ? 'selected' : '' }}>
