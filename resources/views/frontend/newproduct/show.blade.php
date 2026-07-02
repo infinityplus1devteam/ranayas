@@ -44,6 +44,7 @@
                                     }
                                 }
                             @endphp
+                            
                             <div class="tab-content large_image">
                                 <style>
                                     .tab-content.large_image .tab-pane:not(.active) {

@@ -2984,8 +2984,8 @@ a.scroll:hover span {
 /* breadcumb css */
 .breadcrumb-area {
     background-color: rgb(244, 242, 243);
-    padding: 15px 0px;
-    margin-top: 100px;
+    padding: 115px 0px 15px 0px;
+    margin-top: 0px;
 }
 
 .breadcrumb-area .breadcrumb-start ul.breadcrumb-url {
@@ -3006,6 +3006,10 @@ a.scroll:hover span {
 }
 
 /* product page css */
+.section-tb-padding.pro-page {
+    padding-top: 30px !important;
+}
+
 .o-page-top {
     position: unset;
 }
@@ -3550,7 +3554,8 @@ a.scroll:hover span {
 
 @media (max-width: 1200px) {
     .breadcrumb-area {
-        margin-top: 157px;
+        margin-top: 0px;
+        padding-top: 172px;
     }
 }
 
