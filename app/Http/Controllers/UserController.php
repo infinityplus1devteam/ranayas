@@ -343,11 +343,11 @@ class UserController extends Controller
                 'description' => 'Applied for Return and Refund against Order ID : ' . $order->id,
             ]);
             // SMS::send($order->user->mobile, 'Ranayas - You have applied for Return and Refund against Order ID : ' . $order->id . ', Stay tuned for approval on ' . route('user.login'));
-            SMS::send(
-                $order->user->mobile,
-                'Dear Customer, Thank You for login with RANAYAS. Your OTP for login is ' . substr($order->id, 0, 6) . '.',
-                config('services.sms.dlt_template_id')
-            );
+            // SMS::send(
+            //     $order->user->mobile,
+            //     'Dear Customer, Thank You for login with RANAYAS. Your OTP for login is ' . substr($order->id, 0, 6) . '.',
+            //     config('services.sms.dlt_template_id')
+            // );
 
             // Email to Admin
             $adminEmail = \App\Model\Admin::first()->email;
@@ -391,11 +391,11 @@ class UserController extends Controller
                     'status' => 'Cancelled',
                 ]);
 
-                SMS::send(
-                    $order->user->mobile,
-                    'Dear Customer, Thank You for login with RANAYAS. Your OTP for login is ' . substr($order->id, 0, 6) . '.',
-                    config('services.sms.dlt_template_id')
-                );
+                // SMS::send(
+                //     $order->user->mobile,
+                //     'Dear Customer, Thank You for login with RANAYAS. Your OTP for login is ' . substr($order->id, 0, 6) . '.',
+                //     config('services.sms.dlt_template_id')
+                // );
 
                 Mail::send(['html' => 'backend.mails.order-cancel'], ['order' => $order], function ($message) use ($order) {
                     $message->to('info@ranayas.com')->subject('Order has been Cancelled ! [order id : ' . $order->id . ']');
