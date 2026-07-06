@@ -2,236 +2,114 @@
 
 namespace App\Http\Controllers;
 
-use App\Model\SMS;
 use App\Model\TxnUser;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Str;
 
 class UserResetPassword extends Controller
 {
+    /**
+     * Show the form to request a password reset link.
+     */
     public function showResetRequestForm()
     {
         return view('frontend.user.email');
     }
 
-    public function resetPassword(Request $request)
+    /**
+     * Send a reset link to the given user.
+     */
+    public function sendResetLinkEmail(Request $request)
     {
-        $validator = Validator::make(
-            $request->all(),
-            [
-                'email' => 'required|email|exists:txn_users,email',
-            ],
-            [
-                'email.required' => 'Please Enter Email',
-                'email.email' => 'Please Enter Proper Email',
-                'email.exists' => 'Invalid Email ID !',
-            ]
-        );
-
-        if ($validator->fails()) {
-            connectify('error', 'Error', $validator->errors()->first());
-
-            return back()->withInput();
-        }
-
+        // dd('HIT sendResetLinkEmail');
+        
+        $request->validate([
+            'email' => 'required|email',
+        ]);
+        
         try {
+            $response = $this->broker()->sendResetLink(
+                $request->only('email')
+            );
+            // dd($response);
 
-            $user = TxnUser::where('email', $request->email)->firstOrFail();
-
-            $rand_otp = rand(100000, 999999);
-
-            $user->update([
-                'otp' => $rand_otp,
-            ]);
-
-            SMS::send($user->mobile, 'Dear Customer, Thank You for login with RANAYAS. Your OTP for login is '.$rand_otp.'.', config('services.sms.dlt_otp_template_id'));
-
-            Mail::send(['html' => 'backend.mails.password-reset-otp'], ['user' => $user], function ($message) use ($user) {
-                $message->to($user->email)->subject(config('app.name').', One Time Password(OTP)');
-                $message->from(config('mail.from.address'), config('mail.from.name'));
-            });
-
-            session()->put('user', $user);
-
-            return redirect()->route('user.password.otp.send');
-
-        } catch (\Exception $ex) {
-            if ($ex instanceof ModelNotFoundException) {
-
-                connectify('error', 'Invalid Email', 'Whoops, Email Not Found !');
-
-                return back()->withInput($request->all());
-
+            if ($response == Password::RESET_LINK_SENT) {
+                // dd("RESET_LINK_SENT");
+                return back()->with('status', __($response));
             }
+            // dd($response);
 
-            connectify('error', 'Error', 'Whoops, Something Went Wrong From Our End try again !');
-
-            return back();
-
+            return back()->withErrors(
+                ['email' => __($response)]
+            )->withInput($request->only('email'));
+            
+        } catch (\Exception $e) {
+            connectify('error', 'Error', $e->getMessage());
+            dd($e->getMessage());
+            return back()->withInput($request->only('email'));
         }
     }
 
-    public function sendOtp()
+    /**
+     * Show the password reset form (user arrives here from the email link).
+     */
+    public function showResetForm(Request $request, $token = null)
     {
-        return view('frontend.user.reset-otp');
+        return view('frontend.user.reset', [
+            'token' => $token,
+            'email' => $request->email,
+        ]);
     }
 
-    public function resendOtp()
-    {
-        try {
-
-            $userData = session()->get('user');
-
-            $user = TxnUser::where('mobile', $userData->mobile)->where('otp', '<>', null)->firstOrFail();
-
-            $rand_otp = rand(100000, 999999);
-
-            $user->update([
-                'otp' => $rand_otp,
-            ]);
-
-            SMS::send($user->mobile, 'Dear Customer, Thank You for login with RANAYAS. Your OTP for login is '.$rand_otp.'.', config('services.sms.dlt_otp_template_id'));
-
-            Mail::send(['html' => 'backend.mails.password-reset-otp'], ['user' => $user], function ($message) use ($user) {
-                $message->to($user->email)->subject(config('app.name').', One Time Password(OTP)');
-                $message->from(config('mail.from.address'), config('mail.from.name'));
-            });
-
-            return redirect()->route('user.password.otp.send');
-
-        } catch (\Exception $ex) {
-            if ($ex instanceof ModelNotFoundException) {
-
-                connectify('error', 'Invalid Email', 'Whoops, Email Id Not Found !');
-
-                return back();
-            }
-
-            connectify('error', 'Error', 'Whoops, Something Went Wrong From Our End try again !');
-
-            return back();
-
-        }
-    }
-
-    public function verifyOTP(Request $request)
-    {
-        $validator = Validator::make(
-            $request->all(),
-            [
-                'otp' => 'required|max:6',
-            ],
-            [
-                'otp.required' => 'Please Enter OTP',
-            ]
-        );
-
-        if ($validator->fails()) {
-            connectify('error', 'Error', $validator->errors()->first());
-
-            return back()->withInput();
-        }
-
-        try {
-
-            $userData = session()->get('user');
-
-            $user = TxnUser::where('mobile', $userData->mobile)->where('otp', $request->otp)->firstOrFail();
-
-            $user->update([
-                'otp' => null,
-            ]);
-
-            return redirect()->route('user.password.reset.form');
-
-        } catch (\Exception $ex) {
-            if ($ex instanceof ModelNotFoundException) {
-
-                connectify('error', 'Invalid Otp', 'The Entered Otp is Invalid !');
-
-                return back();
-
-            }
-
-            connectify('error', 'Error', 'Whoops, Something Went Wrong From Our End try again !');
-
-            return back();
-
-        }
-    }
-
-    public function resetForm()
-    {
-        if (session()->get('user')) {
-
-            return view('frontend.user.reset');
-        }
-
-        return redirect('/');
-
-    }
-
+    /**
+     * Reset the given user's password.
+     */
     public function reset(Request $request)
     {
-        $validator = Validator::make(
-            $request->all(),
-            [
-                'email' => 'required|email|max:191|exists:txn_users,email',
-                'password' => 'required_with:con_password|string|max:191',
-                'con_password' => 'required_with:password|same:password|string|max:191',
-            ],
-            [
-                'email.required' => 'Please Enter Email ID',
-                'email.exists' => 'Please Enter Valid Email ID',
-                'password.required_with' => 'Please Enter Confirm Password to Reset Password',
-                'con_password.required_with' => 'Please Enter Password to Reset Password',
-                'con_password.same' => 'Please Enter Confirm Password same as Password',
-            ]
-        );
-
-        if ($validator->fails()) {
-            connectify('error', 'Error', $validator->errors()->first());
-
-            return back()->withInput();
-        }
+        $request->validate([
+            'token' => 'required',
+            'email' => 'required|email',
+            'password' => 'required|string|min:6|confirmed',
+        ]);
 
         try {
+            $response = $this->broker()->reset(
+                $request->only('email', 'password', 'password_confirmation', 'token'),
+                function ($user, $password) {
+                    $user->forceFill([
+                        'password' => Hash::make($password),
+                        'remember_token' => Str::random(60),
+                    ])->save();
 
-            $userData = session()->get('user');
+                    Auth::guard('user')->login($user);
+                }
+            );
 
-            if ($userData->email != $request->email) {
-                return back()->with('errors', 'Email is Invalid');
+            if ($response == Password::PASSWORD_RESET) {
+                connectify('success', 'Success', 'Password has been reset successfully!');
+                return redirect()->route('user.dashboard');
             }
 
-            $user = TxnUser::where('email', $request->email)->firstOrFail();
-
-            $user->update([
-                'password' => bcrypt($request->password),
-            ]);
-
-            Auth::guard('user')->login($user, true);
-
-            session()->pull('user', 'default');
-
-            connectify('success', 'Success', 'Password has been changed successfully !');
-
-            return redirect(route('user.dashboard'));
-
-        } catch (\Exception $ex) {
-            if ($ex instanceof ModelNotFoundException) {
-
-                connectify('error', 'error', 'Whoops, Email Not Found !');
-
-                return back();
-            }
-
-            connectify('error', 'error', 'Whoops, Something Went Wrong From Our End try again !');
-
-            return back();
-
+            return back()->withErrors(
+                ['email' => [__($response)]]
+            )->withInput($request->only('email'));
+            
+        } catch (\Exception $e) {
+            connectify('error', 'Error', $e->getMessage());
+            return back()->withInput($request->only('email'));
         }
+    }
+
+    /**
+     * Get the broker to be used during password reset.
+     *
+     * @return \Illuminate\Contracts\Auth\PasswordBroker
+     */
+    protected function broker()
+    {
+        return Password::broker('users');
     }
 }

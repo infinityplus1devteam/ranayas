@@ -407,12 +407,9 @@ Route::
                     Route::POST('/otp/resend', 'UserAuth\LoginController@resendOtp')->name('user.otp.resend');
                     Route::POST('/otp/verify', 'UserAuth\LoginController@verifyOtp')->name('user.otp.verify');
                     Route::GET('/password/email', 'UserResetPassword@showResetRequestForm')->name('user.password.request');
-                    Route::POST('/password/email', 'UserResetPassword@resetPassword');
-                    Route::GET('/password/otp/send', 'UserResetPassword@sendOtp');
-                    Route::POST('/password/otp/resend', 'UserResetPassword@resendOtp')->name('user.reset-otp.resend');
-                    Route::POST('/password/otp/verify', 'UserResetPassword@verifyOtp')->name('user.reset-otp.verify');
-                    Route::GET('/reset/password', 'UserResetPassword@resetForm')->name('user.password.reset.form');
-                    Route::POST('/reset/password', 'UserResetPassword@reset')->name('user.reset.password');
+                    Route::POST('/password/email', 'UserResetPassword@sendResetLinkEmail')->name('user.password.email');
+                    Route::GET('/password/reset/{token}', 'UserResetPassword@showResetForm')->name('user.password.reset');
+                    Route::POST('/password/reset', 'UserResetPassword@reset')->name('user.password.update');
                 });
 
                 Route::group(['middleware' => 'auth:user'], function () {

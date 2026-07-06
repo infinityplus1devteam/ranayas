@@ -23,8 +23,9 @@
         <div class="title-area text-center">
             <h3>Reset Password</h3>
         </div> <!-- /.title-area -->
-        <form id="login-form" action="{{ route('user.reset.password') }}" method="POST" autocomplete="off" class="needs-validation">
+        <form id="login-form" action="{{ route('user.password.update') }}" method="POST" autocomplete="off" class="needs-validation">
             @csrf
+            <input type="hidden" name="token" value="{{ $token }}">
             <div class="row">
                 <div class="col-12">
                     <div class="input-group mb-0">
@@ -37,21 +38,21 @@
                 <div class="col-12">
                     <div class="input-group mb-0">
                         <input type="password" name="password" id="password" required>
-                        <label>New Passwords *</label>
+                        <label>New Password *</label>
                     </div> <!-- /.input-group -->
                     <label for="password" class="error"></label>
                 </div> <!-- /.col- -->
 
                 <div class="col-12">
                     <div class="input-group mb-0">
-                        <input type="password" name="con_password" id="con_password" required>
+                        <input type="password" name="password_confirmation" id="password_confirmation" required>
                         <label>Confirm Password *</label>
                     </div> <!-- /.input-group -->
-                    <label for="con_password" class="error"></label>
+                    <label for="password_confirmation" class="error"></label>
                 </div> <!-- /.col- -->
 
             </div> <!-- /.row -->
-            <button type="submit" class="line-button-one button-rose btnSubmit">Update</button>
+            <button type="submit" class="line-button-one button-rose btnSubmit">Reset Password</button>
         </form>
     </div> <!-- /.sign-up-form-wrapper -->
 </div>
@@ -81,7 +82,7 @@
                     email:true,
                 },
                 
-                con_password: {
+                password_confirmation: {
                     required: true,
                     equalTo:"#password"
                 },
@@ -101,7 +102,7 @@
                     required: "Please Enter Password"
                 },
 
-                con_password: {
+                password_confirmation: {
                     required: "Please Enter Confirm Password",
                     equalTo: "Please Enter Confirm Password same as above password",
                 },

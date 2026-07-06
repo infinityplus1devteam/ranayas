@@ -21,7 +21,7 @@
             <div class="title-area text-center">
                 <h3>Recover your password</h3>
             </div> <!-- /.title-area -->
-            <form id="login-form" method="POST" autocomplete="off" class="form">
+            <form id="login-form" method="POST" action="{{ route('user.password.email') }}" autocomplete="off" class="form">
                 @csrf
                 <div class="row">
                     @if (session('status'))
@@ -33,8 +33,8 @@
                     @endif
                     <div class="col-12">
                         <div class="input-group{{ $errors->has('email') ? ' is-invalid' : '' }}">
-                            <input type="text" name="email" id="email" value="{{ $email ?? old('email') }}"
-                                required autofocus>
+                            <input type="text" name="email" id="email" value="{{ $email ?? old('email') }}" required
+                                autofocus>
                             <label>Email *</label>
                         </div> <!-- /.input-group -->
                     </div> <!-- /.col- -->
@@ -53,7 +53,8 @@
                     @endif
                 </div> <!-- /.row -->
 
-                <button type="submit" class="line-button-one button-rose button_update">Submit</button>
+                {{-- <button type="submit" class="line-button-one button-rose button_update">Submit</button> --}}
+                <button type="submit" class="line-button-one button-rose">Submit</button>
 
             </form>
         </div> <!-- /.sign-up-form-wrapper -->
@@ -72,8 +73,8 @@
 @endsection
 @section('extrajs')
     <script>
-        $(document).ready(function() {
-            $(".form").submit(function() {
+        $(document).ready(function () {
+            $(".form").submit(function () {
                 $(".button_update_login").attr("disabled", "disabled");
                 $(".button_update_login").html("Please Wait");
             });

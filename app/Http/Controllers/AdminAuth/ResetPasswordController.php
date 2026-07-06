@@ -62,10 +62,7 @@ class ResetPasswordController extends Controller
         return Auth::guard('admin');
     }
 
-    public function sendPasswordResetNotification($token)
-    {
-        $this->notify(new AdminResetPasswordNotification($token));
-    }
+    // Removed invalid sendPasswordResetNotification method
 
     public function showResetForm(Request $request, $token = null)
     {
