@@ -200,12 +200,24 @@
                                         </a>
                                     @endif
 
-                                     @if($order->return_status === null && $order->status === 'Delivered')
+                                     @php
+                                        $statusIsDelivered = strtolower((string) $order->status) === 'delivered';
+                                        $hasNonReturnableItem = $order->details->contains(function ($detail) {
+                                            return $detail->product && (bool) $detail->product->non_returnable;
+                                        });
+                                     @endphp
+                                     @if($order->return_status === null && $hasNonReturnableItem)
+                                            <span class="return-expired-btn" title="This item is non returnable">
+                                                <i class="fa fa-times-circle" aria-hidden="true"></i>
+                                                Non Returnable
+                                            </span>
+                                     @elseif($order->return_status === null && $statusIsDelivered)
                                         @php
-                                            $deliveredAt = \Carbon\Carbon::parse($order->delivery_date ?? $order->updated_at);
-                                            $daysSinceDelivery = now()->diffInDays($deliveredAt);
-                                            $withinReturnWindow = $daysSinceDelivery <= 7;
+                                            $deliveredAt = \Carbon\Carbon::parse($order->delivery_date ?? $order->updated_at)->startOfDay();
+                                            $daysSinceDelivery = $deliveredAt->diffInDays(now()->startOfDay());
+                                            $withinReturnWindow = $daysSinceDelivery >= 0 && $daysSinceDelivery < 7;
                                         @endphp
+                                        
                                         @if($withinReturnWindow)
                                             <a href="javascript:void(0);" class="returnBtn"><i class="fa fa-refresh"
                                                     aria-hidden="true"></i>

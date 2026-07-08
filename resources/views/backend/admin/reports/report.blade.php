@@ -221,7 +221,7 @@
                     <tr>
                         <td colspan="2" class="text-center">
                             <span class="company_address ">
-                                OFFICE : Sagar City Andheri (W), MUMBAI - 58
+                                OFFICE : Kandivali West, Mumbai, Maharashtra, India
                             </span>
                         </td>
                     </tr>

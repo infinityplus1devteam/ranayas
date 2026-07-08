@@ -307,14 +307,27 @@
                                                                     }}</strong>
                                                             </p>
                                                         </div>
-                                                        @if($order->return_status === null &&
-                                                        $order->status === 'Delivered' &&
-                                                        $order->status !== 'Cancelled')
                                                         @php
-                                                            $deliveredAt = \Carbon\Carbon::parse($order->delivery_date ?? $order->updated_at);
-                                                            $daysSinceDelivery = now()->diffInDays($deliveredAt);
-                                                            $withinReturnWindow = $daysSinceDelivery <= 7;
+                                                            $statusIsDelivered = strtolower((string) $order->status) === 'delivered';
+                                                            $statusIsProcessing = strtolower((string) $order->status) === 'processing';
+                                                            $hasNonReturnableItem = $order->details->contains(function ($detail) {
+                                                                return $detail->product && (bool) $detail->product->non_returnable;
+                                                            });
                                                         @endphp
+                                                        @if($order->return_status === null && $hasNonReturnableItem)
+                                                        <div class="col">
+                                                            <span class="return-expired-btn" title="This item is non returnable">
+                                                                <i class="fa fa-times-circle" aria-hidden="true"></i>
+                                                                Non Returnable
+                                                            </span>
+                                                        </div>
+                                                        @elseif($order->return_status === null && $statusIsDelivered && $order->status !== 'Cancelled')
+                                                        @php
+                                                            $deliveredAt = \Carbon\Carbon::parse($order->delivery_date ?? $order->updated_at)->startOfDay();
+                                                            $daysSinceDelivery = $deliveredAt->diffInDays(now()->startOfDay());
+                                                            $withinReturnWindow = $daysSinceDelivery >= 0 && $daysSinceDelivery < 7;
+                                                        @endphp
+                                                        
                                                         <div class="col">
                                                             @if($withinReturnWindow)
                                                                 <a href="javascript:void(0)" class="return-btn"
@@ -330,7 +343,7 @@
                                                                 </span>
                                                             @endif
                                                         </div>
-                                                        @endif @if($order->return_status === null && $order->status == 'Processing')
+                                                        @endif @if($order->return_status === null && $statusIsProcessing)
                                                         <div class="col">
                                                             <a href="javascript:void(0);" class="cancelBtn"
                                                                 data-obj-id="{{ $order->id }}">
