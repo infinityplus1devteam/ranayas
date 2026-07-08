@@ -190,6 +190,48 @@ class ReportController extends Controller
 
     public function exportGeneratedReport(Request $request)
     {
-        return Excel::download(new OrderExport, 'Report_on_' . \Carbon\Carbon::parse(now())->format('d_m_Y_h_i_s') . '.xlsx');
+        $request->validate([
+            'from_date' => 'nullable|date_format:Y-m-d',
+            'to_date' => 'nullable|date_format:Y-m-d',
+            'status' => 'nullable|string|max:191',
+            'filter' => 'nullable|string|max:10',
+        ]);
+
+        $query = TxnOrder::query()->orderBy('id', 'DESC')->whereNotIn('status', ['nc']);
+
+        if ($request->filled('from_date') && $request->filled('to_date')) {
+            $from = date('Y-m-d 00:00:00', strtotime($request->from_date));
+            $to = date('Y-m-d 23:59:59', strtotime($request->to_date));
+            $query->whereBetween('created_at', [$from, $to]);
+        } elseif ($request->filled('from_date')) {
+            $from = date('Y-m-d 00:00:00', strtotime($request->from_date));
+            $query->where('created_at', '>=', $from);
+        } elseif ($request->filled('to_date')) {
+            $to = date('Y-m-d 23:59:59', strtotime($request->to_date));
+            $query->where('created_at', '<=', $to);
+        }
+
+        if ($request->filled('status')) {
+            $query->where('status', 'like', '%' . $request->status . '%');
+        }
+
+        if ($request->filled('filter')) {
+            switch ($request->filter) {
+                case 'day':
+                    $query->whereDate('created_at', Carbon::today());
+                    break;
+                case 'week':
+                    $query->whereBetween('created_at', [Carbon::today()->subDays(7), Carbon::now()]);
+                    break;
+                case 'month':
+                    $query->whereBetween('created_at', [Carbon::today()->subDays(30), Carbon::now()]);
+                    break;
+                case 'year':
+                    $query->whereBetween('created_at', [Carbon::today()->subDays(365), Carbon::now()]);
+                    break;
+            }
+        }
+
+        return Excel::download(new OrderExport($query), 'Report_on_' . \Carbon\Carbon::parse(now())->format('d_m_Y_h_i_s') . '.xlsx');
     }
 }

@@ -184,6 +184,10 @@
 
     <form action="{{ route('admin.orders.reports.export') }}" method="POST" id="exportExcel">
         @csrf
+        <input type="hidden" name="from_date" value="{{ $dates['from_date'] ?? '' }}">
+        <input type="hidden" name="to_date" value="{{ $dates['to_date'] ?? '' }}">
+        <input type="hidden" name="status" value="{{ $dates['status'] ?? '' }}">
+        <input type="hidden" name="filter" value="{{ $dates['filter'] ?? '' }}">
     </form>
 
 </section>
