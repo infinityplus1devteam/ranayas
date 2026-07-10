@@ -245,8 +245,10 @@ body.hidden {
 }
 
 .section-tb-padding {
-    padding-top: 80px;
-    padding-bottom: 80px;
+    padding-top: 60px;
+    padding-bottom: 60px;
+    /* padding-top: 80px; */
+    /* padding-bottom: 80px; */
     background-color: rgb(244, 242, 243);
     /* margin-bottom: 20px; */
 }
@@ -2984,7 +2986,8 @@ a.scroll:hover span {
 /* breadcumb css */
 .breadcrumb-area {
     background-color: rgb(244, 242, 243);
-    padding: 115px 0px 15px 0px;
+    /* padding: 115px 0px 15px 0px; */
+    padding: 60px 0px 15px 0px;
     margin-top: 0px;
 }
 
@@ -3555,7 +3558,8 @@ a.scroll:hover span {
 @media (max-width: 1200px) {
     .breadcrumb-area {
         margin-top: 0px;
-        padding-top: 172px;
+        /* padding-top: 172px; */
+        padding-top: 40px
     }
 }
 

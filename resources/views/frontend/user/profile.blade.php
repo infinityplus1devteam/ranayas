@@ -24,7 +24,7 @@
     <!-- Breadcrumb area End -->
 
     <!-- order history start -->
-    <section class="order-histry-area section-tb-padding">
+    <section class="order-histry-area section-tb-padding pt-2">
         <div class="container">
             <div class="row">
                 <div class="col">
@@ -33,7 +33,8 @@
                             <div class="order-pro">
                                 <div class="pro-img">
                                     <a href="javascript:void(0)">
-                                        <img src="{!! asset('assets/image/user-dark.png') !!}" alt="img" class="img-fluid" width="90">
+                                        <img src="{!! asset('assets/image/user-dark.png') !!}" alt="img" class="img-fluid"
+                                            width="90">
                                     </a>
                                 </div>
                                 <div class="order-name">
@@ -108,8 +109,7 @@
                                     </li>
                                     <li>
                                         <label>City</label>
-                                        <input type="text" name="city" placeholder="City*"
-                                            value="{{ $user->city }}">
+                                        <input type="text" name="city" placeholder="City*" value="{{ $user->city }}">
                                     </li>
                                 </ul>
                                 <ul class="pro-input-label">
@@ -145,7 +145,7 @@
         </div>
     </section>
     <!-- order history end -->
-    @endsection @section('extracss')
+@endsection @section('extracss')
     <style>
         label {
             padding: 10px 0px;
@@ -259,7 +259,7 @@
                 },
 
             },
-            submitHandler: function(form) {
+            submitHandler: function (form) {
                 $('.submit_button').attr('disabled', 'disabled');
                 $(".submit_button").html('<span class="fa fa-spinner fa-spin"></span> Loading...');
                 form.submit();

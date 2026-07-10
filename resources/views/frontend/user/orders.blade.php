@@ -143,7 +143,7 @@
 
 
 <!-- order history start -->
-<section class="order-histry-area section-tb-padding">
+<section class="order-histry-area section-tb-padding pt-2">
     <div class="container">
         <div class="row">
             <div class="col">

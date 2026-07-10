@@ -26,8 +26,8 @@ idap-pro css
     }
 
     .section-tb-padding {
-        padding-top: 60px;
-        padding-bottom: 60px;
+        padding-top: 40px;
+        padding-bottom: 40px;
     }
 
     /* slider nav css */
@@ -856,8 +856,8 @@ iphone css
     }
 
     .section-tb-padding {
-        padding-top: 50px;
-        padding-bottom: 50px;
+        padding-top: 40px;
+        padding-bottom: 40px;
     }
 
     .section0-t-padding {
@@ -1016,7 +1016,35 @@ iphone css
     }
 
     .home5-service .service .service-box .s-box {
-        width: 329px;
+        width: 240px;
+        padding: 10px 10px;
+    }
+
+    .home5-service .service .service-box .s-box i,
+    .home5-service .service .service-box .s-box svg {
+        font-size: 24px;
+        margin-right: 8px;
+        width: 24px;
+        height: 24px;
+    }
+
+    .home5-service .service .service-box .s-box .service-content {
+        white-space: nowrap;
+    }
+
+    .home5-service .service .service-box .s-box .service-content .text--1,
+    .home5-service .service .service-box .s-box .service-content .text--2 {
+        font-size: 12px;
+    }
+
+    .home5-service .service .service-box .s-box .service-content p {
+        font-size: 11px;
+        margin-top: 0px;
+    }
+
+    .home5-service.section-tb-padding {
+        padding-top: 15px;
+        padding-bottom: 15px;
     }
 
     /* our product tab css */

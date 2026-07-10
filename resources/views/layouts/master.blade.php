@@ -629,10 +629,10 @@
                                         </a>
                                         <ul class="f-link-ul collapse" id="services"
                                             data-bs-parent="#footer-accordian">
-                                            <li class="f-link-ul-li"><a href="{{ route('about') }}">About</a></li>
+                                            <li class="f-link-ul-li"><a href="{{ route('about') }}">About Us</a></li>
                                             <li class="f-link-ul-li"><a href="{{ route('faq') }}">Faq's</a></li>
-                                            <li class="f-link-ul-li"><a href="{{ route('contact') }}">Contact us</a>
-                                            </li>
+                                            <li class="f-link-ul-li"><a href="{{ route('contact') }}">Contact us</a></li>
+                                            <li class="f-link-ul-li"><a href="javascript:void(0);" onclick="document.getElementById('enquiry-form').style.display = 'block'; document.getElementById('modal_background').classList.remove('d-none');">Sell with us</a></li>
                                         </ul>
                                     </div>
                                     <div class="f-link">
@@ -987,6 +987,46 @@
 
     @include('notify::components.notify')
     @notifyJs
+    <script>
+        // Auto-dismiss all laravel-notify popups after 5 seconds
+        document.addEventListener('DOMContentLoaded', function () {
+            var DISMISS_AFTER = 5000;
+
+            var notifyWrappers = document.querySelectorAll('#laravel-notify .notify');
+            notifyWrappers.forEach(function (wrapper) {
+                // Add a progress bar to show the countdown
+                var progressBar = document.createElement('div');
+                progressBar.style.cssText = 'position:absolute;bottom:0;left:0;height:3px;width:100%;background:rgba(0,0,0,0.15);border-radius:0 0 8px 8px;overflow:hidden;';
+                var progressFill = document.createElement('div');
+                progressFill.style.cssText = 'height:100%;width:100%;background:currentColor;opacity:0.5;transition:width ' + DISMISS_AFTER + 'ms linear;';
+                progressBar.appendChild(progressFill);
+
+                var innerCard = wrapper.querySelector('[x-data]');
+                if (innerCard) {
+                    innerCard.style.position = 'relative';
+                    innerCard.appendChild(progressBar);
+                    // Start shrinking after a tiny delay so the animation triggers
+                    setTimeout(function () { progressFill.style.width = '0%'; }, 50);
+                }
+
+                // Dismiss: trigger AlpineJS x-show = false so it animates out
+                setTimeout(function () {
+                    if (innerCard && innerCard._x_dataStack) {
+                        // Alpine v3
+                        innerCard._x_dataStack[0].show = false;
+                    } else if (innerCard && innerCard.__x) {
+                        // Alpine v2
+                        innerCard.__x.$data.show = false;
+                    } else {
+                        // Fallback: just fade out
+                        wrapper.style.transition = 'opacity 0.4s ease';
+                        wrapper.style.opacity = '0';
+                        setTimeout(function () { wrapper.remove(); }, 400);
+                    }
+                }, DISMISS_AFTER);
+            });
+        });
+    </script>
     <script>
         toast = document.querySelector(".toast");
         (closeIcon = document.querySelector(".close")),

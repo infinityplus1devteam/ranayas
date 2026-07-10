@@ -462,6 +462,54 @@
                             color: #333 !important;
                             display: block;
                         }
+                        @media screen and (max-width: 575px) {
+                            .product-specification-list {
+                                padding-left: 0 !important;
+                                padding-right: 0 !important;
+                                margin: 0 !important;
+                            }
+                            .product-specification-list li {
+                                width: 100% !important;
+                                padding: 0 !important;
+                            }
+                            .spec-box {
+                                border: none !important;
+                                background: transparent !important;
+                                box-shadow: none !important;
+                                border-radius: 0 !important;
+                                transform: none !important;
+                                padding: 12px 0 !important;
+                                margin-bottom: 0 !important;
+                                border-bottom: 1px solid #eee !important;
+                                display: flex !important;
+                                justify-content: space-between !important;
+                                align-items: center !important;
+                                height: auto !important;
+                            }
+                            .spec-box:hover {
+                                transform: none !important;
+                                box-shadow: none !important;
+                                border-color: transparent !important;
+                            }
+                            .spec-label {
+                                font-size: 13px !important;
+                                color: #666 !important;
+                                margin-bottom: 0 !important;
+                                text-transform: none !important;
+                                font-weight: 500 !important;
+                                letter-spacing: normal !important;
+                            }
+                            .spec-value {
+                                font-size: 13px !important;
+                                color: #111 !important;
+                                font-weight: 600 !important;
+                                text-align: right !important;
+                            }
+                            /* Remove border bottom on the last item */
+                            .product-specification-list li:last-child .spec-box {
+                                border-bottom: none !important;
+                            }
+                        }
                     </style>
 
                     <!-- Specifications Section -->

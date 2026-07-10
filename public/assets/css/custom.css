@@ -4375,7 +4375,7 @@ img.lazy {
 }
 
 .radio-cont .card-body {
-    height: 200px;
+    /* height: 200px; */
 }
 
 .delivery-address-height {
@@ -6217,7 +6217,8 @@ img.lazy {
 
 /* pro address css */
 .order-histry-area .order-history .profile-address {
-    width: calc(65% - 30px);
+    /* width: calc(65% - 30px); */
+    width: calc(75% - 30px);
     margin-left: 30px;
 }
 

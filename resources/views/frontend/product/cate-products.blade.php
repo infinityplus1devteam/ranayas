@@ -28,8 +28,12 @@
             <div class="row">
                 <div class="col-lg-3 col-md-4 col-12">
                     <div class="all-filter">
-                        <form action="{{ request()->routeIs('search') ? route('search') : route('categories.filter') }}"
-                            method="GET" id="searchForm">
+                        <a href="#master-filter" data-bs-toggle="collapse" class="filter-link d-md-none" style="display: block; margin-bottom: 20px; font-weight: 700; font-size: 16px; background-color: var(--theme-color); color: #fff; padding: 10px 15px; border-radius: 5px; text-decoration: none;">
+                            <span><i class="fa fa-filter"></i> Filter</span><i class="fa fa-angle-down" style="float: right; margin-top: 4px;"></i>
+                        </a>
+                        <div class="collapse d-md-block" id="master-filter">
+                            <form action="{{ request()->routeIs('search') ? route('search') : route('categories.filter') }}"
+                                method="GET" id="searchForm">
 
                             <!-- Brands -->
                             @if(isset($brands) && count($brands) > 0)
@@ -37,17 +41,19 @@
                                     <h4 class="filter-title">Brands</h4>
                                     <a href="#brand-filter" data-bs-toggle="collapse" class="filter-link"><span>Brands</span><i
                                             class="fa fa-angle-down"></i></a>
-                                    <ul class="all-vendor collapse show" id="brand-filter">
-                                        @foreach ($brands as $brand)
-                                            <li class="f-vendor">
-                                                <input type="checkbox" class="filter cb_brands" name="brands[]"
-                                                    id="brand_{{ $brand->id }}" value="{{ $brand->id }}">
-                                                <label for="brand_{{ $brand->id }}" style="margin-left: 9px">
-                                                    {{ $brand->brand_name }}
-                                                </label>
-                                            </li>
-                                        @endforeach
-                                    </ul>
+                                    <div class="collapse show" id="brand-filter">
+                                        <ul class="all-vendor">
+                                            @foreach ($brands as $brand)
+                                                <li class="f-vendor">
+                                                    <input type="checkbox" class="filter cb_brands" name="brands[]"
+                                                        id="brand_{{ $brand->id }}" value="{{ $brand->id }}">
+                                                    <label for="brand_{{ $brand->id }}" style="margin-left: 9px">
+                                                        {{ $brand->brand_name }}
+                                                    </label>
+                                                </li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
                                 </div>
                             @endif
 
@@ -57,17 +63,19 @@
                                     <h4 class="filter-title">Conditions</h4>
                                     <a href="#condition-filter" data-bs-toggle="collapse"
                                         class="filter-link"><span>Conditions</span><i class="fa fa-angle-down"></i></a>
-                                    <ul class="all-vendor collapse show" id="condition-filter">
-                                        @foreach ($conditions as $cond)
-                                            <li class="f-vendor">
-                                                <input type="checkbox" class="filter cb_conditions" name="conditions[]"
-                                                    id="condition_{{ $cond->id }}" value="{{ $cond->id }}">
-                                                <label for="condition_{{ $cond->id }}" style="margin-left: 9px">
-                                                    {{ $cond->condition }}
-                                                </label>
-                                            </li>
-                                        @endforeach
-                                    </ul>
+                                    <div class="collapse show" id="condition-filter">
+                                        <ul class="all-vendor">
+                                            @foreach ($conditions as $cond)
+                                                <li class="f-vendor">
+                                                    <input type="checkbox" class="filter cb_conditions" name="conditions[]"
+                                                        id="condition_{{ $cond->id }}" value="{{ $cond->id }}">
+                                                    <label for="condition_{{ $cond->id }}" style="margin-left: 9px">
+                                                        {{ $cond->condition }}
+                                                    </label>
+                                                </li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
                                 </div>
                             @endif
 
@@ -77,19 +85,21 @@
                                     <h4 class="filter-title">Colors</h4>
                                     <a href="#color" data-bs-toggle="collapse" class="filter-link"><span>Colors</span><i
                                             class="fa fa-angle-down"></i></a>
-                                    <ul class="all-vendor collapse show" id="color">
-                                        @foreach ($colors as $color)
-                                            <li class="f-vendor">
-                                                <input type="checkbox" class="filter cb_colors" name="colors[]"
-                                                    id="color_{{ $color->id }}" value="{{ $color->id }}">
-                                                <label for="color_{{ $color->id }}" style="margin-left: 9px">
-                                                    <span class="color_div"
-                                                        style="background-color: {{ $color->color_code }}; display:inline-block; width:15px; height:15px; border-radius:50%;"></span>
-                                                    {{ $color->title }}
-                                                </label>
-                                            </li>
-                                        @endforeach
-                                    </ul>
+                                    <div class="collapse show" id="color">
+                                        <ul class="all-vendor">
+                                            @foreach ($colors as $color)
+                                                <li class="f-vendor">
+                                                    <input type="checkbox" class="filter cb_colors" name="colors[]"
+                                                        id="color_{{ $color->id }}" value="{{ $color->id }}">
+                                                    <label for="color_{{ $color->id }}" style="margin-left: 9px">
+                                                        <span class="color_div"
+                                                            style="background-color: {{ $color->color_code }}; display:inline-block; width:15px; height:15px; border-radius:50%;"></span>
+                                                        {{ $color->title }}
+                                                    </label>
+                                                </li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
                                 </div>
                             @endif
 
@@ -99,17 +109,19 @@
                                     <h4 class="filter-title">Sizes</h4>
                                     <a href="#size" data-bs-toggle="collapse" class="filter-link"><span>Sizes</span><i
                                             class="fa fa-angle-down"></i></a>
-                                    <ul class="all-vendor collapse show" id="size">
-                                        @foreach ($sizes as $size)
-                                            <li class="f-vendor">
-                                                <input type="checkbox" class="filter cb_sizes" name="sizes[]"
-                                                    id="size_{{ $size->id }}" value="{{ $size->id }}">
-                                                <label for="size_{{ $size->id }}" style="margin-left: 9px">
-                                                    {{ $size->title }}
-                                                </label>
-                                            </li>
-                                        @endforeach
-                                    </ul>
+                                    <div class="collapse show" id="size">
+                                        <ul class="all-vendor">
+                                            @foreach ($sizes as $size)
+                                                <li class="f-vendor">
+                                                    <input type="checkbox" class="filter cb_sizes" name="sizes[]"
+                                                        id="size_{{ $size->id }}" value="{{ $size->id }}">
+                                                    <label for="size_{{ $size->id }}" style="margin-left: 9px">
+                                                        {{ $size->title }}
+                                                    </label>
+                                                </li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
                                 </div>
                             @endif
 
@@ -117,13 +129,15 @@
                             <div class="price-filter">
                                 <a href="#price-filter" data-bs-toggle="collapse" class="filter-link"><span>Price
                                         Range</span><i class="fa fa-angle-down"></i></a>
-                                <ul class="all-price collapse show" id="price-filter" style="padding: 10px 15px;">
-                                    <span id="price-range-label"
-                                        style="font-size: 14px; font-weight: 600; color: #333; display: block; margin-bottom: 15px;">Price:
-                                        ₹0 - ₹5000</span>
-                                    <input type="hidden" id="amount" name="amount" />
-                                    <div id="slider-range"></div>
-                                </ul>
+                                <div class="collapse show" id="price-filter">
+                                    <ul class="all-price" style="padding: 10px 15px;">
+                                        <span id="price-range-label"
+                                            style="font-size: 14px; font-weight: 600; color: #333; display: block; margin-bottom: 15px;">Price:
+                                            ₹10 - ₹15000</span>
+                                        <input type="hidden" id="amount" name="amount" />
+                                        <div id="slider-range"></div>
+                                    </ul>
+                                </div>
                             </div>
 
                             @if(isset($category))
@@ -133,6 +147,7 @@
                                 <input type="hidden" name="q" value="{{ request('q') }}">
                             @endif
                         </form>
+                        </div>
                     </div>
                 </div>
 
@@ -360,5 +375,14 @@
         function submitFilterForm() {
             $('#searchForm').submit();
         }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            if (window.innerWidth < 768) {
+                let filters = document.querySelectorAll('.vendor-filter .collapse, .price-filter .collapse');
+                filters.forEach(function(filter) {
+                    filter.classList.remove('show');
+                });
+            }
+        });
     </script>
 @endsection

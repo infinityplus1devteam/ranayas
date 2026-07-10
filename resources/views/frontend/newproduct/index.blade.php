@@ -705,8 +705,8 @@
                 products that fit your daily needs and lifestyle.</p>
 
             <div class="btns">
-                <a href="#">Browse products</a>
-                <a href="javascript:void(0);" onclick="document.getElementById('enquiry-form').style.display = 'block'; document.getElementById('modal_background').classList.remove('d-none');">Get buying advice</a>
+                <a href="{{ route('index') }}">Browse products</a>
+                <!-- <a href="javascript:void(0);" onclick="document.getElementById('enquiry-form').style.display = 'block'; document.getElementById('modal_background').classList.remove('d-none');">Get buying advice</a> -->
                 {{-- <a href="#">Browse products</a>
     <a href="#">Get buying advice</a> --}}
             </div>
