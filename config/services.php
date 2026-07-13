@@ -42,6 +42,7 @@ return [
         'dlt_otp_template_id' => env('SMS_DLT_OTP_TEMPLATE_ID'),
         // 'dlt_order_template_id' => env('SMS_DLT_ORDER_TEMPLATE_ID'),
         'dlt_shipped_template_id' => env('SMS_DLT_SHIPPED_TEMPLATE_ID'),
+        'dlt_delivered_template_id' => env('SMS_DLT_DELIVERED_TEMPLATE_ID'),
         'dlt_return_template_id' => env('SMS_DLT_RETURN_TEMPLATE_ID'),
         'dlt_cancel_template_id' => env('SMS_DLT_CANCEL_TEMPLATE_ID'),
     ],

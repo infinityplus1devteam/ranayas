@@ -228,6 +228,19 @@ class OrderController extends Controller
                     Log::error('Invoice mail failed for order ' . $order->order_number . ': ' . $mailEx->getMessage());
                 }
 
+                // Send Delivered SMS using DLT delivered template
+                try {
+                    if ($order->user && $order->user->mobile) {
+                        SMS::send(
+                            $order->user->mobile,
+                            'Good News! Your order has been delivered. Rate your purchase, leave a review, and keep shopping at Ranayas!',
+                            config('services.sms.dlt_delivered_template_id')
+                        );
+                    }
+                } catch (\Exception $smsEx) {
+                    Log::error('Delivered SMS failed for order ' . $order->order_number . ': ' . $smsEx->getMessage());
+                }
+
             }
 
             connectify('success', 'Order Updated', 'Status has been updated to ' . $order->status);
