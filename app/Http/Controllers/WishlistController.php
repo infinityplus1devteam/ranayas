@@ -70,7 +70,7 @@ class WishlistController extends Controller
             'user_id' => auth('user')->user()->id,
         ]);
 
-        connectify('success', 'Added to Wishlist', '"' . $product->title . '" has been Added to your wishlist');
+        connectify('success', 'Added to Wishlist', 'Item has been Added to your wishlist');
         return back();
     }
 
@@ -124,7 +124,7 @@ class WishlistController extends Controller
 
             $wishlist->delete();
 
-            connectify('success', 'Removed Wishlist', '"' . $product->title . '" has been Removed from your wishlist');
+            connectify('success', 'Removed Wishlist', 'Item has been Removed from your wishlist');
 
             return back();
 

@@ -83,7 +83,7 @@ class CartController extends Controller
                     ),
                 ));
 
-                connectify('success', 'Cart', '"' . $product->title . '"' . ' has been added to your cart !');
+                connectify('success', 'Cart', 'Item has been added to your cart !');
 
                 return redirect(route('cart'));
             }
@@ -163,7 +163,7 @@ class CartController extends Controller
         
         if ($cart) {
             Cart::remove($request->item_id);
-            connectify('success', 'Item Removed', $cart->name . ' has been removed from your cart !');
+            connectify('success', 'Item Removed', 'Item has been removed from your cart !');
         } else {
             connectify('error', 'Error', 'Item not found in cart.');
         }

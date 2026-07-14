@@ -247,7 +247,7 @@
                 $('.quantity-input').attr('disabled', 'disabled');
 
                 $.ajax({
-                    url: "{{ route('cart.update') }}",
+                    url: "{{ route('cart.update', [], false) }}",
                     type: 'POST',
                     data: {
                         quantity: newQty,

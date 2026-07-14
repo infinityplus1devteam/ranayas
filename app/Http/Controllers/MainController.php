@@ -240,13 +240,13 @@ class MainController extends Controller
 
     public function verifyPincode(Request $request, LogisticService $logistic)
     {
-        $res = $logistic->verify($request->pincode);
-        $res1 = json_decode($res, true);
-        if (isset($res1['status']) && $res1['status'] == 200) {
+        // $res = $logistic->verify($request->pincode);
+        // $res1 = json_decode($res, true);
+        // if (isset($res1['status']) && $res1['status'] == 200) {
             session(['pincode' => $request->pincode]);
-            return response()->json(['success' => 'Delivery Available at ' . $request->pincode, 'estimated_date' => $res1['data']['available_courier_companies'][0]['etd']]);
-        }
-        return response()->json(['error' => 'Delivery Not Available at ' . $request->pincode]);
+            return response()->json(['success' => 'Delivery Available at ' . $request->pincode, 'estimated_date' => '3-4 days']);
+        // }
+        // return response()->json(['error' => 'Delivery Not Available at ' . $request->pincode]);
     }
 
     public function search(Request $request)
