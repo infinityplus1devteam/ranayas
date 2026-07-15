@@ -16,6 +16,13 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'AuthUser' => CheckUserAuth::class,
             'guard' => RedirectIfAuthenticated::class,
+            'admin.timeout' => \App\Http\Middleware\AdminInactivityTimeout::class,
+        ]);
+
+        $middleware->validateCsrfTokens(except: [
+            'myaccount/logout',
+            'adranayas753/logout',
+            'ranayasshop/logout',
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

@@ -97,6 +97,8 @@
         <div class="fixed-btn">
             <button id="connectBtn" class="custom-btn">LET'S CONNECT</button>
         </div>
+
+        {{-- Enquiry Popup --}}
         <div id="enquiry-form" class="popup-modal">
             <div class="popup-content">
                 <button type="button" class="close1" onclick="closeModal()" aria-label="Close">
@@ -104,15 +106,12 @@
                 </button>
 
                 <div class="popup-body">
-
-                    {{-- <div class="img-popup mb-5">
-                        <img width="300px" src="{!! asset('assets/image/logo/ranayas-logo.png') !!}" alt="img">
-                    </div> --}}
                     <form id="modal-form-ctc" name="modal_contact_form" class="contact-form"
                         action="{{ url('sendmail') }}" method="post">
                         @csrf
                         <input type="text" name="website" style="display:none !important;" tabindex="-1"
                             autocomplete="off">
+                        <input type="hidden" name="form_subject" value="Enquiry">
                         <div class="popup mb-5">
                             <h5 class="modal-title text-center mb-3">
                                 Connect Us
@@ -146,8 +145,56 @@
                 </div>
             </div>
         </div>
+
+        {{-- Sell with Us Popup --}}
+        <div id="sell-form" class="popup-modal">
+            <div class="popup-content">
+                <button type="button" class="close1" onclick="closeSellModal()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+
+                <div class="popup-body">
+                    <form id="modal-form-sell" name="modal_sell_form" class="contact-form"
+                        action="{{ url('sendmail') }}" method="post">
+                        @csrf
+                        <input type="text" name="website" style="display:none !important;" tabindex="-1"
+                            autocomplete="off">
+                        <input type="hidden" name="form_subject" value="Sell with Us Enquiry">
+                        <div class="popup mb-5">
+                            <h5 class="modal-title text-center mb-3">
+                                Sell with Us
+                            </h5>
+                            <h3>Partner with Ranayas</h3>
+                        </div>
+                        <div class="custom-form-group">
+                            <input type="text" id="sell_form_name" name="form_name" class="custom-input" required />
+                            <label for="sell_form_name" class="custom-label">Name:</label>
+                        </div>
+                        <div class="custom-form-group">
+                            <input type="email" id="sell_form_email" name="form_email" class="custom-input" required />
+                            <label for="sell_form_email" class="custom-label">Email Address:</label>
+                        </div>
+                        <div class="custom-form-group">
+                            <input type="tel" id="sell_form_number" name="form_phone" class="custom-input" required />
+                            <label for="sell_form_number" class="custom-label">Contact Number:</label>
+                        </div>
+                        <div class="custom-form-group">
+                            <input type="text" id="sell_form_message" name="form_message" class="custom-input" required />
+                            <label for="sell_form_message" class="custom-label">Message:</label>
+                        </div>
+                        <div class="contact-section-btn">
+                            <button class="custom-submit-btn" id="sell-submit-btn" type="submit">
+                                Submit
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
     </div>
     <!-- modal popup end -->
+
 
 
     <!-- For social Start here  -->
@@ -632,7 +679,7 @@
                                             <li class="f-link-ul-li"><a href="{{ route('about') }}">About Us</a></li>
                                             <li class="f-link-ul-li"><a href="{{ route('faq') }}">Faq's</a></li>
                                             <li class="f-link-ul-li"><a href="{{ route('contact') }}">Contact us</a></li>
-                                            <li class="f-link-ul-li"><a href="javascript:void(0);" onclick="document.getElementById('enquiry-form').style.display = 'block'; document.getElementById('modal_background').classList.remove('d-none');">Sell with us</a></li>
+                                            <li class="f-link-ul-li"><a href="javascript:void(0);" onclick="if(document.getElementById('enquiry-form')) document.getElementById('enquiry-form').style.display = 'none'; if(document.getElementById('sell-form')) document.getElementById('sell-form').style.display = 'block'; document.getElementById('modal_background').classList.remove('d-none');">Sell with us</a></li>
                                         </ul>
                                     </div>
                                     <div class="f-link">
@@ -1069,21 +1116,33 @@
         var connectBtn = document.getElementById('connectBtn');
         var modal = document.getElementById('enquiry-form');
         var modalBackground = document.getElementById('modal_background');
+        var sellModal = document.getElementById('sell-form');
 
-        connectBtn.addEventListener('click', function() {
-            modal.style.display = 'block';
-            modalBackground.classList.remove('d-none');
-        });
+        if (connectBtn) {
+            connectBtn.addEventListener('click', function() {
+                modal.style.display = 'block';
+                if (sellModal) sellModal.style.display = 'none';
+                modalBackground.classList.remove('d-none');
+            });
+        }
 
-        modalBackground.addEventListener('click', function(event) {
-            if (event.target === modalBackground) {
-                closeModal();
-            }
-        });
+        if (modalBackground) {
+            modalBackground.addEventListener('click', function(event) {
+                if (event.target === modalBackground) {
+                    closeModal();
+                    closeSellModal();
+                }
+            });
+        }
 
         function closeModal() {
-            modal.style.display = 'none';
-            modalBackground.classList.add('d-none');
+            if (modal) modal.style.display = 'none';
+            if (modalBackground) modalBackground.classList.add('d-none');
+        }
+
+        function closeSellModal() {
+            if (sellModal) sellModal.style.display = 'none';
+            if (modalBackground) modalBackground.classList.add('d-none');
         }
 
         function toggleSocialMenu() {
@@ -1091,6 +1150,7 @@
             socialIcons.style.display = (socialIcons.style.display === 'block') ? 'none' : 'block';
         }
     </script>
+
 
     <!-- Custom Search JS - Luxury Implementation -->
     <script>

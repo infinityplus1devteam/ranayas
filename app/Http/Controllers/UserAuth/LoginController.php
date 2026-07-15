@@ -138,12 +138,11 @@ class LoginController extends Controller
         $validator = Validator::make(
             $request->all(),
             [
-                'mobile' => 'required|digits:10|unique:txn_users,mobile',
+                'mobile' => 'required|digits:10',
             ],
             [
                 'mobile.required' => 'Please Enter Mobile Number',
                 'mobile.digits' => 'Please Enter 10 digits Mobile Number',
-                'mobile.unique' => 'Mobile Number Already Registered with us',
             ]
         );
 

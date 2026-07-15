@@ -280,7 +280,9 @@
                                                     </a>
                                                 </div>
                                                 <div class="Pro-lable">
-                                                    <span class="p-text">New</span>
+                                                    @if (isset($product->created_at) && \Carbon\Carbon::parse($product->created_at)->greaterThanOrEqualTo(\Carbon\Carbon::now()->subDays(15)))
+                                                        <span class="p-text">New</span>
+                                                    @endif
                                                     <span class="p-discount"> {{ $getOffer }}% off</span>
                                                 </div>
                                                 <div class="pro-icn">
@@ -777,7 +779,6 @@
         //     modal.style.display = 'block';
         //     $("#modal_background").removeClass('d-none');
         // }, 8000);
-        console.log('i m here');
         const start = document.querySelector(".hearing-test-page-wrapper");
         const startTest = document.querySelector(".hearing-test-page .start-test");
         const allInput = document.querySelectorAll(".htpw-parts input");

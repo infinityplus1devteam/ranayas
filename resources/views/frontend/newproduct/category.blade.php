@@ -129,7 +129,9 @@
                                                 </a>
                                             </div>
                                             <div class="Pro-lable">
-                                                <span class="p-text">New</span>
+                                                @if (isset($product->created_at) && \Carbon\Carbon::parse($product->created_at)->greaterThanOrEqualTo(\Carbon\Carbon::now()->subDays(15)))
+                                                    <span class="p-text">New</span>
+                                                @endif
                                                 @if ($getOffer > 0)
                                                     <span class="p-discount"> {{ $getOffer }}% off</span>
                                                 @endif

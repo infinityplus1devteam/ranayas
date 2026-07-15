@@ -52,6 +52,7 @@ class MainController extends Controller
         MAX(map.size_id) as s_id,
         MAX(map.mrp) as mrp,
         MAX(map.starting_price) as starting_price,
+        MAX(p.created_at) as created_at,
 
         GROUP_CONCAT(DISTINCT c.color_code) as color_codes,
         FLOOR(AVG(txn_reviews.rating)) as rating,
@@ -89,14 +90,14 @@ class MainController extends Controller
         // Add Shop By Budget
         $shopByBudgets = \App\Model\ShopByBudget::where('is_active', true)->orderBy('sort_index', 'asc')->get();
         $shopByBudgetProducts = [];
-        foreach($shopByBudgets as $budget) {
+        foreach ($shopByBudgets as $budget) {
             $productIds = \App\Model\MapShopByBudgetProduct::where('shop_by_budget_id', $budget->id)->orderBy('sort_index')->pluck('product_id')->toArray();
-            if(!empty($productIds)) {
-                $budgetProds = collect($productIds)->map(function($pid) use ($products) {
+            if (!empty($productIds)) {
+                $budgetProds = collect($productIds)->map(function ($pid) use ($products) {
                     return $products->firstWhere('id', $pid);
                 })->filter()->all();
-                
-                if(!empty($budgetProds)) {
+
+                if (!empty($budgetProds)) {
                     $shopByBudgetProducts[$budget->name] = [
                         'description' => $budget->description,
                         'products' => $budgetProds
@@ -209,7 +210,7 @@ class MainController extends Controller
                 $resolved_color_id = $results->first()->color_id;
             }
         }
-        
+
         if ($request->source == 'color' && $results->isEmpty()) {
             $fallback = MapColorSize::select('mrp', 'starting_price', 'color_id', 'size_id', 'stock')->where('product_id', $request->product_id)->where('color_id', $request->color_id)->where('status', true)->orderBy('sort_index', 'asc')->first();
             if ($fallback) {
@@ -223,7 +224,7 @@ class MainController extends Controller
             $imageQuery->where('size_id', $resolved_size_id);
         }
         $images = $imageQuery->orderBy('id', 'DESC')->get();
-        
+
         if ($images->isEmpty()) {
             $images = TxnImage::select('id', 'image_url')->where('product_id', $request->product_id)->where('color_id', $resolved_color_id)->orderBy('id', 'DESC')->get();
         }
@@ -243,8 +244,8 @@ class MainController extends Controller
         // $res = $logistic->verify($request->pincode);
         // $res1 = json_decode($res, true);
         // if (isset($res1['status']) && $res1['status'] == 200) {
-            session(['pincode' => $request->pincode]);
-            return response()->json(['success' => 'Delivery Available at ' . $request->pincode, 'estimated_date' => '3-4 days']);
+        session(['pincode' => $request->pincode]);
+        return response()->json(['success' => 'Delivery Available at ' . $request->pincode, 'estimated_date' => '3-4 days']);
         // }
         // return response()->json(['error' => 'Delivery Not Available at ' . $request->pincode]);
     }
@@ -258,7 +259,7 @@ class MainController extends Controller
 
             $products = DB::table('txn_products as p')
                 ->selectRaw("p.id , p.title , p.slug_url,w.user_id as w_u_id, w.id as w_id, w.product_id as w_product_id,map.color_id as c_id, map.size_id as s_id , p.image_url, p.image_url1,p.review_status, FLOOR(AVG(r.rating)) as rating , map.mrp, map.starting_price, map.stock,
-                GROUP_CONCAT(DISTINCT(c.color_code)) as color_codes, COUNT(Distinct(r.comment)) as total_comment, p.category_id")
+                GROUP_CONCAT(DISTINCT(c.color_code)) as color_codes, COUNT(Distinct(r.comment)) as total_comment, p.category_id, p.created_at")
                 ->leftJoin("txn_reviews as r", function ($join) {
                     $join->on("r.product_id", "=", "p.id")
                         ->where("r.status", "=", true);
@@ -273,7 +274,7 @@ class MainController extends Controller
 
             $products = DB::table('txn_products as p')
                 ->selectRaw("p.id , p.title , p.slug_url,w.user_id as w_u_id,w.id as w_id, w.product_id as w_product_id,map.color_id as c_id, map.size_id as s_id , p.image_url,p.review_status, p.image_url1, FLOOR(AVG(r.rating)) as rating , map.mrp, map.starting_price, map.stock,
-                GROUP_CONCAT(DISTINCT(c.color_code)) as color_codes, COUNT(Distinct(r.comment)) as total_comment, p.category_id")
+                GROUP_CONCAT(DISTINCT(c.color_code)) as color_codes, COUNT(Distinct(r.comment)) as total_comment, p.category_id, p.created_at")
                 ->leftJoin("map_color_sizes as map", "map.product_id", "p.id")
                 ->leftJoin("mst_colors as c", "c.id", "map.color_id")
                 ->leftJoin("txn_reviews as r", function ($join) {
@@ -350,7 +351,7 @@ class MainController extends Controller
     {
         $products = DB::table('txn_products as p')
             ->selectRaw("p.id , p.title , p.slug_url,w.user_id as w_u_id,w.id as w_id, w.product_id as w_product_id,map.color_id as c_id, map.size_id as s_id, p.image_url, p.image_url1,p.review_status, map.mrp, map.starting_price, map.stock,
-                GROUP_CONCAT(DISTINCT(co.color_code)) as color_codes, p.category_id ,c.parent_id, FLOOR(AVG(r.rating)) as rating , COUNT(Distinct(r.comment)) as total_comment")
+                GROUP_CONCAT(DISTINCT(co.color_code)) as color_codes, p.category_id ,c.parent_id, FLOOR(AVG(r.rating)) as rating , COUNT(Distinct(r.comment)) as total_comment, p.created_at")
             ->leftJoin("map_color_sizes as map", "map.product_id", "p.id")
             ->leftJoin("mst_colors as co", "co.id", "map.color_id")
             ->leftJoin("txn_reviews as r", function ($join) {
@@ -449,7 +450,7 @@ class MainController extends Controller
 
         $products = DB::table('txn_products as p')
             ->selectRaw("p.id , p.title , p.slug_url,w.user_id as w_u_id,w.id as w_id, w.product_id as w_product_id,map.color_id as c_id, map.size_id as s_id, p.image_url, p.image_url1,p.review_status, map.mrp, map.starting_price, map.stock,
-                GROUP_CONCAT(DISTINCT(co.color_code)) as color_codes, p.category_id ,c.parent_id, FLOOR(AVG(r.rating)) as rating , COUNT(Distinct(r.comment)) as total_comment")
+                GROUP_CONCAT(DISTINCT(co.color_code)) as color_codes, p.category_id ,c.parent_id, FLOOR(AVG(r.rating)) as rating , COUNT(Distinct(r.comment)) as total_comment, p.created_at")
             ->leftJoin("map_color_sizes as map", "map.product_id", "p.id")
             ->leftJoin("mst_colors as co", "co.id", "map.color_id")
             ->leftJoin("txn_reviews as r", function ($join) {
@@ -471,9 +472,9 @@ class MainController extends Controller
         $brands = \App\Model\TxnBrand::whereIn('id', $brandIds)->where('status', true)->get();
 
         $conditions = TxnCondition::where('status', true)->get();
-        
+
         $colors = MstColor::where('status', true)->get();
-        
+
         $sizes = MstSize::where('status', true)->get();
 
         if ($request->filled('brands') && gettype($request->brands) == 'array') {
@@ -543,7 +544,7 @@ class MainController extends Controller
 
             $products = DB::table('txn_products as p')
                 ->selectRaw("p.id , p.title , p.slug_url,w.user_id as w_u_id,w.id as w_id, w.product_id as w_product_id,map.color_id as c_id, map.size_id as s_id, p.image_url, p.image_url1,p.review_status, map.mrp, map.starting_price, map.stock,
-                GROUP_CONCAT(DISTINCT(co.color_code)) as color_codes, p.category_id ,c.parent_id, FLOOR(AVG(r.rating)) as rating , COUNT(Distinct(r.comment)) as total_comment")
+                GROUP_CONCAT(DISTINCT(co.color_code)) as color_codes, p.category_id ,c.parent_id, FLOOR(AVG(r.rating)) as rating , COUNT(Distinct(r.comment)) as total_comment, p.created_at")
                 ->leftJoin("map_color_sizes as map", "map.product_id", "p.id")
                 ->leftJoin("mst_colors as co", "co.id", "map.color_id")
                 ->leftJoin("txn_reviews as r", function ($join) {
@@ -772,6 +773,19 @@ class MainController extends Controller
         $subject = $request->form_subject ?? 'Ranayas Enquiry';
         $message = $request->form_message ?? '-';
 
+        // Save the enquiry to the database so it appears on the Admin Enquiries page
+        try {
+            \App\Model\TxnContactUs::create([
+                'name' => $name,
+                'email' => $email,
+                'mobile' => $phone,
+                'subject' => $subject,
+                'message' => $message,
+            ]);
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Failed to save contact enquiry to database: ' . $e->getMessage());
+        }
+
         $html = view('frontend.email', compact(
             'name',
             'email',
@@ -789,12 +803,16 @@ class MainController extends Controller
             $mail->Username = env('MAIL_USERNAME');
             $mail->Password = env('MAIL_PASSWORD');
             $mail->Port = env('MAIL_PORT');
-            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+            $mail->Timeout = 15; // Set 15 seconds timeout to prevent infinite loading if connection fails
+            if (env('MAIL_ENCRYPTION') === 'ssl') {
+                $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS; // Port 465 SSL/TLS encryption
+            } else {
+                $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS; // Port 587 STARTTLS encryption
+            }
             $mail->SMTPAutoTLS = true;
             $mail->SMTPDebug = 0;
             $mail->setFrom(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
-            // $mail->addAddress('info@mokshtubes.com');
-            $mail->addAddress('siddiquimahfooz327@gmail.com');
+            $mail->addAddress('info@ranayas.com'); // Hostinger Admin Mail
             $mail->addBCC('supritdagade77@gmail.com');
             $mail->isHTML(true);
             $mail->Subject = "You Received {$subject}";

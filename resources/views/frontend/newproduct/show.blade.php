@@ -509,6 +509,17 @@
                             .product-specification-list li:last-child .spec-box {
                                 border-bottom: none !important;
                             }
+                            /* Description section .spec-box must NOT be flex — paragraphs should stack normally */
+                            .description-content .spec-box {
+                                display: block !important;
+                                justify-content: unset !important;
+                                align-items: unset !important;
+                                padding: 0 !important;
+                                border: none !important;
+                                border-bottom: none !important;
+                                background: transparent !important;
+                                box-shadow: none !important;
+                            }
                         }
                     </style>
 
@@ -667,7 +678,9 @@
                                         </a>
                                     </div>
                                     <div class="Pro-lable">
-                                        <span class="p-text">New</span>
+                                        @if (isset($product->created_at) && \Carbon\Carbon::parse($product->created_at)->greaterThanOrEqualTo(\Carbon\Carbon::now()->subDays(15)))
+                                            <span class="p-text">New</span>
+                                        @endif
                                         @if ($getOffer > 0)
                                             <span class="p-discount"> {{ $getOffer }}% off</span>
                                         @endif

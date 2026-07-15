@@ -117,11 +117,11 @@ Route::
                     Route::GET('/check/email', 'AdminAuth\LoginController@checkEmail')->name('check.email');
                 });
 
-                Route::group(['middleware' => 'auth:admin'], function () {
+                Route::group(['middleware' => ['auth:admin', 'admin.timeout']], function () {
                     Route::GET('/', 'AdminController@index')->name('admin.dashboard');
                     Route::GET('/profile', 'AdminController@edit')->name('admin.profile');
                     Route::POST('/profile', 'AdminController@update');
-                    Route::POST('/logout', 'AdminAuth\LoginController@logout')->name('admin.logout');
+                    Route::match(['get', 'post'], '/logout', 'AdminAuth\LoginController@logout')->name('admin.logout');
 
                     Route::prefix('/manage-policies')->group(function () {
                         Route::GET('/edit/{slug}', 'Admin\PolicyController@edit')->name('admin.policies.edit');
@@ -414,7 +414,7 @@ Route::
 
                 Route::group(['middleware' => 'auth:user'], function () {
 
-                    Route::POST('/logout', 'UserAuth\LoginController@logout')->name('user.logout');
+                    Route::match(['get', 'post'], '/logout', 'UserAuth\LoginController@logout')->name('user.logout');
                     Route::GET('/', 'UserController@index')->name('user.dashboard');
                     Route::GET('/profile', 'UserController@showMyAccount')->name('user.profile');
                     Route::GET('/change-password', 'UserController@showChangePassword')->name('user.change-password');
@@ -456,7 +456,7 @@ Route::
 
                     Route::POST('/profile', 'ShopController@update')->name('shop.update');
 
-                    Route::POST('/logout', 'ShopAuth\LoginController@logout')->name('shop.logout');
+                    Route::match(['get', 'post'], '/logout', 'ShopAuth\LoginController@logout')->name('shop.logout');
                 });
             });
 
