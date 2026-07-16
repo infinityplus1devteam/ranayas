@@ -937,6 +937,138 @@
     <script src="{!! asset('assets/js/jquery.validate.min.js') !!}"></script>
     <script src="{!! asset('assets/js/custom.js') !!}"></script>
     <script src="{!! asset('assets/js/main.js') !!}"></script>
+    <script>
+        window.verifiedPincodeStatus = window.verifiedPincodeStatus || {};
+
+        function verifyPincodeGlobal($input, callback) {
+            var val = $.trim($input.val());
+            var $form = $input.closest('form');
+            var $btnSubmit = $form.find('button[type="submit"], .btnSubmit, .submit_button');
+            
+            var $statusContainer = $input.siblings('.pincode-popup-status');
+            if ($statusContainer.length === 0) {
+                $statusContainer = $('<div class="pincode-popup-status mt-1"></div>');
+                $input.after($statusContainer);
+            }
+
+            if (!val || val.length !== 6 || isNaN(val)) {
+                window.verifiedPincodeStatus[val] = false;
+                $statusContainer.html('<p class="text-danger m-0" style="color:rgb(238, 53, 53); font-size:14px; font-weight:500;">Enter correct pincode</p>');
+                if ($form.length) {
+                    $btnSubmit.attr('disabled', 'disabled').addClass('disabled');
+                }
+                if (callback) callback(false);
+                return;
+            }
+
+            $.ajax({
+                url: "/pincode",
+                type: 'POST',
+                data: {
+                    _token: $('input[name="_token"]').val(),
+                    pincode: val
+                },
+                success: function(result) {
+                    if (result.error) {
+                        window.verifiedPincodeStatus[val] = false;
+                        $statusContainer.html('<p class="text-danger m-0" style="color:rgb(238, 53, 53); font-size:14px; font-weight:500;">Enter correct pincode</p>');
+                        if ($form.length) {
+                            $btnSubmit.attr('disabled', 'disabled').addClass('disabled');
+                        }
+                        if (callback) callback(false);
+                    } else {
+                        window.verifiedPincodeStatus[val] = true;
+                        $statusContainer.html('<p class="text-success m-0" style="color:#28a745; font-size:14px; font-weight:500;">' + (result.success || ('Delivery available at ' + val)) + '</p>');
+                        if ($form.length) {
+                            $btnSubmit.removeAttr('disabled').removeClass('disabled');
+                        }
+                        if (callback) callback(true);
+                    }
+                },
+                error: function() {
+                    window.verifiedPincodeStatus[val] = false;
+                    $statusContainer.html('<p class="text-danger m-0" style="color:rgb(238, 53, 53); font-size:14px; font-weight:500;">Enter correct pincode</p>');
+                    if ($form.length) {
+                        $btnSubmit.attr('disabled', 'disabled').addClass('disabled');
+                    }
+                    if (callback) callback(false);
+                }
+            });
+        }
+
+        $(document).on('keyup change blur', 'form input[name="pincode"], form input[name="pincode_add"], input#pincode_modal, input#pincode', function() {
+            var $input = $(this);
+            var val = $.trim($input.val());
+            
+            if ($input.hasClass('pincode-code') && !$input.closest('form').length) {
+                return;
+            }
+
+            if (val.length === 6) {
+                verifyPincodeGlobal($input);
+            } else if (val.length > 0) {
+                var $statusContainer = $input.siblings('.pincode-popup-status');
+                if ($statusContainer.length === 0) {
+                    $statusContainer = $('<div class="pincode-popup-status mt-1"></div>');
+                    $input.after($statusContainer);
+                }
+                $statusContainer.html('<p class="text-danger m-0" style="color:rgb(238, 53, 53); font-size:14px; font-weight:500;">Enter correct pincode</p>');
+                $input.closest('form').find('button[type="submit"], .btnSubmit, .submit_button').attr('disabled', 'disabled').addClass('disabled');
+            }
+        });
+
+        $(document).on('submit', 'form', function(e) {
+            var $form = $(this);
+            var $pincodeInput = $form.find('input[name="pincode"]:visible, input[name="pincode_add"]:visible');
+            if ($pincodeInput.length === 0) {
+                $pincodeInput = $form.find('input[name="pincode"]');
+            }
+            if ($pincodeInput.length && $pincodeInput.val() !== undefined && $pincodeInput.val() !== '') {
+                var val = $.trim($pincodeInput.val());
+                if (val.length !== 6 || isNaN(val)) {
+                    alert('Enter correct pincode');
+                    $pincodeInput.focus();
+                    e.preventDefault();
+                    e.stopImmediatePropagation();
+                    return false;
+                }
+                if (window.verifiedPincodeStatus[val] === false) {
+                    alert('Enter correct pincode');
+                    $pincodeInput.focus();
+                    e.preventDefault();
+                    e.stopImmediatePropagation();
+                    return false;
+                } else if (window.verifiedPincodeStatus[val] === undefined) {
+                    var isValid = false;
+                    $.ajax({
+                        url: "/pincode",
+                        type: 'POST',
+                        async: false,
+                        data: {
+                            _token: $('input[name="_token"]').val(),
+                            pincode: val
+                        },
+                        success: function(res) {
+                            if (!res.error && res.success) {
+                                isValid = true;
+                                window.verifiedPincodeStatus[val] = true;
+                            } else {
+                                window.verifiedPincodeStatus[val] = false;
+                            }
+                        }
+                    });
+                    if (!isValid) {
+                        alert('Enter correct pincode');
+                        verifyPincodeGlobal($pincodeInput);
+                        $pincodeInput.focus();
+                        e.preventDefault();
+                        e.stopImmediatePropagation();
+                        return false;
+                    }
+                }
+            }
+        });
+    </script>
     @yield('extrajs')
 
     <script>

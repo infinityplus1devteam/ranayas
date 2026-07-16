@@ -17,6 +17,129 @@
         .home5-service .service .service-box .s-box:hover .homepage-rupee-icon {
             transform: rotateY(180deg);
         }
+
+        .featured5-pro .caption.caption-9 {
+            padding-left: 15px !important;
+            padding-right: 15px !important;
+        }
+        .featured5-pro .caption.caption-9 h3.title {
+            margin-left: 0 !important;
+            padding-left: 0 !important;
+        }
+
+        @media (max-width: 767px) {
+            /* Reduce page outer container padding to let carousel stretch wider */
+            .featured-products .container {
+                padding-left: 10px !important;
+                padding-right: 10px !important;
+            }
+
+            /* Adjust margins and paddings for mobile display */
+            .featured5-pro.owl-carousel .owl-stage-outer {
+                padding: 10px 0 !important;
+            }
+            .featured5-pro.owl-carousel .owl-item {
+                padding: 0 4px !important;
+            }
+            
+            /* Add 4px padding-left and padding-right to caption-9 */
+            .featured5-pro .caption.caption-9 {
+                padding-left: 4px !important;
+                padding-right: 4px !important;
+            }
+            
+            /* Left-align titles and remove padding/margins */
+            .featured5-pro .caption-9 h3.title {
+                margin: 2px 0 !important;
+                padding: 0 !important;
+                display: block !important;
+                text-align: left !important;
+            }
+            .featured5-pro .caption-9 h3.title span.pull-left {
+                float: none !important;
+                display: block !important;
+                width: 100% !important;
+                text-align: left !important;
+            }
+            .featured5-pro .caption-9 h3.title span.pull-left a {
+                font-size: 11px !important;
+                line-height: 1.2 !important;
+                display: block !important;
+                white-space: nowrap !important;
+                overflow: hidden !important;
+                text-overflow: ellipsis !important;
+                text-align: left !important;
+            }
+
+            /* Price and rating alignment left-aligned on mobile */
+            .featured5-pro .caption-9 .price-star {
+                display: flex !important;
+                flex-direction: row !important;
+                align-items: center !important;
+                justify-content: flex-start !important;
+                text-align: left !important;
+                margin-top: 2px !important;
+            }
+            .featured5-pro .caption-9 .price-star .rating {
+                display: none !important; /* Hide rating stars on mobile to avoid overcrowding */
+            }
+            .featured5-pro .caption-9 .price-star .pro-price {
+                float: none !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: flex-start !important;
+                gap: 4px !important;
+            }
+            .featured5-pro .caption-9 .price-star .pro-price span.new-price {
+                font-size: 11px !important;
+                font-weight: 600 !important;
+            }
+            .featured5-pro .caption-9 .price-star .pro-price span.new-price i.fa-inr {
+                font-size: 11px !important;
+            }
+            .featured5-pro .caption-9 .price-star .pro-price span.old-price del {
+                font-size: 9px !important;
+            }
+            .featured5-pro .caption-9 .price-star .pro-price span.old-price i.fa-inr,
+            .featured5-pro .caption-9 .price-star .pro-price span.old-price del i.fa-inr {
+                font-size: 9px !important;
+            }
+
+            /* Labels and discount badges */
+            .featured5-pro .tred-pro .Pro-lable {
+                top: 5px !important;
+                left: 5px !important;
+                display: flex !important;
+                flex-direction: column !important;
+                gap: 2px !important;
+            }
+            .featured5-pro .tred-pro .Pro-lable span {
+                font-size: 8px !important;
+                padding: 1px 3px !important;
+                line-height: 1 !important;
+            }
+
+            /* Hide color dots, wishlist, cart, and eye icons on mobile */
+            .featured5-pro .tred-pro .pro-icn {
+                display: none !important;
+            }
+            .featured5-pro .caption-9 h3.title span.product-colors {
+                display: none !important;
+            }
+        }
+
+        @media (max-width: 575px) {
+            .featured5-pro .caption-9 .price-star {
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+            .featured5-pro .caption-9 .pro-price {
+                margin: 4px !important;
+            }
+            .home5-featured.section-b-padding.featured-products .owl-item .items {
+                margin: 0 !important;
+            }
+        }
     </style>
 @endsection
 @section('content')
@@ -324,7 +447,7 @@
                                                             {{ Str::length($product->title) > 20 ? Str::substr($product->title, 0, 20) . '...' : $product->title }}
                                                         </a>
                                                     </span>
-                                                    <span class="pull-left">
+                                                    <span class="pull-left product-colors">
                                                         @foreach ($colors as $color)
                                                             <span
                                                                 style="background: {{ $color }};border-radius:50%;height:10px;width:10px;display:inline-block;box-shadow: 1px 2px 3px 0px #5f5f5f;opacity:1;"></span>

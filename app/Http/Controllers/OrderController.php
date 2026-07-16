@@ -250,7 +250,7 @@ class OrderController extends Controller
             }
         }
 
-        connectify('error', 'Delivery Not Available', 'Delivery Not Available at '.$request->pincode);
+        connectify('error', 'Error', 'Enter correct pincode');
 
         return redirect(route('checkout'));
     }

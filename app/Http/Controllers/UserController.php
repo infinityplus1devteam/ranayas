@@ -167,6 +167,15 @@ class UserController extends Controller
             return back()->withInput();
         }
 
+        if ($request->filled('pincode')) {
+            $logistic = new \App\Services\LogisticService();
+            $verifyRes = json_decode($logistic->verify($request->pincode), true);
+            if (!isset($verifyRes['status']) || $verifyRes['status'] != 200) {
+                connectify('error', 'Error', 'Enter correct pincode');
+                return back()->withInput();
+            }
+        }
+
         try {
             $user = TxnUser::where('id', auth('user')->user()->id)->firstOrFail();
 
@@ -647,6 +656,15 @@ class UserController extends Controller
             return back()->withInput();
         }
 
+        if ($request->filled('pincode')) {
+            $logistic = new \App\Services\LogisticService();
+            $verifyRes = json_decode($logistic->verify($request->pincode), true);
+            if (!isset($verifyRes['status']) || $verifyRes['status'] != 200) {
+                connectify('error', 'Error', 'Enter correct pincode');
+                return back()->withInput();
+            }
+        }
+
         try {
 
             $add = Address::where('id', $id)->firstOrFail();
@@ -737,6 +755,18 @@ class UserController extends Controller
             return back()->withInput();
         }
 
+        if ($request->filled('pincode')) {
+            $logistic = new \App\Services\LogisticService();
+            $verifyRes = json_decode($logistic->verify($request->pincode), true);
+            if (!isset($verifyRes['status']) || $verifyRes['status'] != 200) {
+                if ($request->ajax() || $request->wantsJson()) {
+                    return response()->json(['status' => false, 'error' => 'Enter correct pincode'], 400);
+                }
+                connectify('error', 'Error', 'Enter correct pincode');
+                return back()->withInput();
+            }
+        }
+
         try {
 
             $user = TxnUser::where('id', auth('user')->user()->id)->firstOrFail();
@@ -804,6 +834,18 @@ class UserController extends Controller
         if ($validator->fails()) {
             connectify('error', 'Error', $validator->errors()->first());
             return back()->withInput();
+        }
+
+        if ($request->filled('pincode')) {
+            $logistic = new \App\Services\LogisticService();
+            $verifyRes = json_decode($logistic->verify($request->pincode), true);
+            if (!isset($verifyRes['status']) || $verifyRes['status'] != 200) {
+                if ($request->ajax() || $request->wantsJson()) {
+                    return response()->json(['status' => false, 'error' => 'Enter correct pincode'], 400);
+                }
+                connectify('error', 'Error', 'Enter correct pincode');
+                return back()->withInput();
+            }
         }
 
         try {

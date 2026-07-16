@@ -9,19 +9,30 @@ class Delivery
     public static function verify($pincode)
     {
         try {
-
-            $baseUrl = env('LOGISTIC_BASE_URL').'/c/api/pin-codes/json/?token=' . env('LOGISTIC_API_TOKEN') . '&filter_codes=' . $pincode;
-            $client  = new \GuzzleHttp\Client([
-                'http_errors' => false,
-            ]);
-            $res = $client->get($baseUrl);
-            if ($res->getStatusCode() == 200) {
-                $json = $res->getBody()->getContents();
-                return $json;
+            if (empty($pincode) || !preg_match('/^[0-9]{6}$/', $pincode)) {
+                return json_encode(['status' => 404, 'error' => 'Enter correct pincode']);
             }
+            $client = new \GuzzleHttp\Client([
+                'http_errors' => false,
+                'timeout' => 10,
+                'verify' => false,
+                'headers' => [
+                    'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+                    'Accept' => 'application/json'
+                ]
+            ]);
+            $res = $client->get('https://api.postalpincode.in/pincode/' . $pincode);
+            if ($res->getStatusCode() == 200) {
+                $content = $res->getBody()->getContents();
+                $data = json_decode($content, true);
+                if (is_array($data) && !empty($data[0]) && isset($data[0]['Status']) && strcasecmp($data[0]['Status'], 'Success') === 0 && !empty($data[0]['PostOffice'])) {
+                    return json_encode(['status' => 200, 'data' => $data[0]['PostOffice']]);
+                }
+            }
+            return json_encode(['status' => 404, 'error' => 'Enter correct pincode']);
         } catch (\Exception $ex) {
             \Log::info('Error : ' . $ex->getMessage());
-            return;
+            return json_encode(['status' => 404, 'error' => 'Enter correct pincode']);
         }
     }
 

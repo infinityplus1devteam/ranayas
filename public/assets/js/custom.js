@@ -1226,15 +1226,16 @@ $(document).ready(function () {
         autoplayHoverPause: true,
         responsive: {
             0: {
-                items: 1,
-                margin: 15,
+                items: 3,
+                margin: 6,
             },
             479: {
-                items: 1,
-                margin: 15,
+                items: 3,
+                margin: 6,
             },
             768: {
-                items: 2,
+                items: 3,
+                margin: 15,
             },
             979: {
                 items: 4,

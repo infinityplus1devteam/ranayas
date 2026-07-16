@@ -49,25 +49,13 @@
                                                 @endif
                                                 <div class="row address_div">
                                                     @if (count($addresses))
-                                                        <!-- <div class="col-md-12">
-                                                                                    <div class="checkout-form form-row mb--5 mb-xs--10">
-                                                                                        <div class="form__group col-md-12 mb-sm--30 mb-xs--10">
-                                                                                            <label for="name" style="padding-left: 0;font-size: 18px"
-                                                                                                class="form__label form__label--2">Please enter
-                                                                                                PIN code to check delivery
-                                                                                                <span class="required">*</span></label>
-                                                                                            <input type="text" placeholder="Enter pincode"
-                                                                                                class="pincode-code form-control form__input form__input--2"
-                                                                                                value="" name="pincode" id="pincode" required>
-                                                                                        </div>
-                                                                                        <div class="form__group col-md-12 pincd">
-                                                                                            <label for="pincode" class="error pincode_error"></label>
-                                                                                            <p class="text-success pincode_success"></p>
-                                                                                                                    <p class="text-success estimated_date"></p>
-                                                                                            <p class="text-danger pincode_error"></p>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div> -->
+                                                        <div class="col-md-12 mb-3 checkout-form" id="selected_address_delivery_status">
+                                                            <div class="p-3 border rounded" style="background-color: #f8f9fa;">
+                                                                <label for="pincode" class="error pincode_error m-0" style="font-weight: 500; font-size: 15px; color: rgb(238, 53, 53); display: none;"></label>
+                                                                <p class="text-success pincode_success m-0" style="font-weight: 500; font-size: 15px; color: #28a745; display: none;"></p>
+                                                                <p class="text-success estimated_date m-0" style="font-size: 14px; color: #28a745; display: none;"></p>
+                                                            </div>
+                                                        </div>
                                                     @endif
                                                     @foreach ($addresses as $add)
                                                         <div class="col-md-6">
@@ -343,9 +331,9 @@
                                                 value="" name="pincode_add" id="pincode_add" required>
                                         </div>
                                         <div class="col-12 pincd mt-2">
-                                            <label for="pincode" class="error pincode_error"></label>
-                                            <!-- <p class="text-success pincode_success m-0"></p>
-                                                                                            <p class="text-success estimated_date m-0"></p> -->
+                                            <label for="pincode" class="error pincode_error m-0" style="font-weight: 500; font-size: 15px; color: rgb(238, 53, 53); display: none;"></label>
+                                            <p class="text-success pincode_success m-0" style="font-weight: 500; font-size: 15px; color: #28a745; display: none;"></p>
+                                            <p class="text-success estimated_date m-0" style="font-size: 14px; color: #28a745; display: none;"></p>
                                         </div>
                                     </div>
 
@@ -1575,20 +1563,21 @@
         });
 
         function chkPindode(val, container) {
-            container = container || $('.checkout-form').first();
+            var $containers = container ? $(container) : $('.checkout-form:visible');
+            if ($containers.length === 0) {
+                $containers = $('#selected_address_delivery_status, .checkout-form');
+            }
             if (val == '' || val === undefined || val === null) {
-                container.find('.pincode-code').focus();
-                container.find('.pincode_error').html('Please Enter Pincode');
-                // container.find('.pincode_button').html('<i class="fa fa-search" aria-hidden="true"></i>');
-                // container.find('.pincode_button').removeAttr('disabled');
+                $containers.find('.pincode-code').focus();
+                $containers.find('.pincode_error').html('Enter correct pincode').css('display', 'block');
+                $containers.find('.pincode_success').css('display', 'none');
+                $('.order_place').attr('disabled', 'disabled').addClass('disabled');
             } else if (val.length == 6) {
                 $.ajaxSetup({
                     headers: {
                         'X-CSRF-TOKEN': $('input[name="_token"]').val()
                     }
                 });
-                // container.find('.pincode_button').html('<span class="fa fa-spinner fa-spin"></span>');
-                // container.find('.pincode_button').attr('disabled', 'disabled');
                 $('.add_address').hide();
                 $.ajax({
                     url: "{{ route('verify.pincode') }}",
@@ -1597,35 +1586,34 @@
                         pincode: val,
                     },
                     success: function (result) {
+                        window.verifiedPincodeStatus = window.verifiedPincodeStatus || {};
                         if (result.error) {
-                            container.find('.pincode_error').html(result.error);
-                            container.find('.pincode_success').css('display', 'none');
-                            container.find('.pincode_error').css('display', 'block');
-                            // container.find('.pincode_button').html(
-                            //     '<i class="fa fa-search" aria-hidden="true"></i>');
-                            // container.find('.pincode_button').removeAttr('disabled');
-                            $('.order_place').attr('disabled', 'disabled');
-                            $('.order_place').addClass('disabled');
-                            container.find('.estimated_date').hide();
+                            window.verifiedPincodeStatus[val] = false;
+                            $containers.find('.pincode_error').html('Enter correct pincode').css('display', 'block');
+                            $containers.find('.pincode_success').css('display', 'none');
+                            $('.order_place').attr('disabled', 'disabled').addClass('disabled');
+                            $containers.find('.estimated_date').hide();
                         } else {
-                            // container.find('.pincode_success').html(result.success);
-                            container.find('.pincode_error').css('display', 'none');
-                            // container.find('.pincode_success').css('display', 'block');
-                            // container.find('.pincode_button').html(
-                            //     '<i class="fa fa-search" aria-hidden="true"></i>');
-                            // container.find('.pincode_button').removeAttr('disabled');
-                            $('.order_place').removeAttr('disabled');
-                            $('.order_place').removeClass('disabled');
+                            window.verifiedPincodeStatus[val] = true;
+                            $containers.find('.pincode_error').css('display', 'none');
+                            $containers.find('.pincode_success').html(result.success || ('Delivery available at ' + val)).css('display', 'block');
+                            $('.order_place').removeAttr('disabled').removeClass('disabled');
                             $('.add_address').show();
                             $('#txtPincode').val(val);
-                            // container.find('.estimated_date').html('Estimated Delivery: ' + result
-                            //     .estimated_date);
-                            // container.find('.estimated_date').show();
                         }
+                    },
+                    error: function() {
+                        window.verifiedPincodeStatus = window.verifiedPincodeStatus || {};
+                        window.verifiedPincodeStatus[val] = false;
+                        $containers.find('.pincode_error').html('Enter correct pincode').css('display', 'block');
+                        $containers.find('.pincode_success').css('display', 'none');
+                        $('.order_place').attr('disabled', 'disabled').addClass('disabled');
                     }
                 });
             } else {
-                container.find('.pincode_error').html('Pincode should be of 6 digits');
+                $containers.find('.pincode_error').html('Enter correct pincode').css('display', 'block');
+                $containers.find('.pincode_success').css('display', 'none');
+                $('.order_place').attr('disabled', 'disabled').addClass('disabled');
             }
         }
 
