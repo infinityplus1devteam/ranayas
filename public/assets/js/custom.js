@@ -1150,20 +1150,20 @@ $(document).ready(function () {
         autoplayHoverPause: true,
         responsive: {
             0: {
-                items: 1,
-                // margin: 5,
+                items: 3,
+                margin: 10,
             },
             479: {
-                items: 1,
-                // margin: 5,
+                items: 3,
+                margin: 10,
             },
             768: {
-                items: 1,
-                margin: 50,
+                items: 3,
+                margin: 15,
             },
             979: {
-                items: 2,
-                // margin: 20,
+                items: 3,
+                margin: 15,
             },
             1199: {
                 items: 4,

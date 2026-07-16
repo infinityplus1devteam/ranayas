@@ -167,19 +167,23 @@
                             <h3>Partner with Ranayas</h3>
                         </div>
                         <div class="custom-form-group">
-                            <input type="text" id="sell_form_name" name="form_name" class="custom-input" required />
+                            <input type="text" id="sell_form_name" name="form_name" class="custom-input"
+                                required />
                             <label for="sell_form_name" class="custom-label">Name:</label>
                         </div>
                         <div class="custom-form-group">
-                            <input type="email" id="sell_form_email" name="form_email" class="custom-input" required />
+                            <input type="email" id="sell_form_email" name="form_email" class="custom-input"
+                                required />
                             <label for="sell_form_email" class="custom-label">Email Address:</label>
                         </div>
                         <div class="custom-form-group">
-                            <input type="tel" id="sell_form_number" name="form_phone" class="custom-input" required />
+                            <input type="tel" id="sell_form_number" name="form_phone" class="custom-input"
+                                required />
                             <label for="sell_form_number" class="custom-label">Contact Number:</label>
                         </div>
                         <div class="custom-form-group">
-                            <input type="text" id="sell_form_message" name="form_message" class="custom-input" required />
+                            <input type="text" id="sell_form_message" name="form_message" class="custom-input"
+                                required />
                             <label for="sell_form_message" class="custom-label">Message:</label>
                         </div>
                         <div class="contact-section-btn">
@@ -500,16 +504,19 @@
                     <div class="cart-img">
                         <a href="{{ route('product', $item->attributes->slug_url) }}">
                             <!-- <img src="{!! asset('storage/images/products/' . $item->attributes->image_url) !!}" alt="cart-image" class="img-fluid"> -->
-                             @php
-                                $variantCount = \App\Model\MapColorSize::where('product_id', $item->attributes->product_id)->count();
+                            @php
+                                $variantCount = \App\Model\MapColorSize::where(
+                                    'product_id',
+                                    $item->attributes->product_id,
+                                )->count();
                                 // dd($variantCount);
                             @endphp
-                            @if($variantCount > 1 && $item->attributes->color_image)
-                                <img src="{!! asset('storage/images/multi-products/' . $item->attributes->color_image) !!}"
-                                    class="img-fluid" alt="{{ $item->name }}" width="100">
+                            @if ($variantCount > 1 && $item->attributes->color_image)
+                                <img src="{!! asset('storage/images/multi-products/' . $item->attributes->color_image) !!}" class="img-fluid" alt="{{ $item->name }}"
+                                    width="100">
                             @else
-                                <img src="{!! asset('storage/images/products/' . $item->attributes->image_url) !!}"
-                                    class="img-fluid" alt="{{ $item->name }}" width="100">
+                                <img src="{!! asset('storage/images/products/' . $item->attributes->image_url) !!}" class="img-fluid" alt="{{ $item->name }}"
+                                    width="100">
                             @endif
                         </a>
                     </div>
@@ -678,8 +685,11 @@
                                             data-bs-parent="#footer-accordian">
                                             <li class="f-link-ul-li"><a href="{{ route('about') }}">About Us</a></li>
                                             <li class="f-link-ul-li"><a href="{{ route('faq') }}">Faq's</a></li>
-                                            <li class="f-link-ul-li"><a href="{{ route('contact') }}">Contact us</a></li>
-                                            <li class="f-link-ul-li"><a href="javascript:void(0);" onclick="if(document.getElementById('enquiry-form')) document.getElementById('enquiry-form').style.display = 'none'; if(document.getElementById('sell-form')) document.getElementById('sell-form').style.display = 'block'; document.getElementById('modal_background').classList.remove('d-none');">Sell with us</a></li>
+                                            <li class="f-link-ul-li"><a href="{{ route('contact') }}">Contact us</a>
+                                            </li>
+                                            <li class="f-link-ul-li"><a href="javascript:void(0);"
+                                                    onclick="if(document.getElementById('enquiry-form')) document.getElementById('enquiry-form').style.display = 'none'; if(document.getElementById('sell-form')) document.getElementById('sell-form').style.display = 'block'; document.getElementById('modal_background').classList.remove('d-none');">Sell
+                                                    with us</a></li>
                                         </ul>
                                     </div>
                                     <div class="f-link">
@@ -944,7 +954,7 @@
             var val = $.trim($input.val());
             var $form = $input.closest('form');
             var $btnSubmit = $form.find('button[type="submit"], .btnSubmit, .submit_button');
-            
+
             var $statusContainer = $input.siblings('.pincode-popup-status');
             if ($statusContainer.length === 0) {
                 $statusContainer = $('<div class="pincode-popup-status mt-1"></div>');
@@ -953,7 +963,9 @@
 
             if (!val || val.length !== 6 || isNaN(val)) {
                 window.verifiedPincodeStatus[val] = false;
-                $statusContainer.html('<p class="text-danger m-0" style="color:rgb(238, 53, 53); font-size:14px; font-weight:500;">Enter correct pincode</p>');
+                $statusContainer.html(
+                    '<p class="text-danger m-0" style="color:rgb(238, 53, 53); font-size:14px; font-weight:500;">Enter correct pincode</p>'
+                );
                 if ($form.length) {
                     $btnSubmit.attr('disabled', 'disabled').addClass('disabled');
                 }
@@ -971,14 +983,18 @@
                 success: function(result) {
                     if (result.error) {
                         window.verifiedPincodeStatus[val] = false;
-                        $statusContainer.html('<p class="text-danger m-0" style="color:rgb(238, 53, 53); font-size:14px; font-weight:500;">Enter correct pincode</p>');
+                        $statusContainer.html(
+                            '<p class="text-danger m-0" style="color:rgb(238, 53, 53); font-size:14px; font-weight:500;">Enter correct pincode</p>'
+                        );
                         if ($form.length) {
                             $btnSubmit.attr('disabled', 'disabled').addClass('disabled');
                         }
                         if (callback) callback(false);
                     } else {
                         window.verifiedPincodeStatus[val] = true;
-                        $statusContainer.html('<p class="text-success m-0" style="color:#28a745; font-size:14px; font-weight:500;">' + (result.success || ('Delivery available at ' + val)) + '</p>');
+                        $statusContainer.html(
+                            '<p class="text-success m-0" style="color:#28a745; font-size:14px; font-weight:500;">' +
+                            (result.success || ('Delivery available at ' + val)) + '</p>');
                         if ($form.length) {
                             $btnSubmit.removeAttr('disabled').removeClass('disabled');
                         }
@@ -987,7 +1003,9 @@
                 },
                 error: function() {
                     window.verifiedPincodeStatus[val] = false;
-                    $statusContainer.html('<p class="text-danger m-0" style="color:rgb(238, 53, 53); font-size:14px; font-weight:500;">Enter correct pincode</p>');
+                    $statusContainer.html(
+                        '<p class="text-danger m-0" style="color:rgb(238, 53, 53); font-size:14px; font-weight:500;">Enter correct pincode</p>'
+                    );
                     if ($form.length) {
                         $btnSubmit.attr('disabled', 'disabled').addClass('disabled');
                     }
@@ -996,26 +1014,31 @@
             });
         }
 
-        $(document).on('keyup change blur', 'form input[name="pincode"], form input[name="pincode_add"], input#pincode_modal, input#pincode', function() {
-            var $input = $(this);
-            var val = $.trim($input.val());
-            
-            if ($input.hasClass('pincode-code') && !$input.closest('form').length) {
-                return;
-            }
+        $(document).on('keyup change blur',
+            'form input[name="pincode"], form input[name="pincode_add"], input#pincode_modal, input#pincode',
+            function() {
+                var $input = $(this);
+                var val = $.trim($input.val());
 
-            if (val.length === 6) {
-                verifyPincodeGlobal($input);
-            } else if (val.length > 0) {
-                var $statusContainer = $input.siblings('.pincode-popup-status');
-                if ($statusContainer.length === 0) {
-                    $statusContainer = $('<div class="pincode-popup-status mt-1"></div>');
-                    $input.after($statusContainer);
+                if ($input.hasClass('pincode-code') && !$input.closest('form').length) {
+                    return;
                 }
-                $statusContainer.html('<p class="text-danger m-0" style="color:rgb(238, 53, 53); font-size:14px; font-weight:500;">Enter correct pincode</p>');
-                $input.closest('form').find('button[type="submit"], .btnSubmit, .submit_button').attr('disabled', 'disabled').addClass('disabled');
-            }
-        });
+
+                if (val.length === 6) {
+                    verifyPincodeGlobal($input);
+                } else if (val.length > 0) {
+                    var $statusContainer = $input.siblings('.pincode-popup-status');
+                    if ($statusContainer.length === 0) {
+                        $statusContainer = $('<div class="pincode-popup-status mt-1"></div>');
+                        $input.after($statusContainer);
+                    }
+                    $statusContainer.html(
+                        '<p class="text-danger m-0" style="color:rgb(238, 53, 53); font-size:14px; font-weight:500;">Enter correct pincode</p>'
+                    );
+                    $input.closest('form').find('button[type="submit"], .btnSubmit, .submit_button').attr('disabled',
+                        'disabled').addClass('disabled');
+                }
+            });
 
         $(document).on('submit', 'form', function(e) {
             var $form = $(this);
@@ -1168,28 +1191,35 @@
     @notifyJs
     <script>
         // Auto-dismiss all laravel-notify popups after 5 seconds
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             var DISMISS_AFTER = 5000;
 
             var notifyWrappers = document.querySelectorAll('#laravel-notify .notify');
-            notifyWrappers.forEach(function (wrapper) {
+            notifyWrappers.forEach(function(wrapper) {
                 // Add a progress bar to show the countdown
                 var progressBar = document.createElement('div');
-                progressBar.style.cssText = 'position:absolute;bottom:0;left:0;height:3px;width:100%;background:rgba(0,0,0,0.15);border-radius:0 0 8px 8px;overflow:hidden;';
+                progressBar.style.cssText =
+                    'position:absolute;bottom:0;left:0;height:3px;width:100%;background:rgba(0,0,0,0.15);border-radius:0 0 8px 8px;overflow:hidden;z-index:9999;';
                 var progressFill = document.createElement('div');
-                progressFill.style.cssText = 'height:100%;width:100%;background:currentColor;opacity:0.5;transition:width ' + DISMISS_AFTER + 'ms linear;';
+                progressFill.style.cssText =
+                    'height:100%;width:100%;background:currentColor;opacity:0.5;transition:width ' +
+                    DISMISS_AFTER + 'ms linear;';
                 progressBar.appendChild(progressFill);
 
-                var innerCard = wrapper.querySelector('[x-data]');
+                var innerCard = wrapper.querySelector('[x-data]') || wrapper.firstElementChild;
                 if (innerCard) {
-                    innerCard.style.position = 'relative';
-                    innerCard.appendChild(progressBar);
+                    var visualCard = innerCard.querySelector('.relative') || innerCard;
+                    visualCard.style.position = 'relative';
+                    visualCard.style.overflow = 'hidden';
+                    visualCard.appendChild(progressBar);
                     // Start shrinking after a tiny delay so the animation triggers
-                    setTimeout(function () { progressFill.style.width = '0%'; }, 50);
+                    setTimeout(function() {
+                        progressFill.style.width = '0%';
+                    }, 50);
                 }
 
                 // Dismiss: trigger AlpineJS x-show = false so it animates out
-                setTimeout(function () {
+                setTimeout(function() {
                     if (innerCard && innerCard._x_dataStack) {
                         // Alpine v3
                         innerCard._x_dataStack[0].show = false;
@@ -1200,7 +1230,9 @@
                         // Fallback: just fade out
                         wrapper.style.transition = 'opacity 0.4s ease';
                         wrapper.style.opacity = '0';
-                        setTimeout(function () { wrapper.remove(); }, 400);
+                        setTimeout(function() {
+                            wrapper.remove();
+                        }, 400);
                     }
                 }, DISMISS_AFTER);
             });
@@ -1296,11 +1328,11 @@
                     suggestionBox.innerHTML = `
                         <div class="suggestion-group-title">${title}</div>
                         ${list.map(k => `
-                                    <div class="suggestion-item">
-                                        <i class="fa fa-search"></i>
-                                        ${k}
-                                    </div>
-                                `).join('')}
+                                                    <div class="suggestion-item">
+                                                        <i class="fa fa-search"></i>
+                                                        ${k}
+                                                    </div>
+                                                `).join('')}
                     `;
                     suggestionBox.classList.add('active');
                 } else {

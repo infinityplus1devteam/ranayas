@@ -352,11 +352,68 @@ $(function () {
       });
     });
 
+  function sanitizeHtmlString(html) {
+    var div = document.createElement('div');
+    div.innerHTML = html;
+
+    // Remove dangerous tags
+    var dangerousTags = div.querySelectorAll('script, iframe, object, embed, applet, meta, link');
+    dangerousTags.forEach(function (tag) {
+      if (tag.parentNode) {
+        tag.parentNode.removeChild(tag);
+      }
+    });
+
+    // Clean attributes of all remaining elements
+    var allElements = div.querySelectorAll('*');
+    allElements.forEach(function (el) {
+      // Remove class and id attributes
+      el.removeAttribute('class');
+      el.removeAttribute('id');
+
+      // Remove data-*, on* (js events), and aria-* attributes
+      var attributes = Array.prototype.slice.call(el.attributes);
+      attributes.forEach(function (attr) {
+        var name = attr.name.toLowerCase();
+        if (
+          name.startsWith('data-') ||
+          name.startsWith('on') ||
+          name.startsWith('aria-') ||
+          name === 'class' ||
+          name === 'id'
+        ) {
+          el.removeAttribute(attr.name);
+        }
+      });
+    });
+
+    return div.innerHTML;
+  }
+
   if (jQuery().summernote) {
     $(".summernote").summernote({
       dialogsInBody: true,
-      minHeight: 250
+      minHeight: 250,
+      callbacks: {
+        onPaste: function (e) {
+          var clipboardData = (e.originalEvent || e).clipboardData || window.clipboardData;
+          if (!clipboardData) return;
+
+          var bufferHtml = clipboardData.getData('text/html');
+          var bufferText = clipboardData.getData('text/plain');
+
+          if (bufferHtml) {
+            e.preventDefault();
+            var cleanHtml = sanitizeHtmlString(bufferHtml);
+            document.execCommand('insertHTML', false, cleanHtml);
+          } else if (bufferText) {
+            e.preventDefault();
+            document.execCommand('insertText', false, bufferText);
+          }
+        }
+      }
     });
+
     $(".summernote-simple").summernote({
       dialogsInBody: true,
       minHeight: 150,
@@ -365,6 +422,19 @@ $(function () {
         ["font", ["strikethrough"]],
         ["para", ["paragraph"]]
       ]
+    });
+
+    // Sanitize summernote content before form submission
+    $('form').on('submit', function () {
+      $(this).find('.summernote').each(function () {
+        var textarea = $(this);
+        if (!textarea.summernote('isEmpty')) {
+          var rawHtml = textarea.summernote('code');
+          var cleanHtml = sanitizeHtmlString(rawHtml);
+          // Set clean HTML back to the textarea to submit it
+          textarea.val(cleanHtml);
+        }
+      });
     });
   }
 

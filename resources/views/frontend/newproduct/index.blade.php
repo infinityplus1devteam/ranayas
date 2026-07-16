@@ -18,9 +18,17 @@
             transform: rotateY(180deg);
         }
 
+        .home5-featured .owl-carousel .owl-stage>div>div {
+            padding: 0px !important;
+        }
+        .home5-featured.section-b-padding.featured-products .owl-item .items {
+            padding: 0px !important;
+        }
+
         .featured5-pro .caption.caption-9 {
             padding-left: 15px !important;
             padding-right: 15px !important;
+            padding-bottom: 15px !important;
         }
         .featured5-pro .caption.caption-9 h3.title {
             margin-left: 0 !important;
@@ -42,10 +50,11 @@
                 padding: 0 4px !important;
             }
             
-            /* Add 4px padding-left and padding-right to caption-9 */
+            /* Add 4px padding-left/right and 10px padding-bottom to caption-9 */
             .featured5-pro .caption.caption-9 {
                 padding-left: 4px !important;
                 padding-right: 4px !important;
+                padding-bottom: 10px !important;
             }
             
             /* Left-align titles and remove padding/margins */
@@ -138,6 +147,98 @@
             }
             .home5-featured.section-b-padding.featured-products .owl-item .items {
                 margin: 0 !important;
+            }
+
+            /* Display service strip as 2x2 grid on mobile */
+            .home5-service .service {
+                display: flex !important;
+                flex-wrap: wrap !important;
+                border: none !important;
+                overflow: visible !important;
+            }
+            .home5-service .service .service-box {
+                width: 50% !important;
+            }
+            .home5-service .service .service-box .s-box {
+                width: 100% !important;
+                padding: 12px 6px !important;
+                border: 0.5px dashed #dedede !important;
+                justify-content: flex-start !important;
+                height: 100% !important;
+            }
+            .home5-service .service .service-box .s-box i,
+            .home5-service .service .service-box .s-box svg {
+                font-size: 18px !important;
+                width: 18px !important;
+                height: 18px !important;
+                margin-right: 6px !important;
+                flex-shrink: 0 !important;
+            }
+            .home5-service .service .service-box .s-box .service-content {
+                white-space: normal !important;
+                text-align: left !important;
+            }
+            .home5-service .service .service-box .s-box .service-content span {
+                display: block !important;
+                font-size: 10.5px !important;
+                font-weight: 600 !important;
+                line-height: 1.2 !important;
+            }
+            .home5-service .service .service-box .s-box .service-content p {
+                font-size: 9.5px !important;
+                margin-top: 2px !important;
+                line-height: 1.2 !important;
+            }
+
+            /* Alternate background and text colors on mobile (purple/yellow, then yellow/purple) */
+            .home5-service .service .service-box:nth-child(3) {
+                background-color: rgb(252 202 47) !important; /* Yellow */
+            }
+            .home5-service .service .service-box:nth-child(3) .s-box i,
+            .home5-service .service .service-box:nth-child(3) .s-box svg {
+                color: #7423b6 !important; /* Purple Icon */
+            }
+            .home5-service .service .service-box:nth-child(3) .s-box .service-content span,
+            .home5-service .service .service-box:nth-child(3) .s-box .service-content p {
+                color: #333355 !important; /* Dark Text */
+            }
+
+            .home5-service .service .service-box:nth-child(4) {
+                background-color: #7423b6 !important; /* Purple */
+            }
+            .home5-service .service .service-box:nth-child(4) .s-box i,
+            .home5-service .service .service-box:nth-child(4) .s-box svg {
+                color: #ffffff !important; /* White Icon */
+            }
+            .home5-service .service .service-box:nth-child(4) .s-box .service-content span,
+            .home5-service .service .service-box:nth-child(4) .s-box .service-content p {
+                color: white !important; /* White Text */
+            }
+        }
+
+        @media (max-width: 1199px) {
+            .home5-cate-image .cate-image {
+                width: 100% !important;
+                height: auto !important;
+                padding: 8px !important;
+            }
+            .home5-cate-image .items {
+                padding: 5px !important;
+                margin: 0 !important;
+            }
+            .home5-cate-image .cate-image a img {
+                width: 100% !important;
+                height: auto !important;
+                aspect-ratio: 1 / 1 !important;
+                object-fit: cover !important;
+            }
+        }
+
+        @media (max-width: 767px) {
+            /* Remove circle effect and show full rectangular image on screens <= 767px */
+            .home5-cate-image .cate-image a img,
+            .home5-cate-image .cate-image:hover img {
+                border-radius: 0% !important;
             }
         }
     </style>
