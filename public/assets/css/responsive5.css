@@ -1457,3 +1457,9 @@ iphone css
         background-position: left 52% top;
     }
 }
+
+@media (max-width: 768px) {
+    .mobile-logo {
+        width: 60px;
+    }
+}

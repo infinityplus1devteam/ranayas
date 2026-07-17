@@ -251,7 +251,7 @@
                                 <!-- logo start -->
                                 <div class="header-element logo">
                                     <a href="{{ route('index') }}">
-                                        <img src="{!! asset('assets/image/logo/ranayas-logo2.jpg') !!}" alt="logo" class="img-fluid">
+                                        <img src="{!! asset('assets/image/logo/ranayas-logo3.jpg') !!}" alt="logo" class="mobile-logo">
                                     </a>
                                 </div>
                                 <!-- logo end -->
