@@ -727,36 +727,16 @@
                                         <ul class="f-link-ul collapse" id="services1"
                                             data-bs-parent="#footer-accordian">
                                             <li class="f-link-ul-li">
-                                                @if (auth('user')->check())
-                                                    <a href="{{ route('user.dashboard') }}">My Account</a>
-                                                @else
-                                                    <a href="javascript:void(0)" data-bs-toggle="modal"
-                                                        data-bs-target="#modalLogin">My Account</a>
-                                                @endif
+                                                <a href="{{ route('user.dashboard') }}">My Account</a>
                                             </li>
                                             <li class="f-link-ul-li">
-                                                @if (auth('user')->check())
-                                                    <a href="{{ route('user.showOrder') }}">My Orders</a>
-                                                @else
-                                                    <a href="javascript:void(0)" data-bs-toggle="modal"
-                                                        data-bs-target="#modalLogin">My Orders</a>
-                                                @endif
+                                                <a href="{{ route('user.showOrder') }}">My Orders</a>
                                             </li>
                                             <li class="f-link-ul-li">
-                                                @if (auth('user')->check())
-                                                    <a href="{{ route('user.wishlists') }}">My Wishlists</a>
-                                                @else
-                                                    <a href="javascript:void(0)" data-bs-toggle="modal"
-                                                        data-bs-target="#modalLogin">My Wishlists</a>
-                                                @endif
+                                                <a href="{{ route('user.wishlists') }}">My Wishlists</a>
                                             </li>
                                             <li class="f-link-ul-li">
-                                                @if (auth('user')->check())
-                                                    <a href="{{ route('user.addresses') }}">My Address</a>
-                                                @else
-                                                    <a href="javascript:void(0)" data-bs-toggle="modal"
-                                                        data-bs-target="#modalLogin">My Address</a>
-                                                @endif
+                                                <a href="{{ route('user.addresses') }}">My Address</a>
                                             </li>
                                         </ul>
                                     </div>

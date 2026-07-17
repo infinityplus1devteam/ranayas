@@ -24,6 +24,18 @@ return Application::configure(basePath: dirname(__DIR__))
             'adranayas753/logout',
             'ranayasshop/logout',
         ]);
+
+        $middleware->redirectTo(
+            guests: function (\Illuminate\Http\Request $request) {
+                if ($request->is('myaccount') || $request->is('myaccount/*')) {
+                    return route('user.register');
+                }
+                if ($request->is('ranayasshop') || $request->is('ranayasshop/*')) {
+                    return route('shop.login');
+                }
+                return route('login');
+            }
+        );
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

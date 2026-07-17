@@ -53,7 +53,7 @@ $(document).ready(function () {
     });
 
     $(".wishlist-login").click(function () {
-        $('#modalLogin').modal('show');
+        window.location.href = '/myaccount/register';
     });
 
     $('.search-btn').click(function () {
