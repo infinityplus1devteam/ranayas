@@ -58,50 +58,44 @@
                                                         </div>
                                                     @endif
                                                     @foreach ($addresses as $add)
-                                                        <div class="col-md-6">
-                                                            <label class="radio-cont">
-                                                                <div class="card">
+                                                        <div class="col-md-6 mb-4">
+                                                            <label class="radio-cont w-100 h-100 mb-0">
+                                                                <div class="address-card card h-100">
                                                                     <div class="card-body">
-                                                                        <h4 class="card-title pl--35">
-
-                                                                            {{ $add->name }}
-
-                                                                            <input type="radio" checked="checked"
-                                                                                name="choose_address" value="{{ $add->id }}"
-                                                                                data-pincode="{{ $add->pincode }}">
-                                                                            <span class="checkmark"></span>
-
-                                                                            <b><span class="badge rounded-pill bg-primary"
-                                                                                    style="font-size: 12px;float:right;margin-top:2px">{{ $add->type_of_address ? 'Work' : 'Home' }}</span></b>
-                                                                        </h4>
-                                                                        <p class="card-text">
-                                                                            {{ $add->address }},
-                                                                            {{ $add->landmark ? $add->landmark . ',' : '' }}
-                                                                            {{ $add->city }},
-                                                                            {{ $add->territory }},
-                                                                            {{ $add->country }},
-                                                                            {{ $add->pincode }},
+                                                                        <div class="d-flex justify-content-between align-items-center mb-3">
+                                                                            <h5 class="address-name pl--35">
+                                                                                {{ $add->name }}
+                                                                                <input type="radio" checked="checked"
+                                                                                    name="choose_address" value="{{ $add->id }}"
+                                                                                    data-pincode="{{ $add->pincode }}">
+                                                                                <span class="checkmark"></span>
+                                                                            </h5>
+                                                                            <span class="address-badge">{{ $add->type_of_address ? 'Work' : 'Home' }}</span>
+                                                                        </div>
+                                                                        <p class="address-text">
+                                                                            {{ $add->address }},<br>
+                                                                            @if ($add->landmark)<span class="text-muted small">Landmark: {{ $add->landmark }}</span><br>@endif
+                                                                            {{ $add->city }}, {{ $add->territory }}, {{ $add->country }} - {{ $add->pincode }}
                                                                         </p>
                                                                         @if ($add->mobile)
-                                                                            <p class="text-info">
-                                                                                {{ $add->mobile }}
-                                                                            </p>
+                                                                            <div class="address-phone">
+                                                                                <i class="fa fa-phone"></i> {{ $add->mobile }}
+                                                                            </div>
                                                                         @else
-                                                                            <p class="text-danger">
-                                                                                Update Mobile Number
-                                                                            </p>
+                                                                            <div class="address-phone text-danger">
+                                                                                <i class="fa fa-exclamation-triangle"></i> Update Mobile Number
+                                                                            </div>
                                                                         @endif
-
                                                                     </div>
                                                                     <div class="card-footer">
                                                                         <a href="javascript:void(0)"
-                                                                            class="card-link float-left remove-address"
+                                                                            class="action-btn remove-btn remove-address"
                                                                             data-obj-id="{{ $add->id }}"><i
-                                                                                class="fa fa-trash text-danger "></i>
+                                                                                class="fa fa-trash"></i>
                                                                             Remove</a>
                                                                         <a href="javascript:void(0)" data-obj-id="{{ $add->id }}"
-                                                                            class="card-link pull-right editAddress"><i
-                                                                                class="fa fa-pencil text-primary"></i>
+                                                                            class="action-btn edit-btn editAddress"><i
+                                                                                class="fa fa-pencil"></i>
                                                                             Edit</a>
                                                                     </div>
                                                                 </div>
@@ -109,15 +103,17 @@
                                                         </div>
                                                     @endforeach
                                                     @if (count($addresses))
-                                                        <div class="col-md-6 add_address">
-                                                            <label class="radio-cont">
-                                                                <div class="card">
-                                                                    <div class="card-body text-center delivery-address-height">
-                                                                        <i class="fa fa-plus-circle fa-3x text-black"></i>
-                                                                        <p class="text-black"> Add new delivery address</p>
+                                                        <div class="col-md-6 mb-4 add_address">
+                                                            <div class="radio-cont w-100 h-100 mb-0">
+                                                                <div class="address-card add-card card h-100">
+                                                                    <div class="card-body d-flex flex-column align-items-center justify-content-center">
+                                                                        <div class="add-icon-wrap">
+                                                                            <i class="fa fa-plus"></i>
+                                                                        </div>
+                                                                        <h5 class="add-text">Add new delivery address</h5>
                                                                     </div>
                                                                 </div>
-                                                            </label>
+                                                            </div>
                                                         </div>
                                                     @endif
                                                 </div>
@@ -940,7 +936,6 @@
             var seconds = 5;
 
             $('.order_place').attr('disabled', 'disabled');
-            $('.add_address').hide();
 
             var pincode = $("input[name='choose_address']:checked").attr('data-pincode');
 
@@ -990,7 +985,7 @@
                 }
             });
 
-            $('.delivery-address-height').click(function () {
+            $('.delivery-address-height, .add-card').click(function () {
                 $('#new-address').modal('show');
             });
 
@@ -1578,7 +1573,6 @@
                         'X-CSRF-TOKEN': $('input[name="_token"]').val()
                     }
                 });
-                $('.add_address').hide();
                 $.ajax({
                     url: "{{ route('verify.pincode') }}",
                     type: 'POST',
@@ -1598,7 +1592,6 @@
                             $containers.find('.pincode_error').css('display', 'none');
                             $containers.find('.pincode_success').html(result.success || ('Delivery available at ' + val)).css('display', 'block');
                             $('.order_place').removeAttr('disabled').removeClass('disabled');
-                            $('.add_address').show();
                             $('#txtPincode').val(val);
                         }
                     },

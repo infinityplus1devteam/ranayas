@@ -3043,8 +3043,8 @@ a.scroll:hover span {
 
 .pro-page .pro-image .pro-info .rating {
     margin-top: 15px;
-    padding-top: 19px;
-    border-top: 1px solid #ededed;
+    /* padding-top: 19px; */
+    /* border-top: 1px solid #ededed; */
 }
 
 .pro-page .pro-image .pro-info .rating i {

@@ -12,7 +12,11 @@
                         <li><a href="{{ route('index') }}">Home</a></li>
                         <li><a href="{{ route('cate', $product->category->slug_url) }}">{{ $product->category->name }}</a>
                         </li>
-                        <li class="current"><span> {{ $product->title }}</span></li>
+                        <li class="current" style="min-width: 0; max-width: 100%;">
+                            <span style="display: inline-block; max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; vertical-align: bottom;">
+                                {{ $product->title }}
+                            </span>
+                        </li>
                     </ul>
                 </div>
             </div>

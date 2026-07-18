@@ -99,7 +99,7 @@
 
     <!-- modal popup start -->
     <div class="d-none" id="modal_background"
-        style="position: fixed; background: rgba(0,0,0,0.5); top: 0; left: 0;width: 100%; height: 100%; z-index: 99;">
+        style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 99; background: transparent;">
     </div>
 
     <div class="modal-1010">
@@ -121,29 +121,31 @@
                         <input type="text" name="website" style="display:none !important;" tabindex="-1"
                             autocomplete="off">
                         <input type="hidden" name="form_subject" value="Enquiry">
-                        <div class="popup mb-5">
-                            <h5 class="modal-title text-center mb-3">
+                        <div class="popup mb-4 form-header-block">
+                            <h5 class="modal-title">
                                 Connect Us
                             </h5>
-                            <h3>Listen with Ranayas</h3>
+                            <p class="modal-subtitle">We’d love to hear from you.</p>
                         </div>
-                        <div class="custom-form-group">
-                            <input type="text" id="form_name" name="form_name" class="custom-input" required />
-                            <label for="form_name" class="custom-label">Name:</label>
+                        <div class="field-block">
+                            <label for="form_name" class="field-label">Name</label>
+                            <input type="text" id="form_name" name="form_name" class="custom-input"
+                                placeholder="Enter your full name" required />
                         </div>
-                        <div class="custom-form-group">
-                            <input type="email" id="form_email" name="form_email" class="custom-input" required />
-                            <label for="form_email" class="custom-label">Email Address:</label>
+                        <div class="field-block">
+                            <label for="form_email" class="field-label">Email Address</label>
+                            <input type="email" id="form_email" name="form_email" class="custom-input"
+                                placeholder="Enter your email address" required />
                         </div>
-                        <div class="custom-form-group">
+                        <div class="field-block">
+                            <label for="form_number" class="field-label">Contact Number</label>
                             <input type="tel" id="form_number" name="form_phone" class="custom-input"
-                                required />
-                            <label for="form_number" class="custom-label">Contact Number:</label>
+                                placeholder="Enter your contact number" required />
                         </div>
-                        <div class="custom-form-group">
-                            <input type="text" id="form_message" name="form_message" class="custom-input"
-                                required />
-                            <label for="form_message" class="custom-label">Message:</label>
+                        <div class="field-block">
+                            <label for="form_message" class="field-label">Message</label>
+                            <textarea id="form_message" name="form_message" class="custom-input custom-textarea"
+                                rows="4" placeholder="Write your message here" required></textarea>
                         </div>
                         <div class="contact-section-btn">
                             <button class="custom-submit-btn" id="submit-btn" type="submit">
@@ -169,31 +171,31 @@
                         <input type="text" name="website" style="display:none !important;" tabindex="-1"
                             autocomplete="off">
                         <input type="hidden" name="form_subject" value="Sell with Us Enquiry">
-                        <div class="popup mb-5">
-                            <h5 class="modal-title text-center mb-3">
+                        <div class="popup mb-4 form-header-block">
+                            <h5 class="modal-title">
                                 Sell with Us
                             </h5>
-                            <h3>Partner with Ranayas</h3>
+                            <p class="modal-subtitle">Partner with Ranayas.</p>
                         </div>
-                        <div class="custom-form-group">
+                        <div class="field-block">
+                            <label for="sell_form_name" class="field-label">Name</label>
                             <input type="text" id="sell_form_name" name="form_name" class="custom-input"
-                                required />
-                            <label for="sell_form_name" class="custom-label">Name:</label>
+                                placeholder="Enter your full name" required />
                         </div>
-                        <div class="custom-form-group">
+                        <div class="field-block">
+                            <label for="sell_form_email" class="field-label">Email Address</label>
                             <input type="email" id="sell_form_email" name="form_email" class="custom-input"
-                                required />
-                            <label for="sell_form_email" class="custom-label">Email Address:</label>
+                                placeholder="Enter your email address" required />
                         </div>
-                        <div class="custom-form-group">
+                        <div class="field-block">
+                            <label for="sell_form_number" class="field-label">Contact Number</label>
                             <input type="tel" id="sell_form_number" name="form_phone" class="custom-input"
-                                required />
-                            <label for="sell_form_number" class="custom-label">Contact Number:</label>
+                                placeholder="Enter your contact number" required />
                         </div>
-                        <div class="custom-form-group">
-                            <input type="text" id="sell_form_message" name="form_message" class="custom-input"
-                                required />
-                            <label for="sell_form_message" class="custom-label">Message:</label>
+                        <div class="field-block">
+                            <label for="sell_form_message" class="field-label">Message</label>
+                            <textarea id="sell_form_message" name="form_message" class="custom-input custom-textarea"
+                                rows="4" placeholder="Write your message here" required></textarea>
                         </div>
                         <div class="contact-section-btn">
                             <button class="custom-submit-btn" id="sell-submit-btn" type="submit">
