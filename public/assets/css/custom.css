@@ -1323,8 +1323,15 @@ span.p-discount {
     transition: opacity 0.5s;
     display: block;
     width: 100%;
-    width: 476px;
-    height: 476px;
+    /* width: 476px;
+    height: 476px; */
+}
+
+@media (max-width: 767px) and (min-width: 476px) {
+    .pro-page .pro-image .larg-image a.long-img figure.zoom img {
+        width: 476px;
+        height: 476px;
+    }
 }
 
 .pro-page .pro-image .larg-image ul.nav.nav-tabs.pro-page-slider {
@@ -4593,6 +4600,7 @@ img.lazy {
 }
 
 @media screen and (max-width: 767px) {
+
     .download-btn,
     .order-btn {
         width: 100%;
@@ -7181,7 +7189,8 @@ img.mobile {
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
     background-color: #fff;
-    overflow: hidden; /* prevents active/hover backgrounds from overflowing rounded corners */
+    overflow: hidden;
+    /* prevents active/hover backgrounds from overflowing rounded corners */
 }
 
 /* Ensure tab borders are clean and visible */
@@ -7202,7 +7211,7 @@ img.mobile {
     .order-histry-area .order-history .profile {
         width: calc(100% - 30px);
     }
-    
+
     .order-histry-area .order-history .profile-form,
     .order-histry-area .order-history .order-info,
     .order-histry-area .order-history .profile-wishlist,
@@ -7224,7 +7233,8 @@ img.mobile {
     height: 100%;
     display: flex;
     flex-direction: column;
-    flex-grow: 1; /* ensures expansion inside flex containers like label */
+    flex-grow: 1;
+    /* ensures expansion inside flex containers like label */
 }
 
 .address-card:hover {
@@ -7366,8 +7376,8 @@ img.mobile {
 }
 
 /* Checkout and My Account Address Grid Flex alignment for equal heights */
-.address_div > div,
-.profile-address .row > div {
+.address_div>div,
+.profile-address .row>div {
     display: flex;
     flex-direction: column;
 }
@@ -7389,8 +7399,10 @@ img.mobile {
         flex-direction: column;
         align-items: flex-start !important;
     }
+
     .address-card .address-badge {
         margin-top: 8px;
-        margin-left: 40px; /* aligns badge under name and offset from checkmark */
+        margin-left: 40px;
+        /* aligns badge under name and offset from checkmark */
     }
 }
