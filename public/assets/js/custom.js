@@ -1111,7 +1111,7 @@ $(document).ready(function () {
         effect: "fade",
         autoplay: {
             delay: 5000,
-          },
+        },
         navigation: {
             nextEl: ".swiper-next",
             prevEl: ".swiper-prev",
@@ -1678,8 +1678,8 @@ $(document).ready(function () {
 
                 // how many times to update the value, and how much to increment the value on each update
                 var loops = Math.ceil(
-                        settings.speed / settings.refreshInterval
-                    ),
+                    settings.speed / settings.refreshInterval
+                ),
                     increment = (settings.to - settings.from) / loops;
 
                 // references & variables that will change with each update
@@ -1817,7 +1817,7 @@ $(document).ready(function () {
   ========================================== */
 
     $(".pro-page-slider").owlCarousel({
-        loop: true,
+        loop: false,
         margin: 15,
         nav: false,
         dots: false,

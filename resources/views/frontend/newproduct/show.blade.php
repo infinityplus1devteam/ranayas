@@ -967,21 +967,22 @@
                 // margin: 5,
 
                 nav: false,
+                dots: false,
                 margin: 5,
                 autoplay: false,
                 autoplayTimeout: 5000,
                 responsive: {
                     0: {
                         items: 2,
-                        loop: images.length > 2
+                        loop: false
                     },
                     578: {
                         items: 4,
-                        loop: images.length > 4
+                        loop: false
                     },
                     768: {
                         items: 5,
-                        loop: images.length > 5
+                        loop: false
                     }
                 }
             });
