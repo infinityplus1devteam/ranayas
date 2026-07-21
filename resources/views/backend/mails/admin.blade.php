@@ -260,7 +260,8 @@
                     @foreach ($order->details as $detail)
                         <tr>
                             <td>{{ $detail->product->title }}</td>
-                            <td>{{ ($detail->size && strtolower($detail->size->title) !== 'null') ? 'Size: ' . $detail->size->title : '' }} <br>
+                            <td>{{ ($detail->size && strtolower($detail->size->title) !== 'null') ? 'Size: ' . $detail->size->title : '' }}
+                                <br>
                                 {{ $detail->color ? 'Color: ' . $detail->color->title : '' }} </td>
                             <td>{{ $detail->mrp }}</td>
                             <td>{{ $detail->quantity }}</td>
@@ -272,7 +273,7 @@
                         <th colspan="12" class="bg-silver text-right text-uppercase">
                             @php
                                 $itemSubtotal = 0;
-                                foreach($order->details as $detail) {
+                                foreach ($order->details as $detail) {
                                     $itemSubtotal += $detail->mrp * $detail->quantity;
                                 }
                                 // Shipping feature removed
@@ -281,8 +282,10 @@
                             <p>Item Subtotal : &#8377; {{ $itemSubtotal }}</p>
                             {{-- GST breakdown hidden (no GST number available)
                             @if($order->tax > 0)
-                                <p style="font-weight: normal; color: #555;">(Includes CGST : &#8377; {{ round($order->tax / 2, 2) }})</p>
-                                <p style="font-weight: normal; color: #555;">(Includes SGST : &#8377; {{ round($order->tax / 2, 2) }})</p>
+                            <p style="font-weight: normal; color: #555;">(Includes CGST : &#8377; {{ round($order->tax /
+                                2, 2) }})</p>
+                            <p style="font-weight: normal; color: #555;">(Includes SGST : &#8377; {{ round($order->tax /
+                                2, 2) }})</p>
                             @endif
                             --}}
                             @if ($order->discount)
