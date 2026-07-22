@@ -672,9 +672,9 @@ class MainController extends Controller
         $request->session()->forget('promocode');
         $cartTotal = \Cart::getTotal();
         $newTotal = $cartTotal;
-        // if ($cartTotal < 1000) {
-        //     $newTotal += 60; // adding shipping charge
-        // }
+        if ($cartTotal > 0 && $cartTotal < 199) {
+            $newTotal += 80; // adding shipping charge
+        }
         return response()->json(['success' => 'Coupon Removed !', 'status' => 200, 'new_total' => $newTotal], 200);
     }
 
@@ -704,9 +704,9 @@ class MainController extends Controller
                 }
 
                 $newTotal = $cartTotal - $discountAmount;
-                // if ($cartTotal < 1000) {
-                //     $newTotal += 60; // adding shipping charge
-                // }
+                if ($cartTotal > 0 && $cartTotal < 199) {
+                    $newTotal += 80; // adding shipping charge
+                }
 
                 return response()->json(['success' => 'Coupon Applied Successfully !', 'status' => 200, 'discount_amount' => $discountAmount, 'new_total' => $newTotal], 200);
             }
@@ -723,9 +723,9 @@ class MainController extends Controller
             session(['promocode' => $promo]);
             $discountAmount = round($cartTotal * 0.10, 2);
             $newTotal = $cartTotal - $discountAmount;
-            // if ($cartTotal < 1000) {
-            //     $newTotal += 60; // adding shipping charge
-            // }
+            if ($cartTotal > 0 && $cartTotal < 199) {
+                $newTotal += 80; // adding shipping charge
+            }
             return response()->json(['success' => 'Coupon Applied Successfully !', 'status' => 200, 'discount_amount' => $discountAmount, 'new_total' => $newTotal], 200);
         }
 

@@ -194,28 +194,30 @@
                                                         </ul>
                                                     </div>
                                                     <ul class="order-history">
+                                                        @php
+                                                            $cartTotal = Cart::getTotal();
+                                                            $shippingCharge = $cartTotal > 0 && $cartTotal < 199 ? 80 : 0;
+                                                            $grandTotal = $cartTotal + $shippingCharge;
+                                                        @endphp
                                                         <li class="order-details" style="margin-top: 15px; padding-top: 5px;">
                                                             <span>Total:</span>
-                                                            <span>₹<span id="cart-total-span">{{ Cart::getTotal() }}</span></span>
+                                                            <span>₹<span id="cart-total-span">{{ $cartTotal }}</span></span>
                                                         </li>
-                                                        {{-- @if (Cart::getTotal() < 1000) <li class="order-details shipping-row">
-                                                            <span class="text-danger">Shipping Charge:</span>
-                                                            <span class="text-danger">+ ₹60</span>
+                                                        @if ($shippingCharge > 0)
+                                                            <li class="order-details shipping-row">
+                                                                <span class="text-danger">Shipping Charge:</span>
+                                                                <span class="text-danger">+ ₹{{ $shippingCharge }}</span>
                                                             </li>
-                                                            @endif --}}
-                                                            <li class="order-details discount-row" style="display: none;">
-                                                                <span class="text-success">Discount:</span>
-                                                                <span class="text-success">- ₹<span
-                                                                        id="discount_span">0</span></span>
-                                                            </li>
-                                                            {{-- Grand total row now only shows if there's a discount, so we start
-                                                            hidden like discount-row --}}
-                                                            <li class="order-details grand-total-row"
-                                                                style="font-weight: bold; border-top: 1px solid #ddd; padding-top: 10px; margin-top: 10px; display: none;">
-                                                                <span>Grand Total:</span>
-                                                                <span>₹<span
-                                                                        class="order-total-ammount">{{ Cart::getTotal() }}</span></span>
-                                                            </li>
+                                                        @endif
+                                                        <li class="order-details discount-row" style="display: none;">
+                                                            <span class="text-success">Discount:</span>
+                                                            <span class="text-success">- ₹<span id="discount_span">0</span></span>
+                                                        </li>
+                                                        <li class="order-details grand-total-row"
+                                                            style="font-weight: bold; border-top: 1px solid #ddd; padding-top: 10px; margin-top: 10px; {{ $shippingCharge > 0 ? '' : 'display: none;' }}">
+                                                            <span>Grand Total:</span>
+                                                            <span>₹<span class="order-total-ammount">{{ $grandTotal }}</span></span>
+                                                        </li>
                                                     </ul>
                                                     <div class="checkout-payment">
 
@@ -1046,100 +1048,100 @@
                                 var html =
                                     `<div class="form profile-form">
 
-                                                            <div class="row mb-3">
-                                                                <div class="col-12">
-                                                                    <label style="padding: 10px 0px; display: block; font-weight: 500;">Name <span class="required" style="color:red">*</span></label>
-                                                                    <input type="text" name="name" id="name" required placeholder="Name*" value="${data.name}" style="padding: 10px 15px !important; border: 1px solid #e2e2e2; width: 100%; border-radius: 4px;">
-                                                                </div>
-                                                            </div>
-
-                                                            <div class="row mb-3">
-                                                                <div class="col-md-6 mb-3 mb-md-0">
-                                                                    <label style="padding: 10px 0px; display: block; font-weight: 500;">Mobile <span class="required" style="color:red">*</span></label>
-                                                                    <input type="number" name="mobile" id="mobile" placeholder="Mobile Number*" value="${data.mobile}" required style="padding: 10px 15px !important; border: 1px solid #e2e2e2; width: 100%; border-radius: 4px;">
-                                                                </div>
-                                                                <div class="col-md-6">
-                                                                    <label style="padding: 10px 0px; display: block; font-weight: 500;">Pincode <span class="required" style="color:red">*</span></label>
-                                                                    <input type="text" name="pincode" id="pincode" placeholder="Pincode*" value="${data.pincode}" required style="padding: 10px 15px !important; border: 1px solid #e2e2e2; width: 100%; border-radius: 4px;">
-                                                                </div>
-                                                            </div>
-
-                                                            <div class="row mb-3">
-                                                                <div class="col-12">
-                                                                    <label style="padding: 10px 0px; display: block; font-weight: 500;">House number and street name <span class="required" style="color:red">*</span></label>
-                                                                    <input type="text" name="address" id="address" required placeholder="Address*" value="${data.address}" style="padding: 10px 15px !important; border: 1px solid #e2e2e2; width: 100%; border-radius: 4px;">
-                                                                </div>
-                                                            </div>
-
-                                                            <div class="row mb-3">
-                                                                <div class="col-12">
-                                                                    <label style="padding: 10px 0px; display: block; font-weight: 500;">Landmark</label>
-                                                                    <input type="text" name="landmark" id="landmark" placeholder="Landmark" value="${data.landmark ? data.landmark : ''}" style="padding: 10px 15px !important; border: 1px solid #e2e2e2; width: 100%; border-radius: 4px;">
-                                                                </div>
-                                                            </div>
-
-                                                            <div class="row mb-3">
-                                                                <div class="col-md-6 mb-3 mb-md-0">
-                                                                    <label style="padding: 10px 0px; display: block; font-weight: 500;">Town / City <span class="required" style="color:red">*</span></label>
-                                                                    <input type="text" name="city" id="city" required placeholder="Town/City*" value="${data.city}" style="padding: 10px 15px !important; border: 1px solid #e2e2e2; width: 100%; border-radius: 4px;">
-                                                                </div>
-                                                                <div class="col-md-6">
-                                                                    <label style="padding: 10px 0px; display: block; font-weight: 500;">State <span class="required" style="color:red">*</span></label>
-                                                                    <select id="territory" name="territory" required style="padding: 10px 15px !important; border: 1px solid #e2e2e2; width: 100%; border-radius: 4px; height: 44px; background: transparent; -webkit-appearance: auto;">
-                                                                        <option value="">Select a state…</option>
-                                                                        <option value="Andhra Pradesh" ${data.territory == 'Andhra Pradesh' ? 'selected' : ''}>Andhra Pradesh</option>
-                                                                        <option value="Arunachal Pradesh" ${data.territory == 'Arunachal Pradesh' ? 'selected' : ''}>Arunachal Pradesh</option>
-                                                                        <option value="Assam" ${data.territory == 'Assam' ? 'selected' : ''}>Assam</option>
-                                                                        <option value="Bihar" ${data.territory == 'Bihar' ? 'selected' : ''}>Bihar</option>
-                                                                        <option value="Chhattisgarh" ${data.territory == 'Chhattisgarh' ? 'selected' : ''}>Chhattisgarh</option>
-                                                                        <option value="Goa" ${data.territory == 'Goa' ? 'selected' : ''}>Goa</option>
-                                                                        <option value="Gujarat" ${data.territory == 'Gujarat' ? 'selected' : ''}>Gujarat</option>
-                                                                        <option value="Haryana" ${data.territory == 'Haryana' ? 'selected' : ''}>Haryana</option>
-                                                                        <option value="Himachal Pradesh" ${data.territory == 'Himachal Pradesh' ? 'selected' : ''}>Himachal Pradesh</option>
-                                                                        <option value="Jharkhand" ${data.territory == 'Jharkhand' ? 'selected' : ''}>Jharkhand</option>
-                                                                        <option value="Karnataka" ${data.territory == 'Karnataka' ? 'selected' : ''}>Karnataka</option>
-                                                                        <option value="Kerala" ${data.territory == 'Kerala' ? 'selected' : ''}>Kerala</option>
-                                                                        <option value="Madhya Pradesh" ${data.territory == 'Madhya Pradesh' ? 'selected' : ''}>Madhya Pradesh</option>
-                                                                        <option value="Maharashtra" ${data.territory == 'Maharashtra' ? 'selected' : ''}>Maharashtra</option>
-                                                                        <option value="Manipur" ${data.territory == 'Manipur' ? 'selected' : ''}>Manipur</option>
-                                                                        <option value="Meghalaya" ${data.territory == 'Meghalaya' ? 'selected' : ''}>Meghalaya</option>
-                                                                        <option value="Mizoram" ${data.territory == 'Mizoram' ? 'selected' : ''}>Mizoram</option>
-                                                                        <option value="Nagaland" ${data.territory == 'Nagaland' ? 'selected' : ''}>Nagaland</option>
-                                                                        <option value="Odisha" ${data.territory == 'Odisha' ? 'selected' : ''}>Odisha</option>
-                                                                        <option value="Punjab" ${data.territory == 'Punjab' ? 'selected' : ''}>Punjab</option>
-                                                                        <option value="Rajasthan" ${data.territory == 'Rajasthan' ? 'selected' : ''}>Rajasthan</option>
-                                                                        <option value="Sikkim" ${data.territory == 'Sikkim' ? 'selected' : ''}>Sikkim</option>
-                                                                        <option value="Tamil Nadu" ${data.territory == 'Tamil Nadu' ? 'selected' : ''}>Tamil Nadu</option>
-                                                                        <option value="Telangana" ${data.territory == 'Telangana' ? 'selected' : ''}>Telangana</option>
-                                                                        <option value="Tripura" ${data.territory == 'Tripura' ? 'selected' : ''}>Tripura</option>
-                                                                        <option value="Uttar Pradesh" ${data.territory == 'Uttar Pradesh' ? 'selected' : ''}>Uttar Pradesh</option>
-                                                                        <option value="Uttarakhand" ${data.territory == 'Uttarakhand' ? 'selected' : ''}>Uttarakhand</option>
-                                                                        <option value="West Bengal" ${data.territory == 'West Bengal' ? 'selected' : ''}>West Bengal</option>
-                                                                        <option value="Andaman and Nicobar Islands" ${data.territory == 'Andaman and Nicobar Islands' ? 'selected' : ''}>Andaman and Nicobar Islands</option>
-                                                                        <option value="Chandigarh" ${data.territory == 'Chandigarh' ? 'selected' : ''}>Chandigarh</option>
-                                                                        <option value="Dadra and Nagar Haveli and Daman and Diu" ${data.territory == 'Dadra and Nagar Haveli and Daman and Diu' ? 'selected' : ''}>Dadra and Nagar Haveli and Daman and Diu</option>
-                                                                        <option value="Delhi" ${data.territory == 'Delhi' ? 'selected' : ''}>Delhi</option>
-                                                                        <option value="Jammu and Kashmir" ${data.territory == 'Jammu and Kashmir' ? 'selected' : ''}>Jammu and Kashmir</option>
-                                                                        <option value="Ladakh" ${data.territory == 'Ladakh' ? 'selected' : ''}>Ladakh</option>
-                                                                        <option value="Lakshadweep" ${data.territory == 'Lakshadweep' ? 'selected' : ''}>Lakshadweep</option>
-                                                                        <option value="Puducherry" ${data.territory == 'Puducherry' ? 'selected' : ''}>Puducherry</option>
-                                                                    </select>
-                                                                </div>
-                                                            </div>
-
-                                                            <div class="row mb-3 mt-4">
-                                                                <div class="col-12">
-                                                                    <label style="padding: 10px 0px; display: block; margin-bottom: 10px; font-weight: 500;">Choose Type of Address <span class="required" style="color:red">*</span></label>
-                                                                    <div class="type-of-address">
-                                                                        <input id="home-update" class="toggle toggle-left" name="type_of_address" type="radio" value="0" ${data.type_of_address == '0' ? 'checked' : ''}>
-                                                                        <label for="home-update" class="btnn1">Home</label>
-                                                                        <input id="corporate-update" class="toggle toggle-right" name="type_of_address" type="radio" value="1" ${data.type_of_address == '1' ? 'checked' : ''}>
-                                                                        <label for="corporate-update" class="btnn1">Office/Commercial</label>
+                                                                <div class="row mb-3">
+                                                                    <div class="col-12">
+                                                                        <label style="padding: 10px 0px; display: block; font-weight: 500;">Name <span class="required" style="color:red">*</span></label>
+                                                                        <input type="text" name="name" id="name" required placeholder="Name*" value="${data.name}" style="padding: 10px 15px !important; border: 1px solid #e2e2e2; width: 100%; border-radius: 4px;">
                                                                     </div>
                                                                 </div>
-                                                            </div>
-                                                            <input type="hidden" name="address_id" value="${data.id}">
-                                                        </div>`
+
+                                                                <div class="row mb-3">
+                                                                    <div class="col-md-6 mb-3 mb-md-0">
+                                                                        <label style="padding: 10px 0px; display: block; font-weight: 500;">Mobile <span class="required" style="color:red">*</span></label>
+                                                                        <input type="number" name="mobile" id="mobile" placeholder="Mobile Number*" value="${data.mobile}" required style="padding: 10px 15px !important; border: 1px solid #e2e2e2; width: 100%; border-radius: 4px;">
+                                                                    </div>
+                                                                    <div class="col-md-6">
+                                                                        <label style="padding: 10px 0px; display: block; font-weight: 500;">Pincode <span class="required" style="color:red">*</span></label>
+                                                                        <input type="text" name="pincode" id="pincode" placeholder="Pincode*" value="${data.pincode}" required style="padding: 10px 15px !important; border: 1px solid #e2e2e2; width: 100%; border-radius: 4px;">
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="row mb-3">
+                                                                    <div class="col-12">
+                                                                        <label style="padding: 10px 0px; display: block; font-weight: 500;">House number and street name <span class="required" style="color:red">*</span></label>
+                                                                        <input type="text" name="address" id="address" required placeholder="Address*" value="${data.address}" style="padding: 10px 15px !important; border: 1px solid #e2e2e2; width: 100%; border-radius: 4px;">
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="row mb-3">
+                                                                    <div class="col-12">
+                                                                        <label style="padding: 10px 0px; display: block; font-weight: 500;">Landmark</label>
+                                                                        <input type="text" name="landmark" id="landmark" placeholder="Landmark" value="${data.landmark ? data.landmark : ''}" style="padding: 10px 15px !important; border: 1px solid #e2e2e2; width: 100%; border-radius: 4px;">
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="row mb-3">
+                                                                    <div class="col-md-6 mb-3 mb-md-0">
+                                                                        <label style="padding: 10px 0px; display: block; font-weight: 500;">Town / City <span class="required" style="color:red">*</span></label>
+                                                                        <input type="text" name="city" id="city" required placeholder="Town/City*" value="${data.city}" style="padding: 10px 15px !important; border: 1px solid #e2e2e2; width: 100%; border-radius: 4px;">
+                                                                    </div>
+                                                                    <div class="col-md-6">
+                                                                        <label style="padding: 10px 0px; display: block; font-weight: 500;">State <span class="required" style="color:red">*</span></label>
+                                                                        <select id="territory" name="territory" required style="padding: 10px 15px !important; border: 1px solid #e2e2e2; width: 100%; border-radius: 4px; height: 44px; background: transparent; -webkit-appearance: auto;">
+                                                                            <option value="">Select a state…</option>
+                                                                            <option value="Andhra Pradesh" ${data.territory == 'Andhra Pradesh' ? 'selected' : ''}>Andhra Pradesh</option>
+                                                                            <option value="Arunachal Pradesh" ${data.territory == 'Arunachal Pradesh' ? 'selected' : ''}>Arunachal Pradesh</option>
+                                                                            <option value="Assam" ${data.territory == 'Assam' ? 'selected' : ''}>Assam</option>
+                                                                            <option value="Bihar" ${data.territory == 'Bihar' ? 'selected' : ''}>Bihar</option>
+                                                                            <option value="Chhattisgarh" ${data.territory == 'Chhattisgarh' ? 'selected' : ''}>Chhattisgarh</option>
+                                                                            <option value="Goa" ${data.territory == 'Goa' ? 'selected' : ''}>Goa</option>
+                                                                            <option value="Gujarat" ${data.territory == 'Gujarat' ? 'selected' : ''}>Gujarat</option>
+                                                                            <option value="Haryana" ${data.territory == 'Haryana' ? 'selected' : ''}>Haryana</option>
+                                                                            <option value="Himachal Pradesh" ${data.territory == 'Himachal Pradesh' ? 'selected' : ''}>Himachal Pradesh</option>
+                                                                            <option value="Jharkhand" ${data.territory == 'Jharkhand' ? 'selected' : ''}>Jharkhand</option>
+                                                                            <option value="Karnataka" ${data.territory == 'Karnataka' ? 'selected' : ''}>Karnataka</option>
+                                                                            <option value="Kerala" ${data.territory == 'Kerala' ? 'selected' : ''}>Kerala</option>
+                                                                            <option value="Madhya Pradesh" ${data.territory == 'Madhya Pradesh' ? 'selected' : ''}>Madhya Pradesh</option>
+                                                                            <option value="Maharashtra" ${data.territory == 'Maharashtra' ? 'selected' : ''}>Maharashtra</option>
+                                                                            <option value="Manipur" ${data.territory == 'Manipur' ? 'selected' : ''}>Manipur</option>
+                                                                            <option value="Meghalaya" ${data.territory == 'Meghalaya' ? 'selected' : ''}>Meghalaya</option>
+                                                                            <option value="Mizoram" ${data.territory == 'Mizoram' ? 'selected' : ''}>Mizoram</option>
+                                                                            <option value="Nagaland" ${data.territory == 'Nagaland' ? 'selected' : ''}>Nagaland</option>
+                                                                            <option value="Odisha" ${data.territory == 'Odisha' ? 'selected' : ''}>Odisha</option>
+                                                                            <option value="Punjab" ${data.territory == 'Punjab' ? 'selected' : ''}>Punjab</option>
+                                                                            <option value="Rajasthan" ${data.territory == 'Rajasthan' ? 'selected' : ''}>Rajasthan</option>
+                                                                            <option value="Sikkim" ${data.territory == 'Sikkim' ? 'selected' : ''}>Sikkim</option>
+                                                                            <option value="Tamil Nadu" ${data.territory == 'Tamil Nadu' ? 'selected' : ''}>Tamil Nadu</option>
+                                                                            <option value="Telangana" ${data.territory == 'Telangana' ? 'selected' : ''}>Telangana</option>
+                                                                            <option value="Tripura" ${data.territory == 'Tripura' ? 'selected' : ''}>Tripura</option>
+                                                                            <option value="Uttar Pradesh" ${data.territory == 'Uttar Pradesh' ? 'selected' : ''}>Uttar Pradesh</option>
+                                                                            <option value="Uttarakhand" ${data.territory == 'Uttarakhand' ? 'selected' : ''}>Uttarakhand</option>
+                                                                            <option value="West Bengal" ${data.territory == 'West Bengal' ? 'selected' : ''}>West Bengal</option>
+                                                                            <option value="Andaman and Nicobar Islands" ${data.territory == 'Andaman and Nicobar Islands' ? 'selected' : ''}>Andaman and Nicobar Islands</option>
+                                                                            <option value="Chandigarh" ${data.territory == 'Chandigarh' ? 'selected' : ''}>Chandigarh</option>
+                                                                            <option value="Dadra and Nagar Haveli and Daman and Diu" ${data.territory == 'Dadra and Nagar Haveli and Daman and Diu' ? 'selected' : ''}>Dadra and Nagar Haveli and Daman and Diu</option>
+                                                                            <option value="Delhi" ${data.territory == 'Delhi' ? 'selected' : ''}>Delhi</option>
+                                                                            <option value="Jammu and Kashmir" ${data.territory == 'Jammu and Kashmir' ? 'selected' : ''}>Jammu and Kashmir</option>
+                                                                            <option value="Ladakh" ${data.territory == 'Ladakh' ? 'selected' : ''}>Ladakh</option>
+                                                                            <option value="Lakshadweep" ${data.territory == 'Lakshadweep' ? 'selected' : ''}>Lakshadweep</option>
+                                                                            <option value="Puducherry" ${data.territory == 'Puducherry' ? 'selected' : ''}>Puducherry</option>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="row mb-3 mt-4">
+                                                                    <div class="col-12">
+                                                                        <label style="padding: 10px 0px; display: block; margin-bottom: 10px; font-weight: 500;">Choose Type of Address <span class="required" style="color:red">*</span></label>
+                                                                        <div class="type-of-address">
+                                                                            <input id="home-update" class="toggle toggle-left" name="type_of_address" type="radio" value="0" ${data.type_of_address == '0' ? 'checked' : ''}>
+                                                                            <label for="home-update" class="btnn1">Home</label>
+                                                                            <input id="corporate-update" class="toggle toggle-right" name="type_of_address" type="radio" value="1" ${data.type_of_address == '1' ? 'checked' : ''}>
+                                                                            <label for="corporate-update" class="btnn1">Office/Commercial</label>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <input type="hidden" name="address_id" value="${data.id}">
+                                                            </div>`
 
                                 $('#formEdit').html(html);
                                 $('#edit-address').modal('show');

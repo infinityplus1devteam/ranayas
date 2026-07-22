@@ -137,9 +137,24 @@
                                 <div class="col-xl-3 col-xs-12 col-sm-12 col-md-12 col-lg-4">
                                     <div class="cart-total">
                                         <h5 class="mb--15">Cart totals</h5>
-                                        <div class="shop-total">
-                                            <span>Total</span>
-                                            <span class="total-amount">₹{{ Cart::getTotal() }}</span>
+                                        @php
+                                            $cartTotal = Cart::getTotal();
+                                            $shippingCharge = $cartTotal > 0 && $cartTotal < 199 ? 80 : 0;
+                                            $grandTotal = $cartTotal + $shippingCharge;
+                                        @endphp
+                                        <div class="shop-total" style="border-bottom: 1px solid #eee; padding-bottom: 10px; margin-bottom: 10px;">
+                                            <span>Subtotal</span>
+                                            <span class="total-amount">₹{{ $cartTotal }}</span>
+                                        </div>
+                                        @if ($shippingCharge > 0)
+                                        <div class="shop-total text-danger" style="border-bottom: 1px solid #eee; padding-bottom: 10px; margin-bottom: 10px;">
+                                            <span>Shipping Charge</span>
+                                            <span class="total-amount">+ ₹{{ $shippingCharge }}</span>
+                                        </div>
+                                        @endif
+                                        <div class="shop-total" style="font-weight: bold;">
+                                            <span>Grand Total</span>
+                                            <span class="total-amount">₹{{ $grandTotal }}</span>
                                         </div>
 
                                         <ul class="subtotal-title-area">

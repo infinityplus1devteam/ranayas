@@ -273,8 +273,7 @@
                                 foreach ($order->details as $detail) {
                                     $itemSubtotal += $detail->mrp * $detail->quantity;
                                 }
-                                // Shipping feature removed
-                                // $shipping = $itemSubtotal < 1000 ? 60 : 0;
+                                $shipping = $itemSubtotal > 0 && $itemSubtotal < 199 ? 80 : 0;
                             @endphp
                             <p>Item Subtotal : &#8377; {{ $itemSubtotal }}</p>
                             {{-- GST breakdown hidden (no GST number available)
@@ -288,7 +287,9 @@
                             @if ($order->discount)
                                 <p>- Discount : &#8377; {{ $order->discount }}</p>
                             @endif
-                            {{-- <p>+ Shipping : &#8377; {{ $shipping }}</p> --}}
+                            @if($shipping > 0)
+                            <p>+ Shipping : &#8377; {{ $shipping }}</p>
+                            @endif
                             <p>Grand Total : &#8377; {{ $order->total }}</p>
                         </th>
                     </tr>

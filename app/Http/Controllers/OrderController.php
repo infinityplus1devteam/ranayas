@@ -46,7 +46,7 @@ class OrderController extends Controller
 
     public function checkout(Request $request, LogisticService $logistic)
     {
-        Log::info('Checkout request data: '.json_encode($request->all()));
+        Log::info('Checkout request data: ' . json_encode($request->all()));
 
         $validator = Validator::make(
             $request->all(),
@@ -146,11 +146,10 @@ class OrderController extends Controller
 
             $balance = $total - $request->discount;
 
-            // Shipping charge feature removed
-            // if ($total < 1000) {
-            //     $request['shipingcharge'] = 60;
-            //     $balance = $balance + $request->shipingcharge;
-            // }
+            if ($total > 0 && $total < 199) {
+                $request['shipingcharge'] = 80;
+                $balance = $balance + $request->shipingcharge;
+            }
 
             $balance = round($balance);
 
@@ -224,18 +223,18 @@ class OrderController extends Controller
                     //     'Dear Customer, Thank You for login with RANAYAS. Your OTP for login is '.substr($order->order_number, 0, 6).'.',
                     //     config('services.sms.dlt_template_id')
                     // );
-                    
-                    SMS::send($order->user->mobile, 'Ranayas - New Order Placed with Order No : '.$order->order_number);
+
+                    SMS::send($order->user->mobile, 'Ranayas - New Order Placed with Order No : ' . $order->order_number);
 
                     if ($order->user && $order->user->email) {
                         Mail::send(['html' => 'backend.mails.received'], ['order' => $order], function ($message) use ($order) {
-                            $message->to($order->user->email)->subject('Your order has been placed successfully ! [order no : '.$order->order_number.']');
+                            $message->to($order->user->email)->subject('Your order has been placed successfully ! [order no : ' . $order->order_number . ']');
                             $message->from(config('mail.from.address'), config('app.name'));
                         });
                     }
 
                     Mail::send(['html' => 'backend.mails.admin'], ['order' => $order], function ($message) use ($order) {
-                        $message->to(config('mail.from.address'))->subject('You have a new order ! [order id : '.$order->order_number.']');
+                        $message->to(config('mail.from.address'))->subject('You have a new order ! [order id : ' . $order->order_number . ']');
                         $message->from(config('mail.from.address'), config('app.name'));
                     });
                 }
@@ -320,17 +319,17 @@ class OrderController extends Controller
                 //     config('services.sms.dlt_template_id')
                 // );
 
-                SMS::send($order->user->mobile, 'Ranayas - New Order Placed with Order No : '.$order->order_number);
+                SMS::send($order->user->mobile, 'Ranayas - New Order Placed with Order No : ' . $order->order_number);
 
                 if ($order->user && $order->user->email) {
                     Mail::send(['html' => 'backend.mails.received'], ['order' => $order], function ($message) use ($order) {
-                        $message->to($order->user->email)->subject('Your order has been placed successfully ! [order no : '.$order->order_number.']');
+                        $message->to($order->user->email)->subject('Your order has been placed successfully ! [order no : ' . $order->order_number . ']');
                         $message->from(config('mail.from.address'), config('app.name'));
                     });
                 }
 
                 Mail::send(['html' => 'backend.mails.admin'], ['order' => $order], function ($message) use ($order) {
-                    $message->to(config('mail.from.address'))->subject('You have a new order ! [order id : '.$order->order_number.']');
+                    $message->to(config('mail.from.address'))->subject('You have a new order ! [order id : ' . $order->order_number . ']');
                     $message->from(config('mail.from.address'), config('app.name'));
                 });
 
@@ -433,13 +432,13 @@ class OrderController extends Controller
         $postData = [
             'amount' => (int) round($order->total * 100), // Razorpay amount is in paise
             'currency' => 'INR',
-            'receipt' => 'rcpt_'.$order->id,
+            'receipt' => 'rcpt_' . $order->id,
         ];
 
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_USERPWD, $keyId.':'.$keySecret);
+        curl_setopt($ch, CURLOPT_USERPWD, $keyId . ':' . $keySecret);
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($postData));
         curl_setopt($ch, CURLOPT_HTTPHEADER, [
@@ -463,7 +462,7 @@ class OrderController extends Controller
 
             return view('frontend.order.razorpay-checkout', compact('order', 'razorpay_order_id'));
         } else {
-            Log::error('Razorpay Order Creation Failed: '.$response);
+            Log::error('Razorpay Order Creation Failed: ' . $response);
             connectify('error', 'Payment Gateway Error', 'Order initiation failed. Check API credentials.');
 
             return redirect()->route('checkout');
@@ -481,7 +480,7 @@ class OrderController extends Controller
 
         // Signature Verification using SHA256 HMAC
         $keySecret = env('RAZORPAY_KEY_SECRET');
-        $expectedSignature = hash_hmac('sha256', $razorpay_order_id.'|'.$razorpay_payment_id, $keySecret);
+        $expectedSignature = hash_hmac('sha256', $razorpay_order_id . '|' . $razorpay_payment_id, $keySecret);
 
         if (hash_equals($expectedSignature, $razorpay_signature)) {
 
@@ -491,9 +490,9 @@ class OrderController extends Controller
                 // Fetch exact payment method from Razorpay API
                 $keyId = env('RAZORPAY_KEY_ID');
                 $ch = curl_init();
-                curl_setopt($ch, CURLOPT_URL, 'https://api.razorpay.com/v1/payments/'.$razorpay_payment_id);
+                curl_setopt($ch, CURLOPT_URL, 'https://api.razorpay.com/v1/payments/' . $razorpay_payment_id);
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                curl_setopt($ch, CURLOPT_USERPWD, $keyId.':'.$keySecret);
+                curl_setopt($ch, CURLOPT_USERPWD, $keyId . ':' . $keySecret);
                 $response = curl_exec($ch);
                 curl_close($ch);
 
@@ -541,17 +540,17 @@ class OrderController extends Controller
                 try {
                     if ($order->user && $order->user->email) {
                         Mail::send(['html' => 'backend.mails.received'], ['order' => $order], function ($message) use ($order) {
-                            $message->to($order->user->email)->subject('Your order has been placed successfully! [order no: '.$order->order_number.']');
+                            $message->to($order->user->email)->subject('Your order has been placed successfully! [order no: ' . $order->order_number . ']');
                             $message->from(config('mail.from.address'), config('app.name'));
                         });
                     }
 
                     Mail::send(['html' => 'backend.mails.admin'], ['order' => $order], function ($message) use ($order) {
-                        $message->to(config('mail.from.address'))->subject('You have a new Razorpay order! [order id: '.$order->order_number.']');
+                        $message->to(config('mail.from.address'))->subject('You have a new Razorpay order! [order id: ' . $order->order_number . ']');
                         $message->from(config('mail.from.address'), config('app.name'));
                     });
                 } catch (\Exception $e) {
-                    Log::error('Mail sending failed during checkout: '.$e->getMessage());
+                    Log::error('Mail sending failed during checkout: ' . $e->getMessage());
                 }
 
                 Cart::clear();
@@ -560,7 +559,7 @@ class OrderController extends Controller
             return view('frontend.order.transaction-success')->with('order', $order)->with('TXNID', $razorpay_payment_id);
         } else {
             // Verification failed
-            Log::warning('Razorpay Signature Verification Failed for Order: '.$order->id);
+            Log::warning('Razorpay Signature Verification Failed for Order: ' . $order->id);
 
             return view('frontend.order.transaction-failed')->with('data', [
                 'message' => 'Razorpay Payment Signature verification failed.',

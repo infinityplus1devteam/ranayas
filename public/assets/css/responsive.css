@@ -5302,6 +5302,52 @@ iphone css
 
 @media (max-width: 476px) {
     .grid-list-area .grid-pro ul.grid-product li.grid-items {
-        width: calc(100% - 15px) !important;
+        width: calc(50% - 15px) !important;
+    }
+    
+    .grid-list-area .grid-pro ul.grid-product li.grid-items .tred-pro .pro-icn {
+        display: none !important;
+    }
+
+    .grid-list-area .grid-pro ul.grid-product li.grid-items .caption h3 span.pull-left {
+        float: none !important;
+        display: block !important;
+        width: 100% !important;
+        text-align: left !important;
+    }
+
+    .grid-list-area .grid-pro ul.grid-product li.grid-items .caption h3 span.pull-left a {
+        font-size: 11px !important;
+        line-height: 1.2 !important;
+        display: block !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+    }
+
+    .grid-list-area .grid-pro ul.grid-product li.grid-items .caption h3 span.pull-right {
+        display: none !important;
+    }
+
+    .grid-list-area .grid-pro ul.grid-product li.grid-items .caption .rating {
+        display: none !important;
+    }
+
+    .grid-list-area .grid-pro ul.grid-product li.grid-items .caption .pro-price {
+        float: none !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: flex-start !important;
+        gap: 4px !important;
+        margin-top: 5px !important;
+    }
+
+    .grid-list-area .grid-pro ul.grid-product li.grid-items .caption .pro-price span.new-price {
+        font-size: 11px !important;
+        font-weight: 600 !important;
+    }
+
+    .grid-list-area .grid-pro ul.grid-product li.grid-items .caption .pro-price span.old-price del {
+        font-size: 9px !important;
     }
 }
