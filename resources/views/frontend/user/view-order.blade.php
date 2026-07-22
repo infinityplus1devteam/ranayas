@@ -312,6 +312,13 @@
                                                     <p class="text-capitalize">{{ $order->status }}</p>
                                                 </div>
 
+                                                @if($order->awb_number)
+                                                <div class="col-sm-12 mb-15">
+                                                    <p class="mb-0"><strong>AWB Tracking Number </strong></p>
+                                                    <p>{{ $order->awb_number }}</p>
+                                                </div>
+                                                @endif
+
                                                 @if($order->transaction)
                                                     <div class="col-sm-12 mb-15">
                                                         <p class="mb-0"><strong>Transaction ID </strong></p>

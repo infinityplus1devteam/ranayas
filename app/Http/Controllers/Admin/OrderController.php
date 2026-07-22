@@ -141,21 +141,27 @@ class OrderController extends Controller
     public function update(Request $request, $id)
     {
 
-        $request->validate(
-            [
-                'status' => 'required|string',
-            ],
-            [
-                'status' => 'Please Select Status',
-            ]
-        );
+        $requiresAwb = in_array($request->status, ['Shipped', 'Out for Delivery', 'Delivered']);
+        
+        $validator = \Illuminate\Support\Facades\Validator::make($request->all(), [
+            'status' => 'required|string',
+            'awb_number' => $requiresAwb ? 'required|string' : 'nullable|string',
+        ], [
+            'status.required' => 'Please Select Status',
+            'awb_number.required' => 'AWB Number is strictly required for this status.',
+        ]);
+
+        if ($validator->fails()) {
+            connectify('error', 'Validation Error', $validator->errors()->first());
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
         try {
 
             $order = TxnOrder::where('id', $id)->with('user', 'details')->firstOrFail();
 
             $order->update([
-
                 'status' => $request->status,
+                'awb_number' => $request->awb_number,
             ]);
 
             // SMS::send($order->user->mobile, 'Ranayas - Your Order ID : ' . $order->id . ', has been ' . $order->status . ',  Login for more detail on ' . route('user.login'));
@@ -176,7 +182,7 @@ class OrderController extends Controller
                 // $mobile = $request->query('mobile');
                 // $mobile = "7045882487";
                 $courier = "Delhivery";
-                $awbNo = "123456789";
+                $awbNo = $order->awb_number ?: "Not Provided";
                 // $templateid = $request->query('templateid', '');
                 // $templateid = "";
                 $result =

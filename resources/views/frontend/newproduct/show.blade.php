@@ -2,6 +2,13 @@
 @section('title')
     {{ $product->title }}
 @endsection
+@section('og_title'){{ $product->title }}@endsection
+@section('og_description'){{ Str::limit(strip_tags($product->description), 150) }}@endsection
+@section('og_image')
+    <meta property="og:image" content="{{ asset('storage/images/products/' . $product->image_url) }}" />
+    <meta property="og:image:secure_url" content="{{ asset('storage/images/products/' . $product->image_url) }}" />
+@endsection
+
 @section('content')
 
     <section class="breadcrumb-area">
@@ -551,6 +558,7 @@
                                                 ' ' .
                                                 ($product->dim_unit ? $product->dim_unit->unit : '')
                                             : null,
+                                        'Quantity' => $product->quantity ? $product->quantity : null,
                                         'Weight' => $product->weight
                                             ? $product->weight . ' ' . ($product->unit ? $product->unit->unit : '')
                                             : null,

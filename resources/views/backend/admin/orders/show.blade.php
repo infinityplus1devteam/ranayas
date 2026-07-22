@@ -82,6 +82,12 @@
                                                 <option value="Cancelled" {{ $order->status == 'Cancelled' ? 'selected' : '' }}>Cancelled</option>
                                             </select>
                                         </div>
+                                        <div class="form-group mr-2">
+                                            <input type="text" name="awb_number" id="awb_number" class="form-control" placeholder="AWB Number" value="{{ $order->awb_number }}">
+                                            @error('awb_number')
+                                                <div class="text-danger mt-1"><small>{{ $message }}</small></div>
+                                            @enderror
+                                        </div>
                                         <button type="submit" class="btn btn-primary">Update Status</button>
                                     </form>
                                 </div>

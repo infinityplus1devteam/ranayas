@@ -37,12 +37,12 @@
                     <div class="modal-body">
                         <div class="form-group">
                             <label for="field_name"> Field Name</label>
-                            <input type="text" required="required" name="field_name" value="{{ old('field_name') }}"
+                            <input type="text" required="required" name="field_name" value="{{ is_string(old('field_name')) ? old('field_name') : '' }}"
                                 class="form-control" id="field_name" placeholder="Enter Field Name">
                         </div>
                         <div class="form-group">
                             <label for="field_value">Field Value </label>
-                            <input type="text" name="field_value" value="{{ old('field_value') }}" class="form-control"
+                            <input type="text" name="field_value" value="{{ is_string(old('field_value')) ? old('field_value') : '' }}" class="form-control"
                                 id="field_value" placeholder="Enter Field Value" required>
                         </div>
                     </div>
@@ -132,6 +132,7 @@
                                 <label class="custom-file-label" for="image_urls">Choose file</label>
                             </div>
                             <label id="" class="error" for="image_urls"></label>
+                            <small class="form-text text-muted">Please upload image of 1000x1000 and below 2 MB.</small>
                         </div>
 
                     </div>
@@ -285,6 +286,7 @@
                                 <div class="form-group">
                                     <label for="image_url">Change Front Image </label>
                                     <input type="file" name="image_url" id="image_url" class="form-control">
+                                    <small class="form-text text-muted">Please upload image of 1000x1000 and below 2 MB.</small>
                                 </div>
                             </div>
 
@@ -292,6 +294,7 @@
                                 <div class="form-group">
                                     <label for="image_url1">Change Back Image </label>
                                     <input type="file" name="image_url1" id="image_url1" class="form-control">
+                                    <small class="form-text text-muted">Please upload image of 1000x1000 and below 2 MB.</small>
                                 </div>
                             </div>
 
@@ -368,6 +371,14 @@
                                             </option>
                                         @endforeach
                                     </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="quantity">Quantity </label>
+                                    <input type="text" name="quantity" id="quantity" class="form-control"
+                                        value="{{ $product->quantity }}" placeholder="Enter quantity">
                                 </div>
                             </div>
 

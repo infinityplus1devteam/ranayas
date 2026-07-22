@@ -15,6 +15,16 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content="Ranayas" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="@yield('og_title', 'Ranayas')" />
+    <meta property="og:description" content="@yield('og_description', 'Ranayas')" />
+    @hasSection('og_image')
+        @yield('og_image')
+    @else
+        <meta property="og:image" content="{{ asset('assets/image/logo/ranayas-logo.png') }}" />
+        <meta property="og:image:secure_url" content="{{ asset('assets/image/logo/ranayas-logo.png') }}" />
+    @endif
+    <meta property="og:url" content="{{ url()->current() }}" />
     <link rel="shortcut icon" href="{!! asset('assets/image/logo/favicon-32x32.png') !!}">
     <!-- Title -->
     <title>@yield('title') || Ranayas</title>

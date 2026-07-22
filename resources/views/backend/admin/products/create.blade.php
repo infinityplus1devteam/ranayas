@@ -177,6 +177,7 @@
                                             <label class="custom-file-label" for="image_url">Choose file</label>
                                         </div>
                                         <label id="" class="error" for="image_url"></label>
+                                        <small class="form-text text-muted">Please upload image of 1000x1000 and below 2 MB.</small>
                                     </div>
                                 </div>
 
@@ -189,6 +190,7 @@
                                             <label class="custom-file-label" for="image_url1">Choose file</label>
                                         </div>
                                         <label id="" class="error" for="image_url1"></label>
+                                        <small class="form-text text-muted">Please upload image of 1000x1000 and below 2 MB.</small>
                                     </div>
                                 </div>
 
@@ -201,6 +203,7 @@
                                             <label class="custom-file-label" for="image_urls">Choose file</label>
                                         </div>
                                         <label id="" class="error" for="image_urls"></label>
+                                        <small class="form-text text-muted">Please upload image of 1000x1000 and below 2 MB.</small>
                                     </div>
                                 </div>
 
@@ -343,6 +346,14 @@
                                                     {{ $unit->unit }}</option>
                                             @endforeach
                                         </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="quantity">Quantity </label>
+                                        <input type="text" name="quantity" id="quantity" class="form-control"
+                                            value="{{ old('quantity') }}" placeholder="Enter quantity">
                                     </div>
                                 </div>
 

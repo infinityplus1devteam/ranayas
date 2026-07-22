@@ -238,12 +238,6 @@
                         </td>
                     </tr>
                     --}}
-                    <tr>
-                        <td colspan="2">
-                            Contact: 9820760951
-                            <span class="invoice_span">Email id : info@ranayas.com</span>
-                        </td>
-                    </tr>
                 </table>
                 <table class="table table-bordered table-responsive">
                     <tr>
@@ -396,6 +390,12 @@
                         </th>
                         <td>
                             Rs. {{ round($invoice->total, 2) }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="3">
+                            Contact: 9820760951
+                            <span class="invoice_span">Email id : info@ranayas.com</span>
                         </td>
                     </tr>
                 </table>
