@@ -245,27 +245,175 @@
 @endsection
 @section('content')
     <!--home page slider start-->
-    <section class="home-slider-5">
+    <style>
+        .banner-slider-section {
+            width: 100%;
+            overflow: hidden;
+            position: relative;
+            padding: 0;
+            margin: 0;
+        }
+        .banner-slider-section .home5-slider,
+        .banner-slider-section .swiper-wrapper,
+        .banner-slider-section .swiper-slide {
+            height: auto !important;
+        }
+        .banner-slide-item {
+            position: relative;
+            width: 100%;
+            display: block;
+        }
+        .banner-slide-img {
+            width: 100% !important;
+            height: auto !important;
+            display: block !important;
+            object-fit: cover;
+        }
+        .home-slider-5 .home-slider-main-5 .home5-slider .img-back {
+            height: auto !important;
+        }
+        .banner-full-link {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 4;
+        }
+        .banner-overlay-content {
+            position: absolute;
+            z-index: 5;
+            max-width: 50%;
+            padding: 15px;
+            pointer-events: auto;
+        }
+        .banner-overlay-content .banner-title {
+            font-size: 38px;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 10px;
+            color: #222222;
+        }
+        .banner-overlay-content .banner-subtitle {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--theme-color, #702c89);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .banner-overlay-content .banner-description {
+            font-size: 14px;
+            line-height: 1.5;
+            margin-bottom: 15px;
+            color: #444444;
+        }
+        .banner-overlay-content .banner-btn {
+            display: inline-block;
+            padding: 10px 24px;
+            background-color: var(--theme-color, #702c89);
+            color: #ffffff !important;
+            border-radius: 4px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
+        .banner-overlay-content .banner-btn:hover {
+            background-color: #58216c;
+            color: #ffffff !important;
+        }
+        /* Positions */
+        .banner-overlay-content.pos-center-left { top: 50%; left: 8%; transform: translateY(-50%); }
+        .banner-overlay-content.pos-center { top: 50%; left: 50%; transform: translate(-50%, -50%); }
+        .banner-overlay-content.pos-center-right { top: 50%; right: 8%; transform: translateY(-50%); }
+        .banner-overlay-content.pos-top-left { top: 10%; left: 8%; }
+        .banner-overlay-content.pos-top-center { top: 10%; left: 50%; transform: translateX(-50%); }
+        .banner-overlay-content.pos-top-right { top: 10%; right: 8%; }
+        .banner-overlay-content.pos-bottom-left { bottom: 10%; left: 8%; }
+        .banner-overlay-content.pos-bottom-center { bottom: 10%; left: 50%; transform: translateX(-50%); }
+        .banner-overlay-content.pos-bottom-right { bottom: 10%; right: 8%; }
+
+        @media (max-width: 767px) {
+            .banner-slide-img {
+                width: 100% !important;
+                height: auto !important;
+                object-fit: contain;
+            }
+            .banner-overlay-content {
+                max-width: 85%;
+                padding: 8px;
+            }
+            .banner-overlay-content .banner-title {
+                font-size: 20px;
+                margin-bottom: 4px;
+            }
+            .banner-overlay-content .banner-subtitle {
+                font-size: 12px;
+                margin-bottom: 4px;
+            }
+            .banner-overlay-content .banner-description {
+                font-size: 11px;
+                margin-bottom: 8px;
+                display: -webkit-box;
+                -webkit-line-clamp: 2;
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+            }
+            .banner-overlay-content .banner-btn {
+                padding: 5px 12px;
+                font-size: 12px;
+            }
+        }
+    </style>
+    <section class="home-slider-5 banner-slider-section">
         <div class="home-slider-main-5">
             <div class="home5-slider swiper-container">
                 <div class="swiper-wrapper">
                     @foreach ($sliders as $slider)
                         <div class="swiper-slide">
-                            <div class="img-back s-image1" style="background-image:url({!! asset('storage/images/sliders') . '/' . $slider->image_url !!});"
-                                onclick="window.location.href='{{ $slider->url ? $slider->url : 'javascript:void(0)' }}'">
-                                <div class="h-s-content">
-                                    <h1>{{ $slider->title }}</h1>
-                                    <h3>{{ $slider->subtitle }}</h3>
-                                </div>
+                            <div class="banner-slide-item">
+                                @if(empty($slider->button_text) && !empty($slider->url))
+                                    <a href="{{ $slider->url }}" class="d-block w-100 banner-img-link">
+                                        <picture class="w-100 d-block">
+                                            <source media="(max-width: 767px)" srcset="{!! $slider->mobile_image_url !!}">
+                                            <img src="{!! $slider->desktop_image_url !!}" alt="{{ $slider->title ?? 'Banner' }}" class="banner-slide-img">
+                                        </picture>
+                                    </a>
+                                @else
+                                    <picture class="w-100 d-block">
+                                        <source media="(max-width: 767px)" srcset="{!! $slider->mobile_image_url !!}">
+                                        <img src="{!! $slider->desktop_image_url !!}" alt="{{ $slider->title ?? 'Banner' }}" class="banner-slide-img">
+                                    </picture>
+                                @endif
+
+                                @if(!empty($slider->title) || !empty($slider->subtitle) || !empty($slider->description) || !empty($slider->button_text))
+                                    @php
+                                        $posClass = 'pos-' . ($slider->content_position ?? 'center-left');
+                                        $alignClass = 'text-' . ($slider->text_align ?? 'left');
+                                    @endphp
+                                    <div class="banner-overlay-content {{ $posClass }} {{ $alignClass }}">
+                                        @if(!empty($slider->subtitle)) <h3 class="banner-subtitle">{{ $slider->subtitle }}</h3> @endif
+                                        @if(!empty($slider->title)) <h1 class="banner-title">{{ $slider->title }}</h1> @endif
+                                        @if(!empty($slider->description)) <p class="banner-description">{{ $slider->description }}</p> @endif
+                                        @if(!empty($slider->button_text))
+                                            <a href="{{ $slider->url ? $slider->url : 'javascript:void(0)' }}" class="btn banner-btn">
+                                                {{ $slider->button_text }}
+                                            </a>
+                                        @endif
+                                    </div>
+                                @endif
                             </div>
                         </div>
                     @endforeach
                 </div>
-                <div class="swiper-buttons">
-                    <button class="swiper-prev"><i class="fa fa-angle-left"></i></button>
-                    <button class="swiper-next"><i class="fa fa-angle-right"></i></button>
-                </div>
-                <div class="swiper-pagination"><span></span></div>
+                @if(count($sliders) > 1)
+                    <div class="swiper-buttons d-none d-md-block">
+                        <button class="swiper-prev"><i class="fa fa-angle-left"></i></button>
+                        <button class="swiper-next"><i class="fa fa-angle-right"></i></button>
+                    </div>
+                    <div class="swiper-pagination"><span></span></div>
+                @endif
             </div>
         </div>
     </section>

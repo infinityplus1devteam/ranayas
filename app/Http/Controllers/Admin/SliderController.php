@@ -45,17 +45,23 @@ class SliderController extends Controller
         $validator = Validator::make(
             $request->all(),
             [
-                'image_url' => 'required|image|mimes:jpg,jpeg,png|max:1024',
+                'image_url' => 'required|image|mimes:jpg,jpeg,png,webp|max:2048',
+                'mobile_image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
                 'sort_index' => 'required|integer',
                 'title' => 'nullable|string|max:191',
                 'subtitle' => 'nullable|string|max:191',
                 'description' => 'nullable|string',
                 'url' => 'nullable|url|max:191',
+                'button_text' => 'nullable|string|max:191',
+                'content_position' => 'nullable|string|max:50',
+                'text_align' => 'nullable|string|max:50',
             ],
             [
-                'image_url.max' => 'Please Choose image of Maximum 1MB Size..',
-                'image_url.required' => 'Please Choose Atleast One Image',
-                'image_url.image' => 'Please Choose Only Image',
+                'image_url.max' => 'Please Choose Desktop Image of Maximum 2MB Size..',
+                'image_url.required' => 'Please Choose Desktop Image',
+                'image_url.image' => 'Please Choose Only Image for Desktop',
+                'mobile_image.max' => 'Please Choose Mobile Image of Maximum 2MB Size..',
+                'mobile_image.image' => 'Please Choose Only Image for Mobile',
                 'sort_index.required' => 'Please Enter Slider Position',
                 'url.url' => 'Please Enter Proper Url',
             ]
@@ -67,22 +73,33 @@ class SliderController extends Controller
             return redirect(route('admin.sliders.all'))->withInput();
         }
 
+        $desktop_img = null;
         if ($request->hasFile('image_url')) {
-            $request['img'] = uniqid() . '.' . pathinfo($request->image_url->getClientOriginalName(), PATHINFO_EXTENSION);
-            $request->image_url->storeAs('images/sliders', $request->img, 'public');
+            $desktop_img = uniqid() . '.' . pathinfo($request->image_url->getClientOriginalName(), PATHINFO_EXTENSION);
+            $request->image_url->storeAs('images/sliders/desktop', $desktop_img, 'public');
+        }
+
+        $mobile_img = null;
+        if ($request->hasFile('mobile_image')) {
+            $mobile_img = uniqid() . '.' . pathinfo($request->mobile_image->getClientOriginalName(), PATHINFO_EXTENSION);
+            $request->mobile_image->storeAs('images/sliders/mobile', $mobile_img, 'public');
         }
 
         Slider::create([
-            'image_url' => $request->img,
+            'image_url' => $desktop_img,
+            'mobile_image' => $mobile_img,
             'sort_index' => $request->sort_index,
             'status' => true,
             'title' => $request->title,
-            'url' => $request->url,
             'subtitle' => $request->subtitle,
             'description' => $request->description,
+            'url' => $request->url,
+            'button_text' => $request->button_text,
+            'content_position' => $request->content_position ?? 'center-left',
+            'text_align' => $request->text_align ?? 'left',
         ]);
 
-        connectify('success', 'slider Added', 'slider has been added successfully !');
+        connectify('success', 'Slider Added', 'Slider has been added successfully !');
 
         return redirect(route('admin.sliders.all'));
     }
@@ -137,17 +154,24 @@ class SliderController extends Controller
         $validator = Validator::make(
             $request->all(),
             [
-                'image_url' => 'nullable|image|mimes:jpg,jpeg,png|max:1024',
+                'image_url' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+                'mobile_image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
                 'sort_index' => 'required|integer',
                 'title' => 'nullable|string|max:191',
                 'subtitle' => 'nullable|string|max:191',
                 'description' => 'nullable|string',
                 'url' => 'nullable|url|max:191',
+                'button_text' => 'nullable|string|max:191',
+                'content_position' => 'nullable|string|max:50',
+                'text_align' => 'nullable|string|max:50',
             ],
             [
-                'image_url.image' => 'Please Choose Only image..',
-                'image_url.mimes' => 'Please Choose Only image of type JPG,JPEG,PNG..',
-                'image_url.max' => 'Please Choose Only image of Maximum 1MB Size..',
+                'image_url.image' => 'Please Choose Only image for Desktop..',
+                'image_url.mimes' => 'Please Choose Only image of type JPG, JPEG, PNG, WEBP..',
+                'image_url.max' => 'Please Choose Only image of Maximum 2MB Size..',
+                'mobile_image.image' => 'Please Choose Only image for Mobile..',
+                'mobile_image.mimes' => 'Please Choose Only image of type JPG, JPEG, PNG, WEBP..',
+                'mobile_image.max' => 'Please Choose Only image of Maximum 2MB Size..',
                 'sort_index.required' => 'Please Enter Sort Index',
                 'url.url' => 'Please Enter Proper Url',
             ]
@@ -160,30 +184,28 @@ class SliderController extends Controller
         }
 
         try {
-
             $slider = Slider::where('id', $id)->firstOrFail();
 
-            // if ($request->hasFile('image_url')) {
-            //     Storage::disk('public')->delete('images/sliders/' . $slider->image_url);
-            //     $request->image_url->storeAs('images/sliders', $slider->image_url, 'public');
-            // }
-
-            // $slider->update([
-            //     'status' => $request->status,
-            //     'sort_index' => $request->sort_index,
-            //     'title' => $request->title,
-            //     'subtitle' => $request->subtitle,
-            //     'url' => $request->url,
-            //     'description' => $request->description,
-            // ]);
-
             if ($request->hasFile('image_url')) {
-                Storage::disk('public')->delete('images/sliders/' . $slider->image_url);
+                if ($slider->image_url) {
+                    Storage::disk('public')->delete('images/sliders/desktop/' . $slider->image_url);
+                    Storage::disk('public')->delete('images/sliders/' . $slider->image_url);
+                }
 
-                // Generate a unique name
                 $new_image_name = uniqid() . '.' . $request->image_url->getClientOriginalExtension();
-                $request->image_url->storeAs('images/sliders', $new_image_name, 'public');
+                $request->image_url->storeAs('images/sliders/desktop', $new_image_name, 'public');
                 $slider->image_url = $new_image_name;
+            }
+
+            if ($request->hasFile('mobile_image')) {
+                if ($slider->mobile_image) {
+                    Storage::disk('public')->delete('images/sliders/mobile/' . $slider->mobile_image);
+                    Storage::disk('public')->delete('images/sliders/' . $slider->mobile_image);
+                }
+
+                $new_mobile_name = uniqid() . '.' . $request->mobile_image->getClientOriginalExtension();
+                $request->mobile_image->storeAs('images/sliders/mobile', $new_mobile_name, 'public');
+                $slider->mobile_image = $new_mobile_name;
             }
 
             $slider->update([
@@ -192,12 +214,15 @@ class SliderController extends Controller
                 'title' => $request->title,
                 'subtitle' => $request->subtitle,
                 'url' => $request->url,
+                'button_text' => $request->button_text,
+                'content_position' => $request->content_position ?? 'center-left',
+                'text_align' => $request->text_align ?? 'left',
                 'description' => $request->description,
-                // Save the new image name to the database
                 'image_url' => $slider->image_url,
+                'mobile_image' => $slider->mobile_image,
             ]);
 
-            connectify('success', 'Slider Updated', 'slider has been Updated successfully !');
+            connectify('success', 'Slider Updated', 'Slider has been Updated successfully !');
 
             return redirect(route('admin.sliders.all'));
         } catch (\Exception $ex) {
@@ -225,10 +250,17 @@ class SliderController extends Controller
     public function destroy(Request $request)
     {
         try {
-
             $slider = Slider::where('id', $request->slider_id)->firstOrFail();
 
-            Storage::disk('public')->delete('images/sliders/' . $slider->image_url);
+            if ($slider->image_url) {
+                Storage::disk('public')->delete('images/sliders/desktop/' . $slider->image_url);
+                Storage::disk('public')->delete('images/sliders/' . $slider->image_url);
+            }
+
+            if ($slider->mobile_image) {
+                Storage::disk('public')->delete('images/sliders/mobile/' . $slider->mobile_image);
+                Storage::disk('public')->delete('images/sliders/' . $slider->mobile_image);
+            }
 
             $slider->delete();
 
