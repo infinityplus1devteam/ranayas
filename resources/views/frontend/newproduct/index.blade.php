@@ -288,7 +288,7 @@
             pointer-events: auto;
         }
         .banner-overlay-content .banner-title {
-            font-size: 38px;
+            font-size: 52px;
             font-weight: 700;
             line-height: 1.2;
             margin-bottom: 10px;
@@ -303,17 +303,17 @@
             letter-spacing: 1px;
         }
         .banner-overlay-content .banner-description {
-            font-size: 14px;
+            font-size: 20px;
             line-height: 1.5;
             margin-bottom: 15px;
             color: #444444;
         }
         .banner-overlay-content .banner-btn {
             display: inline-block;
-            padding: 10px 24px;
+            padding: 10px 12px;
             background-color: var(--theme-color, #702c89);
             color: #ffffff !important;
-            border-radius: 4px;
+            border-radius: 8px;
             font-weight: 600;
             text-decoration: none;
             transition: all 0.3s ease;
@@ -762,7 +762,7 @@
                         hassle-free experience.</p>
                 </li>
             </ul>
-            <a href="#" class="text-uppercase fs-6 fw-bold text-light py-1 px-2">contact us</a>
+            <a href="#" style="border-radius:8px;" class="text-uppercase fs-6 fw-bold text-light py-1 px-2">contact us</a>
             {{-- <h2 class="text-uppercase fs-4 pt-3 pb-2">Rediscover the Beauty of Sound with Us, Intelligent hearing Solutions for You.</h2> --}}
             {{-- <p class="fs-6 text-secondary">Lorem ipsum dolor sit amet consectetur adipisicing elit. Laboriosam sequi
                 officiis fugiat rerum voluptatum

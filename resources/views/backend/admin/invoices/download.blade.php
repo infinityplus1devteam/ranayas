@@ -392,8 +392,16 @@
                             Rs. {{ round($invoice->total, 2) }}
                         </td>
                     </tr>
+                </table>
+                
+                <table class="table table-bordered table-responsive mb-0" style="margin-top: 20px;">
                     <tr>
-                        <td colspan="3">
+                        <th colspan="3" class="text-center text-uppercase bg-silver">
+                            Seller Contact Information
+                        </th>
+                    </tr>
+                    <tr>
+                        <td colspan="3" class="text-left">
                             Contact: 9820760951
                             <span class="invoice_span">Email id : info@ranayas.com</span>
                         </td>

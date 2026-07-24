@@ -112,6 +112,7 @@
                                     <div class="collapse show" id="size">
                                         <ul class="all-vendor">
                                             @foreach ($sizes as $size)
+                                                @if(strtolower(trim($size->title)) !== 'null' && trim($size->title) !== '')
                                                 <li class="f-vendor">
                                                     <input type="checkbox" class="filter cb_sizes" name="sizes[]"
                                                         id="size_{{ $size->id }}" value="{{ $size->id }}">
@@ -119,6 +120,7 @@
                                                         {{ $size->title }}
                                                     </label>
                                                 </li>
+                                                @endif
                                             @endforeach
                                         </ul>
                                     </div>
