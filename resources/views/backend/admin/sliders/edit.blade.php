@@ -106,12 +106,14 @@
                                 <div class="form-group">
                                     <label for="image_url">Change Desktop Image</label>
                                     <input type="file" name="image_url" id="image_url" class="form-control">
+                                    <small class="form-text text-muted">Please maintain image ratio of 16:9 and upload image below 2 MB.</small>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="mobile_image">Change Mobile Image</label>
                                     <input type="file" name="mobile_image" id="mobile_image" class="form-control">
+                                    <small class="form-text text-muted">Please maintain image ratio of 2:3 and upload image below 2 MB.</small>
                                 </div>
                             </div>
 

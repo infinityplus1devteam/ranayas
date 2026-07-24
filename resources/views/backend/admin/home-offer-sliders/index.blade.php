@@ -44,6 +44,7 @@
                                 <div class="form-group">
                                     <label for="image_url">Image <span class="text-danger">*</span></label>
                                     <input type="file" name="image_url" id="image_url" class="form-control" required>
+                                    <small class="form-text text-muted">Please maintain image size of 1920x800 px and upload image below 1 MB.</small>
                                 </div>
                             </div>
                             <div class="col-md-12">
