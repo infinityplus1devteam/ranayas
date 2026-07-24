@@ -319,6 +319,13 @@
                                                 </div>
                                                 @endif
 
+                                                @if($order->courier_name)
+                                                <div class="col-sm-12 mb-15">
+                                                    <p class="mb-0"><strong>Courier Name </strong></p>
+                                                    <p>{{ $order->courier_name }}</p>
+                                                </div>
+                                                @endif
+
                                                 @if($order->transaction)
                                                     <div class="col-sm-12 mb-15">
                                                         <p class="mb-0"><strong>Transaction ID </strong></p>

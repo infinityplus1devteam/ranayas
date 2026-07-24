@@ -88,6 +88,12 @@
                                                 <div class="text-danger mt-1"><small>{{ $message }}</small></div>
                                             @enderror
                                         </div>
+                                        <div class="form-group mr-2">
+                                            <input type="text" name="courier_name" id="courier_name" class="form-control" placeholder="Courier Name" value="{{ $order->courier_name }}">
+                                            @error('courier_name')
+                                                <div class="text-danger mt-1"><small>{{ $message }}</small></div>
+                                            @enderror
+                                        </div>
                                         <button type="submit" class="btn btn-primary">Update Status</button>
                                     </form>
                                 </div>

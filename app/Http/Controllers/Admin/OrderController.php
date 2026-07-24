@@ -146,9 +146,11 @@ class OrderController extends Controller
         $validator = \Illuminate\Support\Facades\Validator::make($request->all(), [
             'status' => 'required|string',
             'awb_number' => $requiresAwb ? 'required|string' : 'nullable|string',
+            'courier_name' => $requiresAwb ? 'required|string' : 'nullable|string',
         ], [
             'status.required' => 'Please Select Status',
             'awb_number.required' => 'AWB Number is strictly required for this status.',
+            'courier_name.required' => 'Courier Name is strictly required for this status.',
         ]);
 
         if ($validator->fails()) {
@@ -162,6 +164,7 @@ class OrderController extends Controller
             $order->update([
                 'status' => $request->status,
                 'awb_number' => $request->awb_number,
+                'courier_name' => $request->courier_name,
             ]);
 
             // SMS::send($order->user->mobile, 'Ranayas - Your Order ID : ' . $order->id . ', has been ' . $order->status . ',  Login for more detail on ' . route('user.login'));
@@ -181,7 +184,7 @@ class OrderController extends Controller
                 // dd($order->user->mobile);
                 // $mobile = $request->query('mobile');
                 // $mobile = "7045882487";
-                $courier = "Delhivery";
+                $courier = $order->courier_name ?: "Not Provided";
                 $awbNo = $order->awb_number ?: "Not Provided";
                 // $templateid = $request->query('templateid', '');
                 // $templateid = "";
