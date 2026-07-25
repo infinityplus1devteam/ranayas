@@ -98,7 +98,8 @@
                                     </li>
                                     <li>
                                         <label>Email</label>
-                                        <input disabled value="{{ $user->email }}">
+                                        <input id="email" type="email" name="email" placeholder="Email"
+                                            value="{{ $user->email }}">
                                     </li>
                                 </ul>
                                 <ul class="pro-input-label">
@@ -196,6 +197,10 @@
                     required: true
                 },
 
+                email: {
+                    email: true
+                },
+
                 mobile: {
                     required: true,
                     minlength: 10,
@@ -228,6 +233,10 @@
 
                 name: {
                     required: "Please Enter Name"
+                },
+
+                email: {
+                    email: "Please Enter Proper Email ID"
                 },
 
                 mobile: {

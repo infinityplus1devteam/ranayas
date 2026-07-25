@@ -144,6 +144,7 @@ class UserController extends Controller
             $request->all(),
             [
                 'name' => 'required|string|max:191',
+                'email' => 'nullable|email|max:191|unique:txn_users,email,' . auth('user')->user()->id,
                 'mobile' => 'required|digits_between:10,12',
                 'city' => 'required|string|max:191',
                 'territory' => 'required|string|max:191',
@@ -152,6 +153,8 @@ class UserController extends Controller
             ],
             [
                 'name.required' => 'Please Enter Name',
+                'email.email' => 'Please Enter Proper Email ID',
+                'email.unique' => 'Email Already Registered with us',
                 'mobile.required' => 'Please Enter Mobile Number',
                 'mobile.digits_between' => 'Mobile Number should be between 10 to 12 digits',
                 'city.required' => 'Please Enter City',
@@ -181,6 +184,7 @@ class UserController extends Controller
 
             $user->update([
                 'name' => $request->name,
+                'email' => $request->filled('email') ? $request->email : null,
                 'mobile' => $request->mobile,
                 'city' => $request->city,
                 'address' => $request->address,
