@@ -353,6 +353,16 @@
             box-shadow: none;
         }
     </style>
-@endsection @section('extrajs')
-
+@endsection
+@section('extrajs')
+@if(isset($order))
+<script>
+  gtag('event', 'conversion', {
+      'send_to': 'AW-18352765244/1nv_CMDJmtccELzyo69E',
+      'value': {{ $order->total ?? 1.0 }},
+      'currency': 'INR',
+      'transaction_id': '{{ $order->id }}'
+  });
+</script>
+@endif
 @endsection
