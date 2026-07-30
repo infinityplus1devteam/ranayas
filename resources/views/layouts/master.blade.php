@@ -2,15 +2,26 @@
 <html lang="en">
 
 <head>
-    <!-- Google tag (gtag.js) -->
-    <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-5FGG0Z44CD"></script>
+    <!-- Correctly Combined Google Tags -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-5FGG0Z44CD"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-5FGG0Z44CD');
+        gtag('config', 'AW-18352765244');
+    </script>
+
+    <!-- Old Google Tags (Commented Out)
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-5FGG0Z44CD"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
 
       gtag('config', 'G-5FGG0Z44CD');
-    </script> -->
+    </script>
 
     <script async src="https://www.googletagmanager.com/gtag/js?id=AW-18352765244"></script>
     <script>
@@ -20,6 +31,7 @@
 
         gtag('config', 'AW-18352765244');
     </script>
+    -->
 
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
