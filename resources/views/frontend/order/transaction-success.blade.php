@@ -364,5 +364,13 @@
       'transaction_id': '{{ $order->id }}'
   });
 </script>
+<!-- Event snippet for Purchase (1) conversion page -->
+<script>
+  gtag('event', 'conversion', {
+      'send_to': 'AW-18352765244/MK8OCNemstkcELzyo69E',
+      'transaction_id': '{{ $order->id }}'
+      // 'new_customer': true /* calculate dynamically, populate with true/false */,
+  });
+</script>
 @endif
 @endsection
