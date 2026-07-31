@@ -556,7 +556,9 @@ class OrderController extends Controller
                 Cart::clear();
             }
 
-            return view('frontend.order.transaction-success')->with('order', $order)->with('TXNID', $razorpay_payment_id);
+            // return view('frontend.order.transaction-success')->with('order', $order)->with('TXNID', $razorpay_payment_id);
+            return redirect()->route('order.success', encrypt($order->id));
+
         } else {
             // Verification failed
             Log::warning('Razorpay Signature Verification Failed for Order: ' . $order->id);
