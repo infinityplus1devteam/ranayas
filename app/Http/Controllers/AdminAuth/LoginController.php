@@ -32,7 +32,7 @@ class LoginController extends Controller
     public function login(Request $request)
     {
         $this->validate($request, [
-            'email'    => 'required|email',
+            'email' => 'required|email',
             'password' => 'required',
         ]);
 
@@ -56,11 +56,11 @@ class LoginController extends Controller
 
             try {
                 Mail::send(['html' => 'backend.mails.otp'], ['user' => $user], function ($message) use ($user) {
-                    $message->to($user['email'])->subject(config('app.name').', Admin One Time Password(OTP)');
+                    $message->to($user['email'])->subject(config('app.name') . ', Admin One Time Password(OTP)');
                     $message->from(config('mail.from.address'), config('mail.from.name'));
                 });
             } catch (\Exception $e) {
-                Log::error('Mail Error (Admin OTP): '.$e->getMessage());
+                Log::error('Mail Error (Admin OTP): ' . $e->getMessage());
             }
 
             return redirect()->route('admin.login.otp');
@@ -146,11 +146,11 @@ class LoginController extends Controller
 
         try {
             Mail::send(['html' => 'backend.mails.otp'], ['user' => $user], function ($message) use ($user) {
-                $message->to($user['email'])->subject(config('app.name').', Admin One Time Password(OTP)');
+                $message->to($user['email'])->subject(config('app.name') . ', Admin One Time Password(OTP)');
                 $message->from(config('mail.from.address'), config('mail.from.name'));
             });
         } catch (\Exception $e) {
-            Log::error('Mail Error (Admin OTP Resend): '.$e->getMessage());
+            Log::error('Mail Error (Admin OTP Resend): ' . $e->getMessage());
         }
 
         return back()->with('success', 'OTP has been resent to your email address.');

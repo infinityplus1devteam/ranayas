@@ -158,10 +158,17 @@ class InvoiceController extends Controller
 
             $searchId = $request->order_id > 1000000000 ? $request->order_id - 1000000000 : $request->order_id;
             $invoice = TxnOrder::where('id', $searchId)->with('details', 'user', 'transaction')->firstOrFail();
+
+            $recipientEmail = $invoice->email ?? $invoice->user->email;
+            if (empty($recipientEmail)) {
+                connectify('error', 'Error', 'Cannot resend invoice: The customer does not have an email address registered.');
+                return redirect(route('admin.invoices.all'));
+            }
+
             $pdf = PDF::loadView('backend.admin.invoices.download', ['invoice' => $invoice]);
-            Mail::send(['html' => 'backend.admin.invoices.empty'], ['invoice' => $invoice], function ($message) use ($invoice, $pdf) {
+            Mail::send(['html' => 'backend.admin.invoices.empty'], ['invoice' => $invoice], function ($message) use ($invoice, $pdf, $recipientEmail) {
                 $message->from(env('MAIL_FROM_ADDRESS', 'info@ranayas.com'), env('MAIL_FROM_NAME', 'Ranayas'));
-                $message->to($invoice->user->email, $invoice->user->name);
+                $message->to($recipientEmail, $invoice->user_name ?? $invoice->user->name);
                 $message->subject('Invoice copy of Order No ' . $invoice->order_number . ' From Ranayas');
                 $message->attachData($pdf->output(), 'order_no_' . $invoice->order_number . '.pdf');
             });

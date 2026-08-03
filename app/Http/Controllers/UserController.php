@@ -736,6 +736,7 @@ class UserController extends Controller
                 'landmark' => 'nullable|string|max:191',
                 'pincode' => 'required|digits:6',
                 'mobile' => 'required|digits:10',
+                'email' => 'required|email|max:191',
                 'type_of_address' => 'required|numeric|min:0|max:1',
             ],
             [
@@ -789,6 +790,7 @@ class UserController extends Controller
                 'user_id' => $user->id,
                 'name' => $request->name,
                 'mobile' => $request->mobile,
+                'email' => $request->email,
             ]);
 
             connectify('success', 'Address Saved', 'New Address has been added to your list !');
@@ -817,6 +819,7 @@ class UserController extends Controller
                 'landmark' => 'nullable|string|max:191',
                 'pincode' => 'required|digits:6',
                 'mobile' => 'required|digits:10',
+                'email' => 'required|email|max:191',
                 'type_of_address' => 'required|numeric|min:0|max:1',
             ],
             [
@@ -865,6 +868,7 @@ class UserController extends Controller
                 'type_of_address' => $request->type_of_address,
                 'name' => $request->name,
                 'mobile' => $request->mobile,
+                'email' => $request->email,
             ]);
 
             connectify('success', 'Address Updated', 'Address has been updated successfully !');

@@ -173,6 +173,8 @@ class OrderController extends Controller
                 'landmark' => $add->landmark,
                 'country' => $add->country,
                 'type_of_address' => $add->type_of_address,
+                'mobile' => $add->mobile,
+                'email' => $add->email,
                 'tbt' => $request->tbt,
                 'tax' => $request->tax,
                 'payment_mode' => $request->payment_mode,
@@ -180,16 +182,9 @@ class OrderController extends Controller
                 'is_discount' => $is_discount,
             ]);
 
-            $user->update([
-                'address' => $add->address,
-                'city' => $add->city,
-                'territory' => $add->territory,
-                'landmark' => $add->landmark,
-                'pincode' => $add->pincode,
-                'country' => $add->country,
-                'address_id' => $add->id,
-                'mobile' => $add->mobile,
-            ]);
+            // Removed $user->update(...) to prevent overwriting user's primary identity
+            
+
 
             foreach (Cart::getContent() as $item) {
 

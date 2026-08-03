@@ -261,8 +261,8 @@
 
                     <tr>
                         <td colspan="2">
-                            Contact No. : {{ $invoice->user?->mobile ?? 'N/A' }}
-                            <span class="invoice_span">Email : {{ $invoice->user?->email ?? 'N/A' }}</span>
+                            Contact No. : {{ $invoice->mobile ?? $invoice->user?->mobile ?? 'N/A' }}
+                            <span class="invoice_span">Email : {{ $invoice->email ?? $invoice->user?->email ?: 'N/A' }}</span>
                         </td>
                     </tr>
                     <tr>

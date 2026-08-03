@@ -205,7 +205,7 @@
                             Email :
                         </td>
                         <td>
-                            {{ $order->user->email }}
+                            {{ $order->email ?? $order->user->email ?: 'N/A' }}
                         </td>
                     </tr>
                     <tr>
@@ -213,7 +213,7 @@
                             Contact No. :
                         </td>
                         <td>
-                            {{ $order->user->mobile }}
+                            {{ $order->mobile ?? $order->user->mobile }}
                         </td>
                     </tr>
                     <tr>
