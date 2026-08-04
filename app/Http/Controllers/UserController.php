@@ -793,6 +793,10 @@ class UserController extends Controller
                 'email' => $request->email,
             ]);
 
+            if (empty($user->email)) {
+                $user->update(['email' => $request->email]);
+            }
+
             connectify('success', 'Address Saved', 'New Address has been added to your list !');
             return back();
 
@@ -870,6 +874,11 @@ class UserController extends Controller
                 'mobile' => $request->mobile,
                 'email' => $request->email,
             ]);
+
+            $user = TxnUser::where('id', auth('user')->user()->id)->first();
+            if ($user && empty($user->email)) {
+                $user->update(['email' => $request->email]);
+            }
 
             connectify('success', 'Address Updated', 'Address has been updated successfully !');
             return back();
