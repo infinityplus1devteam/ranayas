@@ -823,7 +823,7 @@ class MainController extends Controller
             $mail->SMTPDebug = 0;
             $mail->setFrom(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
             $mail->addAddress('info@ranayas.com'); // Hostinger Admin Mail
-            $mail->addBCC('supritdagade77@gmail.com');
+            // $mail->addBCC('supritdagade77@gmail.com');
             $mail->isHTML(true);
             $mail->Subject = "You Received {$subject}";
             $mail->Body = $html;
