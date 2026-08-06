@@ -19,6 +19,7 @@ use App\Model\TxnUser;
 use App\Services\LogisticService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Model\MailLog;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
@@ -775,7 +776,27 @@ class MainController extends Controller
             ], 422);
         }
 
+        // reCAPTCHA v2 verification
+        $recaptchaToken = $request->input('g-recaptcha-response');
+        if (empty($recaptchaToken)) {
+            return redirect()->back()
+                ->withInput()
+                ->with('status', 'error')
+                ->with('msg', 'Please complete the CAPTCHA verification before submitting.');
+        }
 
+        $recaptchaVerify = Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
+            'secret'   => env('RECAPTCHA_SECRET_KEY'),
+            'response' => $recaptchaToken,
+            'remoteip' => $request->ip(),
+        ]);
+
+        if (!$recaptchaVerify->json('success')) {
+            return redirect()->back()
+                ->withInput()
+                ->with('status', 'error')
+                ->with('msg', 'CAPTCHA verification failed. Please tick the "I\'m not a robot" box and try again.');
+        }
 
         $name = $request->form_name ?? '-';
         $email = $request->form_email ?? '-';
@@ -806,6 +827,12 @@ class MainController extends Controller
 
         $mail = new PHPMailer(true);
 
+        // Determine form source from subject
+        $formSource = match(true) {
+            str_contains($subject, 'Sell') => 'Sell with Us Popup',
+            default                        => 'Enquiry Popup',
+        };
+
         try {
             $mail->isSMTP();
             $mail->Host = env('MAIL_HOST');
@@ -830,14 +857,44 @@ class MainController extends Controller
             $mail->AltBody = strip_tags($html);
             $mail->send();
 
+            // Log success
+            MailLog::create([
+                'from_name'    => $name,
+                'from_email'   => $email,
+                'phone'        => $phone,
+                'subject'      => $subject,
+                'message'      => $message,
+                'form_source'  => $formSource,
+                'status'       => 'success',
+                'error_message'=> null,
+                'error_code'   => null,
+                'ip_address'   => $request->ip(),
+                'user_agent'   => $request->userAgent(),
+            ]);
+
             return redirect()->route('index')
                 ->with('status', 'success')
                 ->with('msg', 'Your message has been sent successfully!');
 
         } catch (\Exception $e) {
+            // Log failure with full error detail
+            MailLog::create([
+                'from_name'    => $name,
+                'from_email'   => $email,
+                'phone'        => $phone,
+                'subject'      => $subject,
+                'message'      => $message,
+                'form_source'  => $formSource,
+                'status'       => 'failed',
+                'error_message'=> $e->getMessage() . (isset($mail->ErrorInfo) ? "\n\nPHPMailer Detail: " . $mail->ErrorInfo : ''),
+                'error_code'   => $e->getCode() ?: null,
+                'ip_address'   => $request->ip(),
+                'user_agent'   => $request->userAgent(),
+            ]);
+
             return redirect()->route('index')
                 ->with('status', 'error')
-                ->with('msg', 'Email sending failed.');
+                ->with('msg', 'Email sending failed. Our team has been notified.');
         }
     }
 

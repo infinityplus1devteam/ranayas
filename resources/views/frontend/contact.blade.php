@@ -91,6 +91,10 @@
                                         </div>
                                     </div>
 
+                                    <div class="col-md-12 mb-3">
+                                        <div class="g-recaptcha" data-sitekey="{{ env('RECAPTCHA_SITE_KEY') }}"></div>
+                                    </div>
+
                                     <div class="col-md-12">
                                         <button type="submit" class="btn btn-contact-submit">Send Message</button>
                                     </div>

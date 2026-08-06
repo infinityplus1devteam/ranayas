@@ -106,7 +106,8 @@
         }
     </style>
     @yield('extracss')
-
+    {{-- reCAPTCHA v2 --}}
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 
 <body class="home-5">
@@ -180,6 +181,7 @@
                                 rows="4" placeholder="Write your message here" required></textarea>
                         </div>
                         <div class="contact-section-btn">
+                            <div class="g-recaptcha mb-3" data-sitekey="{{ env('RECAPTCHA_SITE_KEY') }}"></div>
                             <button class="custom-submit-btn" id="submit-btn" type="submit">
                                 Submit
                             </button>
@@ -230,6 +232,7 @@
                                 rows="4" placeholder="Write your message here" required></textarea>
                         </div>
                         <div class="contact-section-btn">
+                            <div class="g-recaptcha mb-3" data-sitekey="{{ env('RECAPTCHA_SITE_KEY') }}"></div>
                             <button class="custom-submit-btn" id="sell-submit-btn" type="submit">
                                 Submit
                             </button>

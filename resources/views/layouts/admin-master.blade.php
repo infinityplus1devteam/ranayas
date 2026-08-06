@@ -278,6 +278,11 @@
                         </li>
 
                         <li class="dropdown">
+                            <a href="{{ route('admin.mail_logs.index') }}" class="nav-link"><i
+                                    data-feather="send"></i><span>Mail Logs</span></a>
+                        </li>
+
+                        <li class="dropdown">
                             <a href="{{ route('admin.faqs.all') }}" class="nav-link"><i
                                     data-feather="message-square"></i><span>FAQ's</span></a>
                         </li>

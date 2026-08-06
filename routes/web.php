@@ -43,8 +43,8 @@ Route::
                 // contact us
         
                 Route::GET('/contact', 'EnquiryController@create')->name('contact');
-                Route::POST('/contact', 'EnquiryController@store');
-                Route::POST('/sendmail', 'MainController@sendMail')->name('sendmail');
+                Route::POST('/contact', 'EnquiryController@store')->middleware('throttle:3,1');
+                Route::POST('/sendmail', 'MainController@sendMail')->name('sendmail')->middleware('throttle:3,1');
 
                 // Bulk Orders
         
@@ -340,6 +340,11 @@ Route::
 
                     Route::prefix('/manage-enquiries')->group(function () {
                         Route::GET('/', 'EnquiryController@index')->name('admin.enquiries.all');
+                    });
+
+                    Route::prefix('/mail-logs')->group(function () {
+                        Route::GET('/', 'Admin\MailLogController@index')->name('admin.mail_logs.index');
+                        Route::GET('/{id}', 'Admin\MailLogController@show')->name('admin.mail_logs.show');
                     });
 
                     Route::prefix('/manage-faqs')->group(function () {
