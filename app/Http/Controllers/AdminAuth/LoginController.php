@@ -41,10 +41,13 @@ class LoginController extends Controller
         if ($admin && Hash::check($request->password, $admin->password)) {
             $otp = rand(100000, 999999);
 
+            $admin->update([
+                'otp' => $otp,
+                'otp_expires_at' => now()->addMinutes(10)
+            ]);
+
             session([
                 'admin_login_email' => $request->email,
-                'admin_login_otp' => $otp,
-                'admin_login_otp_expires_at' => now()->addMinutes(10),
                 'admin_login_remember' => $request->remember ? true : false,
             ]);
 
@@ -53,6 +56,7 @@ class LoginController extends Controller
                 'otp' => $otp,
                 'email' => $admin->email,
             ];
+            Log::info('Admin Login OTP is: ' . $otp);
 
             try {
                 Mail::send(['html' => 'backend.mails.otp'], ['user' => $user], function ($message) use ($user) {
@@ -92,29 +96,34 @@ class LoginController extends Controller
         }
 
         $email = session('admin_login_email');
-        $otp = session('admin_login_otp');
-        $expiresAt = session('admin_login_otp_expires_at');
         $remember = session('admin_login_remember', false);
 
-        if (now()->greaterThan($expiresAt)) {
+        $admin = Admin::where('email', $email)->first();
+
+        if (!$admin) {
+            return redirect()->route('login')->withErrors(['email' => 'Admin not found.']);
+        }
+
+        if (now()->greaterThan($admin->otp_expires_at)) {
             return back()->withErrors(['otp' => 'The OTP has expired. Please request a new one.']);
         }
 
-        if ($request->otp == $otp) {
-            $admin = Admin::where('email', $email)->first();
-            if ($admin) {
-                Auth::guard('admin')->login($admin, $remember);
+        if ($request->otp == $admin->otp) {
+            Auth::guard('admin')->login($admin, $remember);
 
-                // Clear OTP session keys
-                session()->forget([
-                    'admin_login_email',
-                    'admin_login_otp',
-                    'admin_login_otp_expires_at',
-                    'admin_login_remember'
-                ]);
+            // Clear OTP from DB
+            $admin->update([
+                'otp' => null,
+                'otp_expires_at' => null
+            ]);
 
-                return redirect()->intended(route('admin.dashboard'));
-            }
+            // Clear session keys
+            session()->forget([
+                'admin_login_email',
+                'admin_login_remember'
+            ]);
+
+            return redirect()->intended(route('admin.dashboard'));
         }
 
         return back()->withErrors(['otp' => 'The entered OTP is incorrect.']);
@@ -133,9 +142,9 @@ class LoginController extends Controller
         }
 
         $otp = rand(100000, 999999);
-        session([
-            'admin_login_otp' => $otp,
-            'admin_login_otp_expires_at' => now()->addMinutes(10),
+        $admin->update([
+            'otp' => $otp,
+            'otp_expires_at' => now()->addMinutes(10),
         ]);
 
         $user = [
