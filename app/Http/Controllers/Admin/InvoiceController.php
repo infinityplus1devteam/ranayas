@@ -166,12 +166,12 @@ class InvoiceController extends Controller
             }
 
             $pdf = PDF::loadView('backend.admin.invoices.download', ['invoice' => $invoice]);
-            Mail::send(['html' => 'backend.admin.invoices.empty'], ['invoice' => $invoice], function ($message) use ($invoice, $pdf, $recipientEmail) {
+            try { Mail::send(['html' => 'backend.admin.invoices.empty'], ['invoice' => $invoice], function ($message) use ($invoice, $pdf, $recipientEmail) {
                 $message->from(env('MAIL_FROM_ADDRESS', 'info@ranayas.com'), env('MAIL_FROM_NAME', 'Ranayas'));
                 $message->to($recipientEmail, $invoice->user_name ?? $invoice->user->name);
                 $message->subject('Invoice copy of Order No ' . $invoice->order_number . ' From Ranayas');
                 $message->attachData($pdf->output(), 'order_no_' . $invoice->order_number . '.pdf');
-            });
+            }); } catch (\Exception $e) { \Log::error("Mail sending failed: " . $e->getMessage()); }
 
             connectify('success', 'invoice Sent', 'Invoice Sent Successfully !');
 

@@ -76,11 +76,11 @@ class EnquiryController extends Controller
         ]);
 
         try {
-            Mail::send(['html' => 'backend.mails.enquiry'], ['data' => $data], function ($message) {
+            try { Mail::send(['html' => 'backend.mails.enquiry'], ['data' => $data], function ($message) {
                 $message->from(env('MAIL_FROM_ADDRESS', 'info@ranayas.com'), 'Ranayas');
                 $message->to('info@ranayas.com', 'Ranayas Admin');
                 $message->subject('New Enquiry From Ranayas');
-            });
+            }); } catch (\Exception $e) { \Log::error("Mail sending failed: " . $e->getMessage()); }
 
             // Log success
             MailLog::create([

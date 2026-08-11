@@ -645,11 +645,11 @@ class MainController extends Controller
                 'status' => false,
             ]);
 
-            Mail::send(['html' => 'backend.mails.question'], ['qna' => $qna, 'product' => $product], function ($message) {
+            try { Mail::send(['html' => 'backend.mails.question'], ['qna' => $qna, 'product' => $product], function ($message) {
                 $message->from('info@ranayas.com', 'Ranayas');
                 $message->to('info@ranayas.com', 'Ranayas');
                 $message->subject('Ranayas - Someone ask question');
-            });
+            }); } catch (\Exception $e) { \Log::error("Mail sending failed: " . $e->getMessage()); }
 
             return redirect(route('product', $product->slug_url))->with('messageSuccess1', 'Your question has been submitted successfully ! we\'ll answer your question soon !');
         } catch (\Exception $ex) {

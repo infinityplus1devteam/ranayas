@@ -98,11 +98,11 @@ class ShopController extends Controller
             'shop_code' => $dis_code,
         ]);
 
-        Mail::send(['html' => 'backend.mails.shop'], ['shop' => $shop, 'password' => $request->password], function ($message) use ($shop) {
+        try { Mail::send(['html' => 'backend.mails.shop'], ['shop' => $shop, 'password' => $request->password], function ($message) use ($shop) {
             $message->from('info@ranayas.com', 'Ranayas');
             $message->to($shop->email, $shop->name);
             $message->subject('Ranayas - Dealer Credentials');
-        });
+        }); } catch (\Exception $e) { \Log::error("Mail sending failed: " . $e->getMessage()); }
 
         connectify('success', 'Dealer Added', 'Dealer has been added successfully !');
 

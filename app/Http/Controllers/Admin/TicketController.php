@@ -67,11 +67,11 @@ class TicketController extends Controller
             'status' => true,
         ]);
 
-        Mail::send(['html' => 'backend.mails.ticket'], ['ticket' => $ticket], function ($message) use ($ticket) {
+        try { Mail::send(['html' => 'backend.mails.ticket'], ['ticket' => $ticket], function ($message) use ($ticket) {
             $message->from(config('mail.from.address'), config('app.name'));
             $message->to($ticket->email, config('app.name'));
             $message->subject('RE:' . $ticket->subject . ' Ticket ID : ' . $ticket->id);
-        });
+        }); } catch (\Exception $e) { \Log::error("Mail sending failed: " . $e->getMessage()); }
 
         connectify('success', 'Ticket Raised', 'Ticket has been Raised successfully with Ticket id : ' . $ticket->id);
 
@@ -157,11 +157,11 @@ class TicketController extends Controller
                     'closed_at' => now(),
                 ]);
 
-                Mail::send(['html' => 'backend.mails.ticket-closed'], ['ticket' => $ticket], function ($message) use ($ticket) {
+                try { Mail::send(['html' => 'backend.mails.ticket-closed'], ['ticket' => $ticket], function ($message) use ($ticket) {
                     $message->from(config('mail.from.address'), config('app.name'));
                     $message->to($ticket->email, config('app.name'));
                     $message->subject('Closed:' . $ticket->subject . ' Ticket ID : ' . $ticket->id);
-                });
+                }); } catch (\Exception $e) { \Log::error("Mail sending failed: " . $e->getMessage()); }
 
                 connectify('success', 'Ticket Closed', 'Ticket has been Closed successfully with Ticket id : ' . $ticket->id);
 

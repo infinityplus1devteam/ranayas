@@ -364,11 +364,11 @@ class UserController extends Controller
 
             // Email to Admin
             $adminEmail = \App\Model\Admin::first()->email;
-            Mail::send(['html' => 'backend.mails.ticket-admin'], ['ticket' => $ticket], function ($message) use ($ticket, $adminEmail) {
+            try { Mail::send(['html' => 'backend.mails.ticket-admin'], ['ticket' => $ticket], function ($message) use ($ticket, $adminEmail) {
                 $message->from('info@ranayas.com', 'Ranayas');
                 $message->to($adminEmail, 'Admin');
                 $message->subject('[ADMIN ALERT] New Return/Refund Request - ' . $ticket->subject . ' [Ticket ID: ' . $ticket->id . ']');
-            });
+            }); } catch (\Exception $e) { \Log::error("Mail sending failed: " . $e->getMessage()); }
 
             connectify('success', 'Return Order', 'Order Return applied successfully, stay tuned for approval !');
 
@@ -410,10 +410,10 @@ class UserController extends Controller
                 //     config('services.sms.dlt_template_id')
                 // );
 
-                Mail::send(['html' => 'backend.mails.order-cancel'], ['order' => $order], function ($message) use ($order) {
+                try { Mail::send(['html' => 'backend.mails.order-cancel'], ['order' => $order], function ($message) use ($order) {
                     $message->to('info@ranayas.com')->subject('Order has been Cancelled ! [order id : ' . $order->id . ']');
                     $message->from('info@ranayas.com', 'Ranayas');
-                });
+                }); } catch (\Exception $e) { \Log::error("Mail sending failed: " . $e->getMessage()); }
 
                 connectify('success', 'Order Cancel', 'Order Cancelled Successfully !');
 
@@ -464,11 +464,11 @@ class UserController extends Controller
 
             // Email to Admin
             $adminEmail = \App\Model\Admin::first()->email;
-            Mail::send(['html' => 'backend.mails.ticket-admin'], ['ticket' => $ticket], function ($message) use ($ticket, $adminEmail) {
+            try { Mail::send(['html' => 'backend.mails.ticket-admin'], ['ticket' => $ticket], function ($message) use ($ticket, $adminEmail) {
                 $message->from('info@ranayas.com', 'Ranayas');
                 $message->to($adminEmail, 'Admin');
                 $message->subject('[ADMIN ALERT] New Support Query - ' . $ticket->subject . ' [Ticket ID: ' . $ticket->id . ']');
-            });
+            }); } catch (\Exception $e) { \Log::error("Mail sending failed: " . $e->getMessage()); }
 
             connectify('success', 'Need Help', 'Your query has been sent successfully, our expert will get in touch with you soon, stay tuned !');
 

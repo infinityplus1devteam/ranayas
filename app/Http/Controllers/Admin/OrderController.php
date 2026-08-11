@@ -226,12 +226,12 @@ class OrderController extends Controller
                     if ($order->user && $order->user->email) {
                         $pdf = PDF::loadView('backend.admin.invoices.download', ['invoice' => $order]);
 
-                        Mail::send(['html' => 'backend.admin.invoices.empty'], ['invoice' => $order], function ($message) use ($order, $pdf) {
+                        try { Mail::send(['html' => 'backend.admin.invoices.empty'], ['invoice' => $order], function ($message) use ($order, $pdf) {
                             $message->from('order-confirmation@ranayas.com', 'Ranayas');
                             $message->to($order->user->email, $order->user->name);
                             $message->subject('Invoice copy of Order No ' . $order->order_number . ' From Ranayas');
                             $message->attachData($pdf->output(), 'invoice_no_' . $order->order_number . '.pdf');
-                        });
+                        }); } catch (\Exception $e) { \Log::error("Mail sending failed: " . $e->getMessage()); }
                     }
                 } catch (\Exception $mailEx) {
                     Log::error('Invoice mail failed for order ' . $order->order_number . ': ' . $mailEx->getMessage());

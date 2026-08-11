@@ -148,20 +148,7 @@
 
     <section class="section">
 
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb bg-dark text-white-all">
-                <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}"><i
-                            class="fas fa-home"></i>Dashboard</a></li>
-                <li class="breadcrumb-item active" aria-current="page"><i class="fas fa-list"></i>Edit Product</li>
-                <li class="breadcrumb-item"><a href="{{ route('admin.products.all') }}">All Products</a></li>
-                <li class="breadcrumb-item"><a href="#addModal" data-toggle="modal" data-target="#addModal"> Add More
-                        Custom
-                        Fields</a></li>
-                <li class="breadcrumb-item"><a href="#addColorModal" data-toggle="modal" data-target="#addColorModal">
-                        Add
-                        More Color & Sizes</a></li>
-            </ol>
-        </nav>
+        
 
         <div class="card" ng-app="products">
             <div class="card-header bg-dark text-white-all">
@@ -736,7 +723,20 @@
             @endif
         </div>
 
-
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb bg-dark text-white-all">
+                <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}"><i
+                            class="fas fa-home"></i>Dashboard</a></li>
+                <li class="breadcrumb-item active" aria-current="page"><i class="fas fa-list"></i>Edit Product</li>
+                <li class="breadcrumb-item"><a href="{{ route('admin.products.all') }}">All Products</a></li>
+                <li class="breadcrumb-item"><a href="#addModal" data-toggle="modal" data-target="#addModal"> Add More
+                        Custom
+                        Fields</a></li>
+                <li class="breadcrumb-item"><a href="#addColorModal" data-toggle="modal" data-target="#addColorModal">
+                        Add
+                        More Color & Sizes</a></li>
+            </ol>
+        </nav>
         <div class="card">
             <div class="card-header">
                 <h5>Available Custom Fields for {{ $product->title }}</h5>

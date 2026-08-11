@@ -124,11 +124,11 @@ class ReturnticketController extends Controller
                     'closed_at' => now(),
                 ]);
 
-                Mail::send(['html' => 'backend.mails.ticket-closed'], ['ticket' => $ticket], function ($message) use ($ticket) {
+                try { Mail::send(['html' => 'backend.mails.ticket-closed'], ['ticket' => $ticket], function ($message) use ($ticket) {
                     $message->from('info@ranayas.com', 'Ranayas ');
                     $message->to($ticket->email, 'Ranayas');
                     $message->subject('Closed:' . $ticket->subject . ' Ticket ID : ' . $ticket->id);
-                });
+                }); } catch (\Exception $e) { \Log::error("Mail sending failed: " . $e->getMessage()); }
 
                 connectify('success', 'Ticket Closed', 'Ticket has been Closed successfully with Ticket id : ' . $ticket->id);
 

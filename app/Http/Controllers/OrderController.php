@@ -222,16 +222,16 @@ class OrderController extends Controller
                     SMS::send($order->user->mobile, 'Ranayas - New Order Placed with Order No : ' . $order->order_number);
 
                     if ($order->user && $order->user->email) {
-                        Mail::send(['html' => 'backend.mails.received'], ['order' => $order], function ($message) use ($order) {
+                        try { Mail::send(['html' => 'backend.mails.received'], ['order' => $order], function ($message) use ($order) {
                             $message->to($order->user->email)->subject('Your order has been placed successfully ! [order no : ' . $order->order_number . ']');
                             $message->from(config('mail.from.address'), config('app.name'));
-                        });
+                        }); } catch (\Exception $e) { \Log::error("Mail sending failed: " . $e->getMessage()); }
                     }
 
-                    Mail::send(['html' => 'backend.mails.admin'], ['order' => $order], function ($message) use ($order) {
+                    try { Mail::send(['html' => 'backend.mails.admin'], ['order' => $order], function ($message) use ($order) {
                         $message->to(config('mail.from.address'))->subject('You have a new order ! [order id : ' . $order->order_number . ']');
                         $message->from(config('mail.from.address'), config('app.name'));
-                    });
+                    }); } catch (\Exception $e) { \Log::error("Mail sending failed: " . $e->getMessage()); }
                 }
 
                 Cart::clear();
@@ -317,16 +317,16 @@ class OrderController extends Controller
                 SMS::send($order->user->mobile, 'Ranayas - New Order Placed with Order No : ' . $order->order_number);
 
                 if ($order->user && $order->user->email) {
-                    Mail::send(['html' => 'backend.mails.received'], ['order' => $order], function ($message) use ($order) {
+                    try { Mail::send(['html' => 'backend.mails.received'], ['order' => $order], function ($message) use ($order) {
                         $message->to($order->user->email)->subject('Your order has been placed successfully ! [order no : ' . $order->order_number . ']');
                         $message->from(config('mail.from.address'), config('app.name'));
-                    });
+                    }); } catch (\Exception $e) { \Log::error("Mail sending failed: " . $e->getMessage()); }
                 }
 
-                Mail::send(['html' => 'backend.mails.admin'], ['order' => $order], function ($message) use ($order) {
+                try { Mail::send(['html' => 'backend.mails.admin'], ['order' => $order], function ($message) use ($order) {
                     $message->to(config('mail.from.address'))->subject('You have a new order ! [order id : ' . $order->order_number . ']');
                     $message->from(config('mail.from.address'), config('app.name'));
-                });
+                }); } catch (\Exception $e) { \Log::error("Mail sending failed: " . $e->getMessage()); }
 
                 Cart::clear();
             }
@@ -534,16 +534,16 @@ class OrderController extends Controller
                 // Send success notifications
                 try {
                     if ($order->user && $order->user->email) {
-                        Mail::send(['html' => 'backend.mails.received'], ['order' => $order], function ($message) use ($order) {
+                        try { Mail::send(['html' => 'backend.mails.received'], ['order' => $order], function ($message) use ($order) {
                             $message->to($order->user->email)->subject('Your order has been placed successfully! [order no: ' . $order->order_number . ']');
                             $message->from(config('mail.from.address'), config('app.name'));
-                        });
+                        }); } catch (\Exception $e) { \Log::error("Mail sending failed: " . $e->getMessage()); }
                     }
 
-                    Mail::send(['html' => 'backend.mails.admin'], ['order' => $order], function ($message) use ($order) {
+                    try { Mail::send(['html' => 'backend.mails.admin'], ['order' => $order], function ($message) use ($order) {
                         $message->to(config('mail.from.address'))->subject('You have a new Razorpay order! [order id: ' . $order->order_number . ']');
                         $message->from(config('mail.from.address'), config('app.name'));
-                    });
+                    }); } catch (\Exception $e) { \Log::error("Mail sending failed: " . $e->getMessage()); }
                 } catch (\Exception $e) {
                     Log::error('Mail sending failed during checkout: ' . $e->getMessage());
                 }
